@@ -1,0 +1,1845 @@
+{% load static %}
+{% include "bookings/_intro.html" %}
+
+<style>
+/* ── Reset helpers ─────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box}
+
+/* ── CSS custom properties ─────────────────────────────────── */
+:root{
+  --nav-h:70px;
+  --brand:#673ab7;
+  --brand-dark:#4527a0;
+  --brand-light:#ede7f6;
+  --ink:#1e1a2d;
+  --muted:#6b6280;
+  --border:#ece6f4;
+  --surface:#ffffff;
+  --radius-pill:999px;
+  --shadow-lg:0 20px 60px rgba(103,58,183,.13);
+}
+
+/* ── Sticky header shell ───────────────────────────────────── */
+.sn-header{
+  position:sticky;
+  top:0;
+  left:0;
+  right:0;
+  width:100%;
+  max-width:100%;
+  box-sizing:border-box;
+  z-index:1000;
+  height:var(--nav-h);
+  background:rgba(255,255,255,0.96);
+  backdrop-filter:blur(18px) saturate(160%);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+  border-bottom:1px solid var(--border);
+  box-shadow:0 2px 20px rgba(103,58,183,.06);
+}
+
+/* ── Inner wrapper ─────────────────────────────────────────── */
+.sn-inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  height:100%;
+  max-width:1240px;
+  width:100%;
+  box-sizing:border-box;
+  margin:0 auto;
+  padding:0 20px;
+  gap:16px;
+}
+
+/* ── Brand ─────────────────────────────────────────────────── */
+.sn-brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  text-decoration:none;
+  flex-shrink:0;
+  -webkit-tap-highlight-color:transparent;
+}
+.sn-brand-emblem{
+  position:relative;
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:3px;
+}
+.sn-brand-emblem::before{
+  content:"";
+  position:absolute;
+  inset:-3px;
+  border-radius:50%;
+  background:conic-gradient(
+    from 0deg,
+    #00d2ff 0deg,
+    #2563eb 85deg,
+    transparent 110deg,
+    #ff0055 180deg,
+    #ef4444 265deg,
+    transparent 290deg,
+    #00d2ff 360deg
+  );
+  animation:aaNavLiveSpin 2.4s linear infinite;
+  z-index:1;
+}
+.sn-brand-emblem::after{
+  content:"";
+  position:absolute;
+  inset:-4px;
+  border-radius:50%;
+  background:conic-gradient(
+    from 0deg,
+    #00d2ff 0deg,
+    #2563eb 85deg,
+    transparent 110deg,
+    #ff0055 180deg,
+    #ef4444 265deg,
+    transparent 290deg,
+    #00d2ff 360deg
+  );
+  filter:blur(6px);
+  opacity:0.85;
+  animation:aaNavLiveSpin 2.4s linear infinite;
+  z-index:0;
+}
+@keyframes aaNavLiveSpin{
+  0%{transform:rotate(0deg)}
+  100%{transform:rotate(360deg)}
+}
+.sn-brand-founder-img{
+  position:relative;
+  z-index:2;
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  object-fit:cover;
+  object-position:center;
+  display:block;
+  border:2px solid #ffffff;
+  background:#17101f;
+  box-shadow:0 2px 10px rgba(0,0,0,0.28);
+  transition:transform .2s ease;
+}
+.sn-brand:hover .sn-brand-founder-img{
+  transform:scale(1.08);
+  box-shadow:0 4px 16px rgba(0,210,255,0.45);
+}
+.sn-brand-col{
+  display:flex;
+  flex-direction:column;
+  line-height:1.15;
+}
+.sn-brand-text{
+  font-size:1.06rem;
+  font-weight:900;
+  letter-spacing:-.03em;
+  color:var(--ink);
+  white-space:nowrap;
+  font-family:'Plus Jakarta Sans','Segoe UI',system-ui,sans-serif;
+}
+.sn-brand-text em{
+  font-style:normal;
+  background:linear-gradient(90deg,#7c3aed,#d946ef);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.sn-brand-sub{
+  font-size:0.62rem;
+  font-weight:800;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:#f2720c;
+  display:block;
+  margin-top:1px;
+}
+
+/* ── Desktop nav links ─────────────────────────────────────── */
+.sn-nav{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-left:auto;
+  margin-right:10px;
+}
+.sn-nav a{
+  position:relative;
+  color:var(--muted);text-decoration:none;
+  font-size:.875rem;font-weight:650;
+  padding:7px 11px;border-radius:8px;
+  white-space:nowrap;
+  transition:color .2s;
+  font-family:'Segoe UI',system-ui,sans-serif;
+}
+.sn-nav a::after{
+  content:'';
+  position:absolute;bottom:2px;left:10px;right:10px;height:2px;
+  background:linear-gradient(90deg,#7c3aed,#d946ef);
+  border-radius:2px;
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .25s cubic-bezier(.4,0,.2,1);
+}
+.sn-nav a:hover{color:var(--brand);}
+.sn-nav a:hover::after{transform:scaleX(1);}
+
+/* ── Navratri pulse badge ──────────────────────────────────── */
+.sn-navratri{
+  display:inline-flex;align-items:center;gap:5px;
+  background:linear-gradient(135deg,#ff6d00,#ff9100);
+  color:#fff !important;
+  font-size:.75rem !important;
+  font-weight:800 !important;
+  padding:5px 11px !important;
+  border-radius:var(--radius-pill) !important;
+  letter-spacing:.02em;
+  box-shadow:0 3px 10px rgba(255,109,0,.35);
+  text-decoration:none !important;
+  animation:sn-pulse 2.2s ease-in-out infinite;
+  transition:transform .15s, box-shadow .15s;
+}
+.sn-navratri::after{display:none !important;}
+.sn-navratri:hover{
+  transform:scale(1.06);
+  box-shadow:0 5px 16px rgba(255,109,0,.5);
+  color:#fff !important;
+}
+.sn-navratri-dot{
+  width:6px;height:6px;
+  background:rgba(255,255,255,.8);
+  border-radius:50%;
+  animation:sn-blink 1.1s ease-in-out infinite;
+}
+@keyframes sn-pulse{
+  0%,100%{box-shadow:0 3px 10px rgba(255,109,0,.35);}
+  50%{box-shadow:0 3px 22px rgba(255,109,0,.65);}
+}
+@keyframes sn-blink{
+  0%,100%{opacity:1;}50%{opacity:.3;}
+}
+
+/* ── Desktop Nav Dropdowns (Venues & About/Contact) ─────────── */
+.sn-nav-dropdown {
+  position: relative;
+  display: inline-block;
+}
+.sn-nav-dropdown summary {
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: .875rem;
+  font-weight: 650;
+  padding: 7px 11px;
+  border-radius: 8px;
+  white-space: nowrap;
+  transition: color .2s, background .2s;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.sn-nav-dropdown summary::-webkit-details-marker {
+  display: none;
+}
+.sn-nav-dropdown summary:hover,
+.sn-nav-dropdown[open] summary {
+  color: var(--brand);
+  background: var(--brand-light);
+}
+.sn-nav-dropdown-arrow {
+  width: 12px;
+  height: 12px;
+  transition: transform .2s ease;
+  flex-shrink: 0;
+}
+.sn-nav-dropdown[open] .sn-nav-dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.sn-nav-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 255px;
+  background: #ffffff;
+  border: 1px solid rgba(103, 58, 183, 0.12);
+  border-radius: 14px;
+  box-shadow: 0 16px 42px rgba(18, 9, 32, 0.16), 0 2px 8px rgba(0, 0, 0, 0.04);
+  padding: 7px;
+  z-index: 1050;
+  animation: sn-nav-fade 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+@keyframes sn-nav-fade {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.sn-nav-menu-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 9px 12px !important;
+  border-radius: 10px !important;
+  text-decoration: none !important;
+  color: #1f2937 !important;
+  transition: background 0.15s ease, transform 0.12s ease !important;
+  font-family: inherit !important;
+  box-sizing: border-box !important;
+}
+.sn-nav-menu-item:hover {
+  background: #fbf8fe !important;
+  color: var(--brand) !important;
+  transform: translateX(2px);
+}
+.sn-nav-menu-icon {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  flex-shrink: 0;
+}
+.sn-nav-menu-icon.b-plots { background: #dcfce7; }
+.sn-nav-menu-icon.b-halls { background: #dbeafe; }
+.sn-nav-menu-icon.b-contact { background: #ccfbf1; }
+.sn-nav-menu-icon.b-about { background: #fae8ff; }
+
+.sn-nav-menu-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+.sn-nav-menu-title {
+  font-size: 0.88rem;
+  font-weight: 750;
+  color: #1a102f;
+  line-height: 1.2;
+}
+.sn-nav-menu-sub {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #6b7280;
+  line-height: 1.2;
+}
+
+/* ── Account Panel Language Grid ───────────────────────────── */
+.sn-panel-lang-wrap {
+  padding: 4px 6px 6px;
+}
+.sn-panel-lang-title {
+  font-size: 0.70rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.sn-panel-lang-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+}
+.sn-panel-lang-btn {
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #374151;
+  text-align: center;
+  cursor: pointer;
+  transition: all .15s ease;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+.sn-panel-lang-btn:hover {
+  border-color: #7c3aed;
+  color: #7c3aed;
+  background: #faf5ff;
+}
+.sn-panel-lang-btn.active {
+  background: #edf2ec;
+  border-color: #86efac;
+  color: #14532d;
+  font-weight: 850;
+}
+
+/* ── Mobile Language Switcher ──────────────────────────────── */
+.sn-mobile-lang-wrap {
+  padding: 12px 14px;
+  background: #fbf9fd;
+  border-radius: 12px;
+  margin: 12px 0;
+  border: 1px solid var(--border);
+}
+.sn-mobile-lang-title {
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sn-mobile-lang-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+.sn-mobile-lang-btn {
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1f2937;
+  text-align: center;
+  cursor: pointer;
+  transition: all .15s ease;
+  font-family: inherit;
+}
+.sn-mobile-lang-btn:hover {
+  border-color: #7c3aed;
+  color: #7c3aed;
+}
+.sn-mobile-lang-btn.active {
+  background: #edf2ec;
+  border-color: #86efac;
+  color: #14532d;
+  font-weight: 850;
+}
+
+/* ── Hide Google Translate Toolbar & Branding Bar ──────────── */
+body > .skiptranslate,
+body > div[class*="skiptranslate"],
+iframe.goog-te-banner-frame,
+iframe[id*=":1.container"],
+iframe[id*=":2.container"],
+iframe[id*="goog"],
+iframe.VIpgJd-ZVi9od-ORHb-OEVmcd,
+.VIpgJd-ZVi9od-ORHb-OEVmcd,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+.VIpgJd-ZVi9od-aZ2wEe-OiiCO,
+.VIpgJd-ZVi9od-l4eHX-hSRGPd,
+#goog-gt-tt,
+.goog-te-balloon-frame,
+.goog-tooltip,
+.goog-tooltip:hover {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  min-height: 0 !important;
+  width: 0 !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  top: -9999px !important;
+  left: -9999px !important;
+  z-index: -999999 !important;
+}
+html, body {
+  top: 0px !important;
+  position: static !important;
+  margin-top: 0px !important;
+  transform: none !important;
+}
+#google_translate_element {
+  display: none !important;
+  position: absolute !important;
+  top: -9999px !important;
+  left: -9999px !important;
+  visibility: hidden !important;
+}
+.goog-text-highlight {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* ── Right zone ────────────────────────────────────────────── */
+.sn-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+
+/* ── Auth buttons (guest) ──────────────────────────────────── */
+.sn-btn-ghost{
+  display:inline-flex;align-items:center;gap:6px;
+  text-decoration:none;color:var(--brand);
+  border:1.5px solid var(--brand);
+  border-radius:var(--radius-pill);
+  padding:6px 14px;
+  font-size:.82rem;font-weight:750;
+  transition:background .18s,color .18s;
+  white-space:nowrap;
+  font-family:'Segoe UI',system-ui,sans-serif;
+}
+.sn-btn-ghost:hover{background:var(--brand);color:#fff;}
+.sn-btn-solid{
+  display:inline-flex;align-items:center;gap:6px;
+  text-decoration:none;color:#fff;
+  background:linear-gradient(135deg,#7c3aed,#9c27b0);
+  border:none;
+  border-radius:var(--radius-pill);
+  padding:7px 16px;
+  font-size:.82rem;font-weight:750;
+  box-shadow:0 3px 12px rgba(103,58,183,.3);
+  transition:box-shadow .18s,transform .15s;
+  white-space:nowrap;
+  cursor:pointer;
+  font-family:'Segoe UI',system-ui,sans-serif;
+}
+.sn-btn-solid:hover{box-shadow:0 5px 18px rgba(103,58,183,.45);transform:translateY(-1px);}
+
+/* ── Account dropdown (Elevated Real-Platform UI) ──────────── */
+.sn-account{position:relative;}
+.sn-account summary{
+  list-style:none;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+  background:#fff;
+  border:1.5px solid var(--border);
+  border-radius:var(--radius-pill);
+  padding:4px 14px 4px 5px;
+  font-size:.85rem;
+  font-weight:750;
+  color:var(--ink);
+  transition:all .18s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family:'Segoe UI',system-ui,sans-serif;
+  user-select:none;
+  white-space:nowrap;
+  box-shadow:0 2px 8px rgba(103,58,183,.05);
+}
+.sn-account summary::-webkit-details-marker{display:none;}
+.sn-account summary:focus{outline:none;}
+.sn-account summary:hover,
+.sn-account[open] summary{
+  border-color:var(--brand);
+  color:var(--brand);
+  box-shadow:0 4px 14px rgba(103,58,183,.16);
+  transform:translateY(-1px);
+}
+
+/* Account Logo & Avatar */
+.sn-acc-avatar{
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  position:relative;
+  transition:transform .2s ease;
+}
+.sn-acc-avatar-guest{
+  background:linear-gradient(135deg,#f3e8ff 0%,#ede7f6 100%);
+  color:var(--brand);
+  border:1.5px solid #d8b4fe;
+  box-shadow:0 2px 6px rgba(103,58,183,.14);
+}
+.sn-acc-avatar-guest svg{
+  width:16px;
+  height:16px;
+  display:block;
+}
+.sn-acc-avatar-auth{
+  background:linear-gradient(135deg,#7c3aed 0%,#a855f7 100%);
+  color:#fff;
+  font-weight:900;
+  font-size:.82rem;
+  letter-spacing:-.02em;
+  box-shadow:0 2px 8px rgba(124,58,237,.35);
+  border:1.5px solid #fff;
+}
+.sn-acc-avatar-photo{
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  object-fit:cover;
+  object-position:center;
+  display:block;
+}
+.sn-status-dot{
+  position:absolute;
+  bottom:-1px;
+  right:-1px;
+  width:8px;
+  height:8px;
+  background:#22c55e;
+  border-radius:50%;
+  border:1.5px solid #fff;
+  box-shadow:0 0 0 1px rgba(34,197,94,.4);
+}
+.sn-acc-label{
+  font-weight:750;
+  font-size:.84rem;
+  color:var(--ink);
+  line-height:1;
+}
+.sn-account summary:hover .sn-acc-label,
+.sn-account[open] summary .sn-acc-label{
+  color:var(--brand);
+}
+.sn-chevron-svg{
+  width:14px;
+  height:14px;
+  color:var(--muted);
+  transition:transform .2s cubic-bezier(.4,0,.2,1);
+  margin-left:1px;
+  flex-shrink:0;
+}
+.sn-account[open] .sn-chevron-svg{
+  transform:rotate(180deg);
+  color:var(--brand);
+}
+
+.sn-panel{
+  position:absolute;
+  right:0;
+  top:calc(100% + 8px);
+  min-width:235px;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:8px;
+  box-shadow:0 16px 40px rgba(18,9,32,.14);
+  z-index:200;
+  animation:sn-panel-in .16s cubic-bezier(.4,0,.2,1) both;
+}
+@keyframes sn-panel-in{
+  from{opacity:0;transform:translateY(-6px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* User Card inside Dropdown Panel */
+.sn-panel-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  background:#f9f6fc;
+  border-radius:12px;
+  margin-bottom:6px;
+  border:1px solid #efe8f8;
+}
+.sn-panel-header-info{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+.sn-panel-user-name{
+  font-size:.88rem;
+  font-weight:850;
+  color:var(--ink);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  line-height:1.2;
+}
+.sn-panel-user-sub{
+  font-size:.72rem;
+  font-weight:700;
+  color:var(--brand);
+  margin-top:2px;
+  letter-spacing:.02em;
+}
+
+.sn-clean-item{
+  display:flex !important;
+  align-items:center !important;
+  gap:10px !important;
+  width:100% !important;
+  padding:9px 12px !important;
+  font-size:.86rem !important;
+  font-weight:700 !important;
+  color:var(--ink) !important;
+  text-decoration:none !important;
+  border-radius:10px !important;
+  background:transparent !important;
+  border:none !important;
+  text-align:left !important;
+  cursor:pointer !important;
+  transition:background .15s,color .15s,transform .15s !important;
+  box-sizing:border-box !important;
+  font-family:'Segoe UI',system-ui,sans-serif !important;
+}
+.sn-clean-item:hover{
+  background:#f5f0fb !important;
+  color:var(--brand) !important;
+  transform:translateX(2px);
+}
+.sn-clean-item.sn-item-primary{
+  background:linear-gradient(135deg,#7c3aed,#9c27b0) !important;
+  color:#fff !important;
+  box-shadow:0 3px 10px rgba(124,58,237,.25) !important;
+  margin-bottom:4px;
+}
+.sn-clean-item.sn-item-primary:hover{
+  background:linear-gradient(135deg,#6d28d9,#8b1aa0) !important;
+  color:#fff !important;
+  transform:translateY(-1px) !important;
+}
+.sn-clean-logout{
+  color:#dc2626 !important;
+}
+.sn-clean-logout:hover{
+  background:#fef2f2 !important;
+  color:#b91c1c !important;
+}
+.sn-panel .sn-panel-sep{
+  height:1px;
+  background:var(--border);
+  margin:6px 0;
+}
+.sn-panel form{margin:0;}
+.sn-item-icon{
+  font-size:.95rem;
+  width:18px;
+  text-align:center;
+  flex-shrink:0;
+}
+
+/* ── Hamburger button (mobile) ─────────────────────────────── */
+.sn-hamburger{
+  display:none;
+  flex-direction:column;align-items:center;justify-content:center;
+  width:44px;height:44px;min-width:44px;min-height:44px;
+  border:1.5px solid var(--border);
+  border-radius:12px;
+  cursor:pointer;gap:5.5px;
+  background:#ffffff;
+  flex-shrink:0;
+  padding:0;
+  transition:border-color .18s, background .18s, transform .15s;
+  -webkit-tap-highlight-color:transparent;
+  outline:none;
+}
+.sn-hamburger:hover,.sn-hamburger:active{border-color:var(--brand);background:var(--brand-light);}
+.sn-ham-bar{
+  width:20px;height:2.2px;
+  background:var(--ink);
+  border-radius:2px;
+  transition:transform .25s cubic-bezier(.4,0,.2,1), opacity .2s;
+  transform-origin:center;
+  pointer-events:none;
+}
+/* When open: animate to X */
+.sn-hamburger.open .sn-ham-bar:nth-child(1){transform:translateY(7.7px) rotate(45deg);}
+.sn-hamburger.open .sn-ham-bar:nth-child(2){opacity:0;transform:scaleX(0);}
+.sn-hamburger.open .sn-ham-bar:nth-child(3){transform:translateY(-7.7px) rotate(-45deg);}
+
+/* ── Mobile backdrop overlay ───────────────────────────────── */
+.sn-backdrop{
+  display:none;
+  position:fixed;
+  inset:0;
+  top:0;
+  width:100vw;
+  height:100vh;
+  height:100dvh;
+  background:rgba(15,8,26,.72);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  z-index:99998;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.sn-backdrop.open{
+  display:block;
+  opacity:1;
+  pointer-events:auto;
+}
+
+/* ── Mobile Header Open State ───────────────────────────────── */
+.sn-header.menu-open{
+  position:fixed !important;
+  top:0 !important;
+  left:0 !important;
+  right:0 !important;
+  width:100% !important;
+  z-index:100002 !important;
+  background:#ffffff !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  box-shadow:0 4px 20px rgba(18,9,32,.12) !important;
+}
+
+body.sn-menu-locked .insta-bottom-nav,
+body.sn-menu-locked .wa-float {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* ── Mobile drawer (Root Level - Completely Opaque & Fullscreen Protected) ── */
+.sn-mobile-drawer{
+  display:none;
+  position:fixed !important;
+  top:var(--nav-h) !important;
+  left:0 !important;
+  right:0 !important;
+  bottom:0 !important;
+  width:100% !important;
+  height:calc(100vh - var(--nav-h)) !important;
+  height:calc(100dvh - var(--nav-h)) !important;
+  background:#ffffff !important;
+  background:linear-gradient(180deg, #ffffff 0%, #faf8fd 100%) !important;
+  z-index:100000 !important;
+  overflow-y:auto !important;
+  -webkit-overflow-scrolling:touch !important;
+  overscroll-behavior-y:contain !important;
+  touch-action:pan-y !important;
+  transform:translateY(-100%);
+  opacity:0;
+  visibility:hidden;
+  transition:transform .3s cubic-bezier(.16,1,.3,1), opacity .2s ease, visibility .2s ease;
+  box-shadow:0 24px 60px rgba(18,9,32,.25);
+}
+.sn-mobile-drawer.open{
+  transform:translateY(0);
+  opacity:1;
+  visibility:visible;
+}
+.sn-drawer-inner{
+  padding:14px 16px 120px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  max-width:540px;
+  margin:0 auto;
+  box-sizing:border-box;
+}
+.sn-drawer-header{
+  padding:13px 15px;
+  background:linear-gradient(135deg, rgba(124, 58, 237, 0.05) 0%, rgba(217, 70, 239, 0.05) 100%);
+  border:1.5px solid rgba(124, 58, 237, 0.14);
+  border-radius:15px;
+  margin-bottom:6px;
+}
+.sn-drawer-user{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.sn-drawer-user-info strong{
+  display:block;
+  color:var(--ink);
+  font-size:.95rem;
+  font-weight:800;
+}
+.sn-drawer-user-info span{
+  display:block;
+  color:var(--muted);
+  font-size:.78rem;
+}
+
+/* ── Modern App-Style Navigation Cards ── */
+.sn-mobile-links{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  width:100%;
+}
+.sn-drawer-link{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  width:100%;
+  padding:12px 14px;
+  background:#ffffff;
+  border:1px solid rgba(103,58,183,0.10);
+  border-radius:14px;
+  text-decoration:none;
+  color:var(--ink);
+  box-shadow:0 2px 7px rgba(18,9,32,0.025);
+  transition:background .15s, border-color .15s, transform .12s, box-shadow .15s;
+  -webkit-tap-highlight-color:transparent;
+  box-sizing:border-box;
+}
+.sn-drawer-link:active{
+  background:#fbf9fe;
+  border-color:#7c3aed;
+  transform:scale(.985);
+}
+.sn-drawer-link-left{
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
+.sn-drawer-badge{
+  width:38px;
+  height:38px;
+  min-width:38px;
+  border-radius:11px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.15rem;
+  flex-shrink:0;
+}
+.sn-drawer-badge.b-events   { background:#f3e8ff; border:1px solid #e9d5ff; }
+.sn-drawer-badge.b-food     { background:#ffedd5; border:1px solid #fed7aa; }
+.sn-drawer-badge.b-plots    { background:#dcfce7; border:1px solid #bbf7d0; }
+.sn-drawer-badge.b-halls    { background:#dbeafe; border:1px solid #bfdbfe; }
+.sn-drawer-badge.b-rooms    { background:#fef3c7; border:1px solid #fde68a; }
+.sn-drawer-badge.b-contact  { background:#ccfbf1; border:1px solid #99f6e4; }
+.sn-drawer-badge.b-about    { background:#fae8ff; border:1px solid #f5d0fe; }
+
+.sn-drawer-col{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  text-align:left;
+}
+.sn-drawer-title{
+  font-size:.95rem;
+  font-weight:800;
+  color:var(--ink);
+  letter-spacing:-.01em;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.sn-drawer-sub{
+  font-size:.74rem;
+  font-weight:550;
+  color:var(--muted);
+}
+.sn-drawer-arrow{
+  font-size:1.15rem;
+  font-weight:700;
+  color:#a1a1aa;
+  transition:transform .15s ease, color .15s ease;
+  padding-right:2px;
+}
+.sn-drawer-link:active .sn-drawer-arrow{
+  transform:translateX(3px);
+  color:#7c3aed;
+}
+
+/* Saffron Food Hub Special Card */
+.sn-drawer-food-special{
+  background:linear-gradient(135deg,#ff6d00 0%,#ff8c00 100%) !important;
+  border-color:#ff6d00 !important;
+  box-shadow:0 4px 16px rgba(255,109,0,.35) !important;
+}
+.sn-drawer-food-special .sn-drawer-title{
+  color:#ffffff !important;
+}
+.sn-drawer-food-special .sn-drawer-sub{
+  color:rgba(255,255,255,.9) !important;
+}
+.sn-drawer-food-special .sn-drawer-arrow{
+  color:#ffffff !important;
+}
+.sn-drawer-food-special .sn-drawer-badge{
+  background:rgba(255,255,255,.22) !important;
+  border:1px solid rgba(255,255,255,.35) !important;
+}
+.sn-food-hot-pill{
+  background:#ffffff;
+  color:#ea580c;
+  font-size:.62rem;
+  font-weight:900;
+  padding:2px 7px;
+  border-radius:9999px;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  box-shadow:0 2px 6px rgba(0,0,0,0.12);
+}
+
+.sn-mobile-sep{
+  height:1px;
+  background:var(--border);
+  margin:6px 0;
+}
+.sn-drawer-cta-strip{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:4px;
+}
+.sn-drawer-cta-strip a{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:12px 14px;
+  border-radius:12px;
+  font-size:.88rem;
+  font-weight:800;
+  text-decoration:none;
+  text-align:center;
+  -webkit-tap-highlight-color:transparent;
+  box-shadow:0 2px 6px rgba(0,0,0,0.03);
+  transition:transform .12s;
+}
+.sn-drawer-cta-strip a:active{transform:scale(.98);}
+.sn-cta-call{
+  background:#f3f0fa;
+  color:var(--brand);
+  border:1.5px solid #dfd4f2;
+}
+.sn-cta-wa{
+  background:#e8f8ee;
+  color:#15803d;
+  border:1.5px solid #bbf2cb;
+}
+.sn-mobile-auth-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:4px;
+}
+.sn-mobile-auth-row a{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:12px 16px;
+  border-radius:var(--radius-pill);
+  font-size:.9rem;
+  font-weight:800;
+  text-decoration:none;
+  text-align:center;
+}
+.sn-drawer-close-btn{
+  margin-top:14px;
+  padding:13px 18px;
+  border-radius:12px;
+  border:1.5px solid #e5e7eb;
+  background:#f9fafb;
+  color:#4b5563;
+  font-size:.9rem;
+  font-weight:800;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  width:100%;
+  transition:background .15s, color .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.sn-drawer-close-btn:active{
+  background:#e5e7eb;
+  color:#111827;
+}
+
+/* ── Responsive breakpoint ─────────────────────────────────── */
+@media(max-width:860px){
+  .sn-nav{display:none;}
+  .sn-hamburger{display:flex;}
+  .sn-mobile-drawer{display:block;}
+  .sn-right .sn-btn-ghost,.sn-right .sn-btn-solid{display:none;}
+  .sn-account{display:inline-block;}
+  .sn-account summary{padding:4px 10px 4px 5px; font-size:.82rem;}
+  .sn-panel{right:0; min-width:220px;}
+}
+@media(max-width:460px){
+  .sn-brand-text{font-size:.95rem;}
+  .sn-brand-sub{font-size:.56rem;}
+  .sn-brand-emblem{width:36px;height:36px;}
+  .sn-inner{padding:0 12px; gap:8px;}
+  .sn-acc-label{display:none;}
+  .sn-account summary{padding:4px 6px;}
+  .sn-panel{right:-30px;}
+}
+@media(max-width:360px){
+  .sn-brand-text{font-size:.85rem;}
+  .sn-brand-emblem{width:32px;height:32px;}
+}
+
+/* ── Bulletproof Mobile Body Scroll Lock ───────────────────── */
+html.sn-menu-locked,
+body.sn-menu-locked{
+  overflow:hidden !important;
+  height:100% !important;
+  max-height:100% !important;
+  overscroll-behavior:none !important;
+}
+body.sn-menu-locked .insta-bottom-nav,
+body.sn-menu-locked .wa-float,
+body.sn-menu-locked .gtranslate_wrapper,
+body.sn-menu-locked #google_translate_element,
+body.sn-menu-locked .skiptranslate{
+  display:none !important;
+  opacity:0 !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
+</style>
+
+<header class="sn-header" id="snHeader" role="banner">
+  <div class="sn-inner">
+
+    {# ── Brand (Authentic Heritage Emblem & Logo) ── #}
+    <a class="sn-brand" href="{% url 'home' %}" aria-label="Amazing Ahmedabad — Home">
+      <div class="sn-brand-emblem" aria-hidden="true">
+        <img class="sn-brand-founder-img" src="{% static 'bookings/developer-badge.jpg' %}?v=20261031v2" alt="Amazing Ahmedabad Web Developer" />
+      </div>
+      <div class="sn-brand-col">
+        <span class="sn-brand-text">Amazing&nbsp;<em>Ahmedabad</em></span>
+        <span class="sn-brand-sub">Celebration Portal</span>
+      </div>
+    </a>
+
+    {# ── Desktop nav links ── #}
+    <nav class="sn-nav" aria-label="Main navigation">
+      <a href="{% url 'events' %}" class="sn-link-events">Events</a>
+      <a href="{% url 'food_hub' %}" class="sn-navratri sn-link-food" aria-label="Amdavad Food Hub — Snacks, Chai, Coffee & Street Food">
+        <span class="sn-navratri-dot" aria-hidden="true"></span>Food&nbsp;&amp;&nbsp;Snacks&nbsp;☕
+      </a>
+
+      {# ── Venues Dropdown (Party Plots & Wedding Halls) ── #}
+      <details class="sn-nav-dropdown" id="snVenuesDropdown">
+        <summary aria-haspopup="true" aria-label="Celebration Venues Menu">
+          <span>Venues</span>
+          <svg class="sn-nav-dropdown-arrow" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </summary>
+        <div class="sn-nav-menu" role="menu">
+          <a href="{% url 'party_plots' %}" class="sn-nav-menu-item" role="menuitem">
+            <span class="sn-nav-menu-icon b-plots">🌿</span>
+            <div class="sn-nav-menu-col">
+              <span class="sn-nav-menu-title">Hourly Party Plots</span>
+              <span class="sn-nav-menu-sub">Open-air lawns &amp; celebrations</span>
+            </div>
+          </a>
+          <a href="{% url 'wedding_halls' %}" class="sn-nav-menu-item" role="menuitem">
+            <span class="sn-nav-menu-icon b-halls">🏛️</span>
+            <div class="sn-nav-menu-col">
+              <span class="sn-nav-menu-title">Wedding Banquet Halls</span>
+              <span class="sn-nav-menu-sub">5-star AC banquet halls</span>
+            </div>
+          </a>
+        </div>
+      </details>
+
+      <a href="{% url 'rooms' %}" class="sn-link-rooms">Luxury Rooms</a>
+
+      {# ── About & Contact Dropdown ── #}
+      <details class="sn-nav-dropdown" id="snAboutContactDropdown">
+        <summary aria-haspopup="true" aria-label="About and Contact Menu">
+          <span>About &amp; Contact</span>
+          <svg class="sn-nav-dropdown-arrow" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </summary>
+        <div class="sn-nav-menu" role="menu">
+          <a href="{% url 'contact' %}" class="sn-nav-menu-item" role="menuitem">
+            <span class="sn-nav-menu-icon b-contact">📞</span>
+            <div class="sn-nav-menu-col">
+              <span class="sn-nav-menu-title">Contact &amp; Inquiries</span>
+              <span class="sn-nav-menu-sub">15-minute response concierge desk</span>
+            </div>
+          </a>
+          <a href="{% url 'about' %}" class="sn-nav-menu-item" role="menuitem">
+            <span class="sn-nav-menu-icon b-about">✨</span>
+            <div class="sn-nav-menu-col">
+              <span class="sn-nav-menu-title">About Us &amp; Developer</span>
+              <span class="sn-nav-menu-sub">Platform vision, story &amp; creator</span>
+            </div>
+          </a>
+        </div>
+      </details>
+    </nav>
+
+    {# ── Right side (Account Dropdown with Real Avatar & Logo) ── #}
+    <div class="sn-right">
+      {% if request.user.is_authenticated %}
+        {# Logged In User Dropdown: Real Initial / Photo Avatar + Online Dot + Rich Menu #}
+        <details class="sn-account" id="snUserDropdown">
+          <summary aria-haspopup="true" aria-label="Account Menu">
+            <div class="sn-acc-avatar sn-acc-avatar-auth" aria-hidden="true">
+              {% if request.user.profile and request.user.profile.profile_photo %}
+                <img src="{{ request.user.profile.profile_photo.url }}" alt="{{ request.user.first_name|default:request.user.username }}" class="sn-acc-avatar-photo" />
+              {% else %}
+                <span>{{ request.user.first_name|default:request.user.username|slice:":1"|upper }}</span>
+              {% endif %}
+              <span class="sn-status-dot" title="Active"></span>
+            </div>
+            <span class="sn-acc-label">{{ request.user.first_name|default:request.user.username }}</span>
+            <svg class="sn-chevron-svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </summary>
+          <div class="sn-panel" role="menu">
+            <div class="sn-panel-header">
+              <div class="sn-acc-avatar sn-acc-avatar-auth" style="width:36px;height:36px;font-size:.9rem;">
+                {% if request.user.profile and request.user.profile.profile_photo %}
+                  <img src="{{ request.user.profile.profile_photo.url }}" alt="{{ request.user.first_name|default:request.user.username }}" class="sn-acc-avatar-photo" />
+                {% else %}
+                  <span>{{ request.user.first_name|default:request.user.username|slice:":1"|upper }}</span>
+                {% endif %}
+                <span class="sn-status-dot"></span>
+              </div>
+              <div class="sn-panel-header-info">
+                <span class="sn-panel-user-name">{{ request.user.first_name|default:request.user.username }}</span>
+                <span class="sn-panel-user-sub">✓ Verified Member</span>
+              </div>
+            </div>
+            <a href="{% url 'account' %}" role="menuitem" class="sn-clean-item">
+              <span class="sn-item-icon">🎟️</span> My Bookings &amp; Passes
+            </a>
+            <a href="{% url 'profile' %}" role="menuitem" class="sn-clean-item">
+              <span class="sn-item-icon">👤</span> My Profile &amp; Photo
+            </a>
+
+
+            {# Language Switcher inside Account Dropdown #}
+            <div class="sn-panel-sep"></div>
+            <div class="sn-panel-lang-wrap">
+              <div class="sn-panel-lang-title">🌐 Language / ભાષા</div>
+              <div class="sn-panel-lang-grid">
+                <button type="button" class="sn-panel-lang-btn active" data-lang="en" data-code="EN">English</button>
+                <button type="button" class="sn-panel-lang-btn" data-lang="gu" data-code="GU">ગુજરાતી</button>
+                <button type="button" class="sn-panel-lang-btn" data-lang="hi" data-code="HI">हिन्दी</button>
+                <button type="button" class="sn-panel-lang-btn" data-lang="nl" data-code="NL">Nederlands</button>
+                <button type="button" class="sn-panel-lang-btn" data-lang="fr" data-code="FR">Français</button>
+                <button type="button" class="sn-panel-lang-btn" data-lang="de" data-code="DE">Deutsch</button>
+              </div>
+            </div>
+
+            <div class="sn-panel-sep"></div>
+            <form method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="sn-clean-item sn-clean-logout" role="menuitem">
+                <span class="sn-item-icon">🚪</span> Logout
+              </button>
+            </form>
+          </div>
+        </details>
+      {% else %}
+        {# Guest Dropdown: Sleek User Profile Logo + Clean Auth & Booking Tracking + Language Selector #}
+        <details class="sn-account" id="snGuestDropdown">
+          <summary aria-haspopup="true" aria-label="Account Menu">
+            <div class="sn-acc-avatar sn-acc-avatar-guest" aria-hidden="true">
+              <svg class="sn-acc-avatar-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+            <span class="sn-acc-label">Account</span>
+            <svg class="sn-chevron-svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </summary>
+          <div class="sn-panel" role="menu">
+            <div class="sn-panel-header">
+              <div class="sn-acc-avatar sn-acc-avatar-guest" style="width:34px;height:34px;">
+                <svg class="sn-acc-avatar-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <div class="sn-panel-header-info">
+                <span class="sn-panel-user-name">Welcome!</span>
+                <span class="sn-panel-user-sub">Guest Explorer · Amdavad</span>
+              </div>
+            </div>
+            <a href="{% url 'login' %}" role="menuitem" class="sn-clean-item sn-item-primary">
+              <span class="sn-item-icon">🔑</span> Log In
+            </a>
+            <a href="{% url 'register' %}" role="menuitem" class="sn-clean-item">
+              <span class="sn-item-icon">📝</span> Create Account
+            </a>
+
+
+            {# Language Switcher inside Guest Dropdown #}
+            <div class="sn-panel-sep"></div>
+            <div class="sn-panel-lang-wrap">
+              <div class="sn-panel-lang-title">🌐 Language / ભાષા</div>
+              <div class="sn-panel-lang-grid">
+                <button type="button" class="sn-panel-lang-btn active" data-lang="en" data-code="EN">English</button>
+                <button type="button" class="sn-panel-lang-btn" data-lang="gu" data-code="GU">ગુજરાતી</button>
+                <button type="button" class="sn-panel-lang-btn" data-lang="hi" data-code="HI">हिन्दी</button>
+                <button type="button" class="sn-panel-lang-btn" data-lang="nl" data-code="NL">Nederlands</button>
+                <button type="button" class="sn-panel-lang-btn" data-lang="fr" data-code="FR">Français</button>
+                <button type="button" class="sn-panel-lang-btn" data-lang="de" data-code="DE">Deutsch</button>
+              </div>
+            </div>
+          </div>
+        </details>
+      {% endif %}
+    </div>
+
+    {# ── Mobile Hamburger Button ── #}
+    <button type="button" class="sn-hamburger" id="snHamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="snMobileDrawer">
+      <span class="sn-ham-bar"></span>
+      <span class="sn-ham-bar"></span>
+      <span class="sn-ham-bar"></span>
+    </button>
+
+  </div>{# /.sn-inner #}
+</header>
+
+{# ── Backdrop Overlay (Root Level) ── #}
+<div class="sn-backdrop" id="snBackdrop" aria-hidden="true"></div>
+
+{# ── Mobile Slide Drawer (Root Level - Completely Immune to Backdrop-filter Clipping) ── #}
+<div class="sn-mobile-drawer" id="snMobileDrawer" role="dialog" aria-modal="true" aria-label="Mobile Navigation">
+  <div class="sn-drawer-inner">
+
+    {% if request.user.is_authenticated %}
+      <div class="sn-drawer-header">
+        <div class="sn-drawer-user">
+          <div class="sn-acc-avatar sn-acc-avatar-auth" style="width:40px;height:40px;font-size:.95rem;">
+            {% if request.user.profile and request.user.profile.profile_photo %}
+              <img src="{{ request.user.profile.profile_photo.url }}" alt="{{ request.user.first_name|default:request.user.username }}" class="sn-acc-avatar-photo" />
+            {% else %}
+              <span>{{ request.user.first_name|default:request.user.username|slice:":1"|upper }}</span>
+            {% endif %}
+            <span class="sn-status-dot"></span>
+          </div>
+          <div class="sn-drawer-user-info">
+            <strong>{{ request.user.first_name|default:request.user.username }}</strong>
+            <span>Verified Customer · Amazing Ahmedabad</span>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="sn-drawer-header">
+        <div class="sn-drawer-user">
+          <div class="sn-acc-avatar sn-acc-avatar-guest" style="width:40px;height:40px;">
+            <svg class="sn-acc-avatar-svg" style="width:20px;height:20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <div class="sn-drawer-user-info">
+            <strong>Account &amp; Sign In</strong>
+            <span>Manage bookings, passes &amp; hotel stays</span>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <nav class="sn-mobile-links">
+      {# 1. Events & Garba #}
+      <a href="{% url 'events' %}" class="sn-drawer-link">
+        <div class="sn-drawer-link-left">
+          <span class="sn-drawer-badge b-events">🎟️</span>
+          <div class="sn-drawer-col">
+            <span class="sn-drawer-title">Events &amp; Garba</span>
+            <span class="sn-drawer-sub">Passes, cultural nights &amp; live slots</span>
+          </div>
+        </div>
+        <span class="sn-drawer-arrow">›</span>
+      </a>
+
+      {# 2. Food & Snacks (Amdavad Bites) #}
+      <a href="{% url 'food_hub' %}" class="sn-drawer-link sn-drawer-food-special">
+        <div class="sn-drawer-link-left">
+          <span class="sn-drawer-badge b-food">☕</span>
+          <div class="sn-drawer-col">
+            <span class="sn-drawer-title">Food &amp; Snacks (Amdavad Bites) <span class="sn-food-hot-pill">Hot 🔥</span></span>
+            <span class="sn-drawer-sub">Chai, Maskabun, Dalvada &amp; night bites</span>
+          </div>
+        </div>
+        <span class="sn-drawer-arrow">›</span>
+      </a>
+
+      {# 3. Hourly Party Plots #}
+      <a href="{% url 'party_plots' %}" class="sn-drawer-link">
+        <div class="sn-drawer-link-left">
+          <span class="sn-drawer-badge b-plots">🌿</span>
+          <div class="sn-drawer-col">
+            <span class="sn-drawer-title">Hourly Party Plots</span>
+            <span class="sn-drawer-sub">Open-air lawns, weddings &amp; celebrations</span>
+          </div>
+        </div>
+        <span class="sn-drawer-arrow">›</span>
+      </a>
+
+      {# 4. Wedding Banquet Halls #}
+      <a href="{% url 'wedding_halls' %}" class="sn-drawer-link">
+        <div class="sn-drawer-link-left">
+          <span class="sn-drawer-badge b-halls">🏛️</span>
+          <div class="sn-drawer-col">
+            <span class="sn-drawer-title">Wedding Banquet Halls</span>
+            <span class="sn-drawer-sub">5-star AC banquet halls &amp; mandaps</span>
+          </div>
+        </div>
+        <span class="sn-drawer-arrow">›</span>
+      </a>
+
+      {# 5. Luxury Hotel Stays #}
+      <a href="{% url 'rooms' %}" class="sn-drawer-link">
+        <div class="sn-drawer-link-left">
+          <span class="sn-drawer-badge b-rooms">🏨</span>
+          <div class="sn-drawer-col">
+            <span class="sn-drawer-title">Luxury Hotel Stays</span>
+            <span class="sn-drawer-sub">Boutique rooms &amp; celebratory suites</span>
+          </div>
+        </div>
+        <span class="sn-drawer-arrow">›</span>
+      </a>
+
+      {# 6. Contact & Inquiries #}
+      <a href="{% url 'contact' %}" class="sn-drawer-link">
+        <div class="sn-drawer-link-left">
+          <span class="sn-drawer-badge b-contact">📞</span>
+          <div class="sn-drawer-col">
+            <span class="sn-drawer-title">Contact &amp; Inquiries</span>
+            <span class="sn-drawer-sub">15-minute response concierge desk</span>
+          </div>
+        </div>
+        <span class="sn-drawer-arrow">›</span>
+      </a>
+
+      {# 7. About Us & Developer #}
+      <a href="{% url 'about' %}" class="sn-drawer-link">
+        <div class="sn-drawer-link-left">
+          <span class="sn-drawer-badge b-about">✨</span>
+          <div class="sn-drawer-col">
+            <span class="sn-drawer-title">About Us &amp; Developer</span>
+            <span class="sn-drawer-sub">Platform vision, story &amp; creator</span>
+          </div>
+        </div>
+        <span class="sn-drawer-arrow">›</span>
+      </a>
+
+      <!-- Mobile Language Selector -->
+      <div class="sn-mobile-lang-wrap">
+        <div class="sn-mobile-lang-title">
+          <span>🌐 Select Language / ભાષા પસંદ કરો</span>
+        </div>
+        <div class="sn-mobile-lang-grid">
+          <button type="button" class="sn-mobile-lang-btn active" data-lang="en" data-code="EN">English</button>
+          <button type="button" class="sn-mobile-lang-btn" data-lang="gu" data-code="GU">ગુજરાતી</button>
+          <button type="button" class="sn-mobile-lang-btn" data-lang="hi" data-code="HI">हिन्दी</button>
+          <button type="button" class="sn-mobile-lang-btn" data-lang="nl" data-code="NL">Nederlands</button>
+          <button type="button" class="sn-mobile-lang-btn" data-lang="fr" data-code="FR">Français</button>
+          <button type="button" class="sn-mobile-lang-btn" data-lang="de" data-code="DE">Deutsch</button>
+          <button type="button" class="sn-mobile-lang-btn" data-lang="da" data-code="DA">Dansk</button>
+        </div>
+      </div>
+
+      <div class="sn-mobile-sep"></div>
+
+      {% if request.user.is_authenticated %}
+        <a href="{% url 'profile' %}" class="sn-drawer-link">
+          <div class="sn-drawer-link-left">
+            <span class="sn-drawer-badge" style="background:#f3f4f6;">👤</span>
+            <div class="sn-drawer-col">
+              <span class="sn-drawer-title">My Profile &amp; Bookings</span>
+              <span class="sn-drawer-sub">View tickets, profile details</span>
+            </div>
+          </div>
+          <span class="sn-drawer-arrow">›</span>
+        </a>
+
+        <form method="post" action="{% url 'logout' %}" style="margin-top:4px;">
+          {% csrf_token %}
+          <button type="submit" style="color:#c62828;background:#fff5f5;border:1px solid #ffd5d5;border-radius:12px;padding:12px 14px;width:100%;cursor:pointer;font-weight:750;display:flex;align-items:center;justify-content:space-between;">
+            <span class="sn-drawer-link-left">
+              <span style="font-size:1.1rem;">🚪</span>
+              <span style="font-size:.92rem;">Logout from Account</span>
+            </span>
+            <span style="color:#c62828;font-weight:700;">›</span>
+          </button>
+        </form>
+      {% else %}
+        <div class="sn-mobile-auth-row">
+          <a href="{% url 'login' %}" class="sn-btn-ghost">🔑 Log In</a>
+          <a href="{% url 'register' %}" class="sn-btn-solid">📝 Register</a>
+        </div>
+      {% endif %}
+
+      <div class="sn-mobile-sep"></div>
+
+      <!-- Quick Support Call & WhatsApp -->
+      <div style="font-size:.78rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:4px 6px;">
+        Ahmedabad Concierge Hotline:
+      </div>
+      <div class="sn-drawer-cta-strip">
+        <a href="tel:+917203928160" class="sn-cta-call">📞 Call Concierge</a>
+        <a href="https://wa.me/917203928160?text=Hi%2C+I+need+help+with+Amazing+Ahmedabad+booking" class="sn-cta-wa" target="_blank" rel="noopener">💬 WhatsApp (15m)</a>
+      </div>
+
+      <!-- Convenient Bottom Close Button -->
+      <button type="button" class="sn-drawer-close-btn" id="snDrawerCloseBottom" aria-label="Close menu">
+        ✕ Close Menu
+      </button>
+    </nav>
+
+  </div>
+</div>
+
+<script>
+(function() {
+  var header = document.getElementById('snHeader');
+  var btn = document.getElementById('snHamburger');
+  var drawer = document.getElementById('snMobileDrawer');
+  var backdrop = document.getElementById('snBackdrop');
+  var bottomCloseBtn = document.getElementById('snDrawerCloseBottom');
+  if (!btn || !drawer || !backdrop) return;
+
+  var scrollLockY = 0;
+  var isMenuOpen = false;
+
+  function openMenu() {
+    if (isMenuOpen) return;
+    isMenuOpen = true;
+
+    // 1. Record exact page scroll position
+    scrollLockY = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+
+    // 2. Add open classes
+    btn.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+    drawer.classList.add('open');
+    backdrop.classList.add('open');
+    if (header) header.classList.add('menu-open');
+
+    // 3. Absolute Bulletproof Body Scroll Freeze on Mobile
+    document.documentElement.classList.add('sn-menu-locked');
+    document.body.classList.add('sn-menu-locked');
+    document.body.style.position = 'fixed';
+    document.body.style.top = '-' + scrollLockY + 'px';
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    if (!isMenuOpen) return;
+    isMenuOpen = false;
+
+    // 1. Remove open classes
+    btn.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+    drawer.classList.remove('open');
+    backdrop.classList.remove('open');
+    if (header) header.classList.remove('menu-open');
+
+    // 2. Unlock body
+    document.documentElement.classList.remove('sn-menu-locked');
+    document.body.classList.remove('sn-menu-locked');
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.width = '';
+    document.body.style.overflow = '';
+
+    // 3. Seamlessly restore exact scroll position
+    window.scrollTo(0, scrollLockY);
+  }
+
+  function toggleMenu(e) {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    if (isMenuOpen) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  }
+
+  btn.addEventListener('click', toggleMenu);
+  backdrop.addEventListener('click', closeMenu);
+  if (bottomCloseBtn) {
+    bottomCloseBtn.addEventListener('click', closeMenu);
+  }
+
+  // Prevent background touch scrolling on backdrop
+  backdrop.addEventListener('touchmove', function(e) {
+    e.preventDefault();
+  }, { passive: false });
+
+  // Prevent background touch scrolling on header
+  if (header) {
+    header.addEventListener('touchmove', function(e) {
+      if (isMenuOpen && !e.target.closest('#snHamburger') && !e.target.closest('.sn-account')) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+  }
+
+  // Auto-close on nav links (excluding language switcher buttons)
+  drawer.querySelectorAll('a, button[type="submit"]').forEach(function(el) {
+    el.addEventListener('click', function() {
+      if (el.classList.contains('sn-mobile-lang-btn') || el.id === 'snDrawerCloseBottom') return;
+      setTimeout(closeMenu, 150);
+    });
+  });
+
+  // Escape key to close
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && isMenuOpen) {
+      closeMenu();
+    }
+  });
+
+  // Close when window resized to desktop
+  window.addEventListener('resize', function() {
+    if (window.innerWidth > 860 && isMenuOpen) {
+      closeMenu();
+    }
+  });
+
+  // Close details dropdown when clicking outside
+  document.addEventListener('click', function(e) {
+    document.querySelectorAll('details.sn-account[open], details.sn-nav-dropdown[open], details.sn-lang[open]').forEach(function(details) {
+      if (!details.contains(e.target)) {
+        details.removeAttribute('open');
+      }
+    });
+  });
+})();
+</script>
+
+<!-- Google Translate Element & Custom Language Switcher -->
+<div id="google_translate_element" style="display:none !important;" aria-hidden="true"></div>
+
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  if (window.google && window.google.translate) {
+    new google.translate.TranslateElement({
+      pageLanguage: 'en',
+      includedLanguages: 'en,gu,hi,nl,fr,de,da',
+      autoDisplay: false
+    }, 'google_translate_element');
+  }
+}
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async defer></script>
+
+<script type="text/javascript">
+(function() {
+  var LANG_KEY = 'user_site_lang';
+  var LANG_CODE_MAP = {
+    'en': 'EN',
+    'nl': 'NL',
+    'fr': 'FR',
+    'de': 'DE',
+    'da': 'DA',
+    'gu': 'GU',
+    'hi': 'HI'
+  };
+
+  var DICTIONARY = {
+    'gu': {
+      '.sn-link-events': 'ઇવેન્ટ્સ',
+      '.sn-link-food': 'ફૂડ અને નાસ્તા ☕',
+      '.sn-link-party-plots': 'પાર્ટી પ્લોટ્સ',
+      '.sn-link-wedding-halls': 'વેડિંગ હોલ્સ',
+      '.sn-link-rooms': 'લક્ઝરી રૂમ્સ',
+      '.sn-link-contact': 'સંપર્ક'
+    },
+    'hi': {
+      '.sn-link-events': 'इवेंट्स',
+      '.sn-link-food': 'फ़ूड और स्नैक्स ☕',
+      '.sn-link-party-plots': 'पार्टी प्लॉट्स',
+      '.sn-link-wedding-halls': 'वेडिंग हॉल्स',
+      '.sn-link-rooms': 'लग्जरी रूम्स',
+      '.sn-link-contact': 'संपर्क'
+    },
+    'nl': {
+      '.sn-link-events': 'Evenementen',
+      '.sn-link-food': 'Eten & Snacks ☕',
+      '.sn-link-party-plots': 'Feestlocaties',
+      '.sn-link-wedding-halls': 'Trouwzalen',
+      '.sn-link-rooms': 'Luxe Kamers',
+      '.sn-link-contact': 'Contact'
+    },
+    'fr': {
+      '.sn-link-events': 'Événements',
+      '.sn-link-food': 'Nourriture & Snacks ☕',
+      '.sn-link-party-plots': 'Lieux de Fête',
+      '.sn-link-wedding-halls': 'Salles de Mariage',
+      '.sn-link-rooms': 'Chambres de Luxe',
+      '.sn-link-contact': 'Contact'
+    },
+    'de': {
+      '.sn-link-events': 'Events',
+      '.sn-link-food': 'Essen & Snacks ☕',
+      '.sn-link-party-plots': 'Partylocations',
+      '.sn-link-wedding-halls': 'Hochzeitssäle',
+      '.sn-link-rooms': 'Luxuszimmer',
+      '.sn-link-contact': 'Kontakt'
+    },
+    'da': {
+      '.sn-link-events': 'Begivenheder',
+      '.sn-link-food': 'Mad & Snacks ☕',
+      '.sn-link-party-plots': 'Feststeder',
+      '.sn-link-wedding-halls': 'Bryllupssale',
+      '.sn-link-rooms': 'Luksusværelser',
+      '.sn-link-contact': 'Kontakt'
+    }
+  };
+
+  function getStoredLang() {
+    var stored = localStorage.getItem(LANG_KEY);
+    if (stored) return stored;
+    var match = document.cookie.match(/(?:^|;\s*)googtrans=\/en\/([a-z]{2})/i);
+    return match ? match[1].toLowerCase() : 'en';
+  }
+
+  function setTransCookie(lang) {
+    var hostname = window.location.hostname;
+    if (lang === 'en') {
+      document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + hostname + ";";
+      if (hostname.indexOf('.') !== -1) {
+        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=." + hostname + ";";
+      }
+    } else {
+      var val = "/en/" + lang;
+      var exp = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString();
+      document.cookie = "googtrans=" + val + "; expires=" + exp + "; path=/;";
+      document.cookie = "googtrans=" + val + "; expires=" + exp + "; path=/; domain=" + hostname + ";";
+      if (hostname.indexOf('.') !== -1) {
+        document.cookie = "googtrans=" + val + "; expires=" + exp + "; path=/; domain=." + hostname + ";";
+      }
+    }
+  }
+
+  function applyInstantDictionary(lang) {
+    if (DICTIONARY[lang]) {
+      var d = DICTIONARY[lang];
+      for (var selector in d) {
+        var el = document.querySelector(selector);
+        if (el) {
+          if (selector === '.sn-link-food') {
+            el.innerHTML = '<span class="sn-navratri-dot" aria-hidden="true"></span>' + d[selector];
+          } else {
+            el.textContent = d[selector];
+          }
+        }
+      }
+    }
+  }
+
+  function updateActiveState(lang) {
+    var code = LANG_CODE_MAP[lang] || 'EN';
+    var labelEl = document.getElementById('snCurrentLang');
+    if (labelEl) labelEl.textContent = code;
+
+    document.querySelectorAll('.sn-lang-item, .sn-panel-lang-btn, .sn-mobile-lang-btn').forEach(function(item) {
+      if (item.getAttribute('data-lang') === lang) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
+
+    applyInstantDictionary(lang);
+  }
+
+  function switchLanguage(lang) {
+    var prevLang = getStoredLang();
+    localStorage.setItem(LANG_KEY, lang);
+    setTransCookie(lang);
+    updateActiveState(lang);
+
+    var details = document.getElementById('snLangDropdown');
+    if (details) details.removeAttribute('open');
+    document.querySelectorAll('details.sn-account[open]').forEach(function(d) {
+      d.removeAttribute('open');
+    });
+
+    if (lang === 'en') {
+      document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + window.location.hostname + ";";
+      document.cookie = "googtrans=; max-age=0; path=/;";
+      window.location.reload();
+      return;
+    }
+
+    var select = document.querySelector('.goog-te-combo');
+    if (select) {
+      select.value = lang;
+      select.dispatchEvent(new Event('change'));
+    } else {
+      window.location.reload();
+    }
+  }
+
+  document.addEventListener('click', function(e) {
+    var item = e.target.closest('.sn-lang-item, .sn-panel-lang-btn, .sn-mobile-lang-btn');
+    if (item) {
+      var lang = item.getAttribute('data-lang');
+      if (lang) {
+        switchLanguage(lang);
+      }
+    }
+  });
+
+  var currentLang = getStoredLang();
+  updateActiveState(currentLang);
+  if (currentLang !== 'en') {
+    setTransCookie(currentLang);
+  }
+
+  function suppressBanner() {
+    if (document.body) {
+      document.body.style.setProperty('top', '0px', 'important');
+      document.body.style.setProperty('margin-top', '0px', 'important');
+      document.body.style.setProperty('position', 'static', 'important');
+    }
+    if (document.documentElement) {
+      document.documentElement.style.setProperty('top', '0px', 'important');
+      document.documentElement.style.setProperty('margin-top', '0px', 'important');
+    }
+    var frames = document.querySelectorAll('iframe.goog-te-banner-frame, iframe.VIpgJd-ZVi9od-ORHb-OEVmcd, iframe[id*=":1.container"], iframe[id*=":2.container"], .VIpgJd-ZVi9od-ORHb-OEVmcd, body > .skiptranslate');
+    for (var i = 0; i < frames.length; i++) {
+      var f = frames[i];
+      f.style.setProperty('display', 'none', 'important');
+      f.style.setProperty('visibility', 'hidden', 'important');
+      f.style.setProperty('height', '0px', 'important');
+      f.style.setProperty('width', '0px', 'important');
+      f.style.setProperty('opacity', '0', 'important');
+      f.style.setProperty('pointer-events', 'none', 'important');
+    }
+  }
+
+  try {
+    var observer = new MutationObserver(function() {
+      suppressBanner();
+    });
+    if (document.documentElement) {
+      observer.observe(document.documentElement, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['style', 'class']
+      });
+    }
+  } catch (err) {}
+
+  suppressBanner();
+  setInterval(suppressBanner, 120);
+})();
+</script>

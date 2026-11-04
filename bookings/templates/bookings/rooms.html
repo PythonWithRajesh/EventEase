@@ -1,0 +1,2229 @@
+{% extends "bookings/base.html" %}
+
+
+
+{% block title %}Hotel Rooms, Luxury Suites &amp; Stays in Ahmedabad | Amazing Ahmedabad{% endblock %}
+
+
+
+{% block extra_css %}
+
+<style>
+
+/* ── Reset & Theme Variables (Luxury Rooms Liquid Glassmorphism Edition) */
+
+:root {
+
+  --rm-ink: #0f172a;
+
+  --rm-ink-soft: #1e293b;
+
+  --rm-muted: #64748b;
+
+  --rm-faint: rgba(248, 250, 252, 0.7);
+
+  --rm-line: rgba(226, 232, 240, 0.85);
+
+  --rm-line-soft: rgba(241, 245, 249, 0.7);
+
+  --rm-white: #ffffff;
+
+  --rm-blue: #2563eb;
+
+  --rm-blue-dark: #1d4ed8;
+
+  --rm-blue-light: #3b82f6;
+
+  --rm-gold: #d97706;
+
+  --rm-gold-light: #f59e0b;
+
+  --rm-gold-pale: rgba(254, 243, 199, 0.88);
+
+  --rm-radius-card: 24px;
+
+  --rm-glass-base: rgba(255, 255, 255, 0.86);
+
+  --rm-glass-card: rgba(255, 255, 255, 0.78);
+
+  --rm-glass-border: rgba(255, 255, 255, 0.92);
+
+  --rm-glass-blur: blur(20px);
+
+  --rm-shadow-card: 0 14px 36px rgba(15, 23, 42, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.95);
+
+  --rm-shadow-card-hover: 0 28px 64px rgba(15, 23, 42, 0.16);
+
+  --rm-transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+}
+
+
+
+body {
+
+  background-color: #fbf8fa;
+
+  background-image:
+
+    radial-gradient(circle at 10% 16%, rgba(245, 158, 11, 0.08) 0%, transparent 45%),
+
+    radial-gradient(circle at 88% 22%, rgba(37, 99, 235, 0.09) 0%, transparent 50%),
+
+    radial-gradient(circle at 50% 55%, rgba(124, 58, 237, 0.06) 0%, transparent 45%),
+
+    radial-gradient(circle at 15% 82%, rgba(16, 185, 129, 0.06) 0%, transparent 48%),
+
+    radial-gradient(circle at 85% 90%, rgba(217, 119, 6, 0.07) 0%, transparent 45%);
+
+  background-attachment: fixed;
+
+  color: var(--rm-ink);
+
+  overflow-x: clip !important;
+
+  position: relative;
+
+}
+
+
+
+/* ── Container helper ─────────────────────────────────────────────── */
+
+.rooms-outer {
+
+  max-width: 1240px;
+
+  margin: 0 auto;
+
+  padding: 0 24px;
+
+  position: relative;
+
+  z-index: 2;
+
+}
+
+
+
+/* ── Liquid Ambient Canvas (Refractive Floating Glowing Blobs) ──── */
+
+.rm-ambient-canvas {
+
+  position: fixed;
+
+  top: 0;
+
+  left: 0;
+
+  width: 100vw;
+
+  height: 100vh;
+
+  pointer-events: none;
+
+  overflow: hidden;
+
+  z-index: 0;
+
+}
+
+
+
+.rm-ambient-blob {
+
+  position: absolute;
+
+  border-radius: 50%;
+
+  filter: blur(90px);
+
+  opacity: 0.42;
+
+  will-change: transform;
+
+  pointer-events: none;
+
+}
+
+
+
+.rm-blob-1 {
+
+  width: 520px;
+
+  height: 520px;
+
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.42) 0%, rgba(217, 119, 6, 0.12) 70%, transparent 100%);
+
+  top: -80px;
+
+  left: -80px;
+
+  animation: rmFloat1 24s ease-in-out infinite alternate;
+
+}
+
+
+
+.rm-blob-2 {
+
+  width: 580px;
+
+  height: 580px;
+
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.36) 0%, rgba(29, 78, 216, 0.12) 70%, transparent 100%);
+
+  top: 35%;
+
+  right: -120px;
+
+  animation: rmFloat2 28s ease-in-out infinite alternate;
+
+}
+
+
+
+.rm-blob-3 {
+
+  width: 480px;
+
+  height: 480px;
+
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.30) 0%, rgba(91, 33, 182, 0.10) 70%, transparent 100%);
+
+  bottom: 8%;
+
+  left: 10%;
+
+  animation: rmFloat3 26s ease-in-out infinite alternate;
+
+}
+
+
+
+.rm-blob-4 {
+
+  width: 440px;
+
+  height: 440px;
+
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.28) 0%, rgba(5, 150, 105, 0.10) 70%, transparent 100%);
+
+  top: 60%;
+
+  left: 45%;
+
+  animation: rmFloat4 30s ease-in-out infinite alternate;
+
+}
+
+
+
+@keyframes rmFloat1 {
+
+  0%   { transform: translate(0, 0) scale(1); }
+
+  50%  { transform: translate(80px, 60px) scale(1.12); }
+
+  100% { transform: translate(-40px, 90px) scale(0.95); }
+
+}
+
+
+
+@keyframes rmFloat2 {
+
+  0%   { transform: translate(0, 0) scale(1); }
+
+  50%  { transform: translate(-90px, -70px) scale(1.15); }
+
+  100% { transform: translate(-50px, 80px) scale(0.92); }
+
+}
+
+
+
+@keyframes rmFloat3 {
+
+  0%   { transform: translate(0, 0) scale(0.96); }
+
+  50%  { transform: translate(70px, -80px) scale(1.1); }
+
+  100% { transform: translate(110px, 40px) scale(1.03); }
+
+}
+
+
+
+@keyframes rmFloat4 {
+
+  0%   { transform: translate(0, 0) scale(1); }
+
+  50%  { transform: translate(-60px, 50px) scale(1.14); }
+
+  100% { transform: translate(50px, -60px) scale(0.9); }
+
+}
+
+
+
+/* ── Hero Section (with Luxury Hotel Suite Celebration Photo) ────── */
+
+.rm-hero {
+
+  position: relative;
+
+  background-color: #0c1222;
+
+  background-image:
+
+    linear-gradient(180deg, rgba(12, 18, 34, 0.45) 0%, rgba(18, 26, 48, 0.32) 42%, rgba(24, 32, 56, 0.50) 80%, rgba(251, 248, 250, 1) 100%),
+
+    url('https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=2000&q=85');
+
+  background-size: cover;
+
+  background-position: center 46%;
+
+  background-repeat: no-repeat;
+
+  color: #ffffff;
+
+  padding: 72px 0 68px;
+
+  min-height: 480px;
+
+  overflow: hidden;
+
+  z-index: 2;
+
+}
+
+
+
+.rm-hero::after {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background: radial-gradient(ellipse 75% 60% at 88% 15%, rgba(245, 158, 11, 0.28) 0, transparent 65%),
+
+              radial-gradient(ellipse 60% 65% at 10% 85%, rgba(37, 99, 235, 0.25) 0, transparent 60%);
+
+  pointer-events: none;
+
+}
+
+
+
+.rm-hero-inner {
+
+  position: relative;
+
+  z-index: 3;
+
+  text-align: center;
+
+}
+
+
+
+.rm-hero h1 {
+
+  font-size: clamp(2.25rem, 5.4vw, 3.85rem);
+
+  line-height: 1.15;
+
+  letter-spacing: -0.035em;
+
+  font-weight: 900;
+
+  margin: 0 auto 24px;
+
+  max-width: 980px;
+
+  text-align: center;
+
+  color: #ffffff;
+
+  filter: drop-shadow(0 4px 22px rgba(0, 0, 0, 0.85)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.95));
+
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+
+}
+
+
+
+.rm-hero h1 span {
+
+  display: inline-block;
+
+  background: linear-gradient(135deg, #ffffff 0%, #bae6fd 35%, #60a5fa 75%, #3b82f6 100%);
+
+  -webkit-background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+
+  background-clip: text;
+
+  filter: drop-shadow(0 2px 16px rgba(59, 130, 246, 0.55));
+
+}
+
+
+
+/* ── Filter Console (Liquid Glassmorphism) ───────────────────────── */
+
+.rm-filter-wrapper {
+
+  margin-top: 32px;
+
+  position: relative;
+
+  z-index: 20;
+
+}
+
+
+
+.rm-filter-box {
+
+  background: var(--rm-glass-base);
+
+  backdrop-filter: var(--rm-glass-blur);
+
+  -webkit-backdrop-filter: var(--rm-glass-blur);
+
+  border: 1.5px solid var(--rm-glass-border);
+
+  border-radius: 24px;
+
+  padding: 20px 24px;
+
+  box-shadow: 0 16px 44px rgba(15, 23, 42, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.95);
+
+  display: flex;
+
+  flex-direction: column;
+
+}
+
+
+
+.rm-filter-form {
+
+  display: grid;
+
+  grid-template-columns: 2fr 1.3fr 1.3fr 1.1fr 1.2fr auto;
+
+  gap: 12px;
+
+  align-items: center;
+
+}
+
+
+
+.rm-input-field {
+
+  position: relative;
+
+  display: flex;
+
+  align-items: center;
+
+}
+
+
+
+.filter-icon {
+
+  position: absolute;
+
+  left: 14px;
+
+  color: var(--rm-muted);
+
+  pointer-events: none;
+
+  display: flex;
+
+  align-items: center;
+
+  font-size: 0.95rem;
+
+}
+
+
+
+.rm-input-field input {
+
+  width: 100%;
+
+  padding: 12px 14px 12px 42px;
+
+  background: rgba(255, 255, 255, 0.85);
+
+  backdrop-filter: blur(12px);
+
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1.5px solid var(--rm-line);
+
+  border-radius: 14px;
+
+  font: inherit;
+
+  font-size: 0.92rem;
+
+  font-weight: 600;
+
+  color: var(--rm-ink);
+
+  outline: none;
+
+  transition: all 0.2s ease;
+
+}
+
+
+
+.rm-input-field input:focus {
+
+  border-color: var(--rm-blue);
+
+  background: #ffffff;
+
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16);
+
+}
+
+
+
+.rm-input-field select {
+
+  width: 100%;
+
+  padding: 12px 34px 12px 14px;
+
+  background: rgba(255, 255, 255, 0.85);
+
+  backdrop-filter: blur(12px);
+
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1.5px solid var(--rm-line);
+
+  border-radius: 14px;
+
+  font: inherit;
+
+  font-size: 0.9rem;
+
+  font-weight: 650;
+
+  color: var(--rm-ink);
+
+  outline: none;
+
+  cursor: pointer;
+
+  appearance: none;
+
+  -webkit-appearance: none;
+
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+
+  background-repeat: no-repeat;
+
+  background-position: right 12px center;
+
+  background-size: 15px;
+
+  transition: all 0.2s ease;
+
+}
+
+
+
+.rm-input-field select:focus {
+
+  border-color: var(--rm-blue);
+
+  background-color: #ffffff;
+
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16);
+
+}
+
+
+
+.rm-btn-search {
+
+  min-height: 48px;
+
+  padding: 0 26px;
+
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+
+  color: #ffffff;
+
+  border: 1px solid rgba(255, 255, 255, 0.35);
+
+  border-radius: 14px;
+
+  font: inherit;
+
+  font-size: 0.94rem;
+
+  font-weight: 850;
+
+  cursor: pointer;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.34);
+
+  transition: all 0.2s ease;
+
+  white-space: nowrap;
+
+}
+
+
+
+.rm-btn-search:hover {
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 12px 30px rgba(37, 99, 235, 0.48);
+
+  filter: brightness(1.08);
+
+}
+
+
+
+/* ── Content Section ──────────────────────────────────────────────── */
+
+.rm-main-section {
+
+  padding: 38px 0 76px;
+
+  position: relative;
+
+  z-index: 2;
+
+}
+
+
+
+.rm-section-header {
+
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-between;
+
+  margin-bottom: 26px;
+
+  gap: 16px;
+
+  flex-wrap: wrap;
+
+}
+
+
+
+.rm-header-title {
+
+  font-size: 1.7rem;
+
+  font-weight: 900;
+
+  color: var(--rm-ink);
+
+  letter-spacing: -0.035em;
+
+  margin: 0 0 4px;
+
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+
+}
+
+
+
+.rm-header-sub {
+
+  color: var(--rm-muted);
+
+  font-size: 0.94rem;
+
+  margin: 0;
+
+}
+
+
+
+.rm-quick-links {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  flex-wrap: wrap;
+
+}
+
+
+
+.rm-link-badge {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 9px 18px;
+
+  background: rgba(255, 255, 255, 0.85);
+
+  backdrop-filter: blur(12px);
+
+  border: 1.5px solid var(--rm-line);
+
+  border-radius: 12px;
+
+  font-size: 0.85rem;
+
+  font-weight: 800;
+
+  color: var(--rm-blue);
+
+  text-decoration: none;
+
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+
+  transition: all 0.2s;
+
+}
+
+
+
+.rm-link-badge:hover {
+
+  color: var(--rm-blue-dark);
+
+  background: #ffffff;
+
+  border-color: var(--rm-blue);
+
+  transform: translateY(-1px);
+
+}
+
+
+
+.rm-link-reset {
+
+  color: #ef4444 !important;
+
+  border-color: #fca5a5 !important;
+
+  background: #fef2f2 !important;
+
+}
+
+
+
+/* ── Rooms Grid (Liquid Glassmorphism) ────────────────────────────── */
+
+.rm-grid {
+
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 24px;
+
+}
+
+
+
+.rm-card {
+
+  background: var(--rm-glass-card);
+
+  backdrop-filter: var(--rm-glass-blur);
+
+  -webkit-backdrop-filter: var(--rm-glass-blur);
+
+  border: 1.5px solid var(--rm-glass-border);
+
+  border-radius: var(--rm-radius-card);
+
+  overflow: hidden;
+
+  box-shadow: var(--rm-shadow-card);
+
+  display: flex;
+
+  flex-direction: column;
+
+  transition: transform var(--rm-transition), box-shadow var(--rm-transition), border-color var(--rm-transition);
+
+  position: relative;
+
+}
+
+
+
+.rm-card:hover {
+
+  transform: translateY(-8px);
+
+  box-shadow: var(--rm-shadow-card-hover);
+
+  border-color: rgba(245, 158, 11, 0.65);
+
+}
+
+
+
+/* Image Container */
+
+.rm-card-media {
+
+  position: relative;
+
+  height: 245px;
+
+  width: 100%;
+
+  overflow: hidden;
+
+  background: #111827;
+
+}
+
+
+
+.rm-card-media img {
+
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: cover;
+
+  object-position: center;
+
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+
+  display: block;
+
+}
+
+
+
+.rm-card:hover .rm-card-media img {
+
+  transform: scale(1.06);
+
+}
+
+
+
+.rm-media-gradient {
+
+  position: absolute;
+
+  inset: 0;
+
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.72) 0%, rgba(15, 23, 42, 0.15) 50%, rgba(0, 0, 0, 0.05) 100%);
+
+  pointer-events: none;
+
+}
+
+
+
+/* Overlaid Glass Badges */
+
+.rm-badge-type {
+
+  position: absolute;
+
+  top: 14px;
+
+  left: 14px;
+
+  background: rgba(255, 255, 255, 0.92);
+
+  backdrop-filter: blur(12px);
+
+  -webkit-backdrop-filter: blur(12px);
+
+  border-radius: 9999px;
+
+  padding: 5px 12px;
+
+  font-size: 0.74rem;
+
+  font-weight: 850;
+
+  color: var(--rm-blue-dark);
+
+  border: 1px solid rgba(37, 99, 235, 0.14);
+
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+}
+
+
+
+.rm-badge-rating {
+
+  position: absolute;
+
+  top: 14px;
+
+  right: 14px;
+
+  background: rgba(16, 185, 129, 0.92);
+
+  backdrop-filter: blur(12px);
+
+  -webkit-backdrop-filter: blur(12px);
+
+  color: #ffffff;
+
+  border-radius: 9999px;
+
+  padding: 5px 11px;
+
+  font-size: 0.73rem;
+
+  font-weight: 850;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+}
+
+
+
+.rm-badge-capacity {
+
+  position: absolute;
+
+  bottom: 14px;
+
+  left: 14px;
+
+  right: 14px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  color: #ffffff;
+
+  font-size: 0.76rem;
+
+  font-weight: 750;
+
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+
+}
+
+
+
+/* Card Body */
+
+.rm-card-body {
+
+  padding: 20px 22px 0;
+
+  flex: 1;
+
+  display: flex;
+
+  flex-direction: column;
+
+}
+
+
+
+.rm-card-title {
+
+  font-size: 1.25rem;
+
+  font-weight: 900;
+
+  letter-spacing: -0.035em;
+
+  line-height: 1.25;
+
+  margin: 0 0 6px;
+
+  color: var(--rm-ink);
+
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+
+}
+
+
+
+.rm-card-title a {
+
+  color: inherit;
+
+  text-decoration: none;
+
+  transition: color 0.18s;
+
+}
+
+
+
+.rm-card-title a:hover {
+
+  color: var(--rm-blue);
+
+}
+
+
+
+.rm-card-property {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  color: var(--rm-muted);
+
+  font-size: 0.85rem;
+
+  font-weight: 650;
+
+  margin-bottom: 12px;
+
+}
+
+
+
+/* Meta pills */
+
+.rm-meta-row {
+
+  display: flex;
+
+  gap: 6px;
+
+  flex-wrap: wrap;
+
+  margin-bottom: 14px;
+
+}
+
+
+
+.rm-meta-pill {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 4px;
+
+  background: rgba(255, 255, 255, 0.85);
+
+  backdrop-filter: blur(8px);
+
+  border: 1px solid var(--rm-line);
+
+  color: var(--rm-ink-soft);
+
+  font-size: 0.74rem;
+
+  font-weight: 750;
+
+  padding: 4px 10px;
+
+  border-radius: 8px;
+
+}
+
+
+
+.rm-meta-pill.green {
+
+  background: rgba(236, 253, 245, 0.9);
+
+  border-color: rgba(16, 185, 129, 0.35);
+
+  color: #065f46;
+
+}
+
+
+
+.rm-meta-pill.gold {
+
+  background: var(--rm-gold-pale);
+
+  border-color: rgba(245, 158, 11, 0.4);
+
+  color: #92400e;
+
+}
+
+
+
+.rm-card-desc {
+
+  color: #475569;
+
+  font-size: 0.88rem;
+
+  line-height: 1.55;
+
+  margin: 0 0 16px;
+
+  display: -webkit-box;
+
+  -webkit-line-clamp: 2;
+
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+
+  flex: 1;
+
+}
+
+
+
+.rm-card-amenities {
+
+  font-size: 0.81rem;
+
+  color: #64748b;
+
+  line-height: 1.45;
+
+  border-top: 1px solid var(--rm-line-soft);
+
+  padding-top: 12px;
+
+  margin-bottom: 0;
+
+  display: -webkit-box;
+
+  -webkit-line-clamp: 2;
+
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+
+}
+
+
+
+.rm-card-amenities strong {
+
+  color: var(--rm-blue-dark);
+
+  font-weight: 800;
+
+  text-transform: uppercase;
+
+  font-size: 0.71rem;
+
+  letter-spacing: 0.05em;
+
+  margin-right: 4px;
+
+}
+
+
+
+/* Card Footer */
+
+.rm-card-footer {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 12px;
+
+  border-top: 1px solid var(--rm-line-soft);
+
+  margin-top: 16px;
+
+  padding: 16px 22px 20px;
+
+  background: rgba(255, 255, 255, 0.52);
+
+  backdrop-filter: blur(12px);
+
+  border-bottom-left-radius: var(--rm-radius-card);
+
+  border-bottom-right-radius: var(--rm-radius-card);
+
+}
+
+
+
+.rm-price-val {
+
+  font-size: 1.45rem;
+
+  font-weight: 900;
+
+  color: var(--rm-blue-dark);
+
+  letter-spacing: -0.04em;
+
+  line-height: 1;
+
+  display: block;
+
+}
+
+
+
+.rm-price-sub {
+
+  font-size: 0.74rem;
+
+  color: var(--rm-muted);
+
+  font-weight: 650;
+
+  margin-top: 3px;
+
+  display: block;
+
+}
+
+
+
+.rm-actions {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+}
+
+
+
+.rm-btn-details {
+
+  background: rgba(255, 255, 255, 0.85);
+
+  backdrop-filter: blur(10px);
+
+  border: 1.5px solid var(--rm-line);
+
+  border-radius: 12px;
+
+  padding: 10px 16px;
+
+  font-size: 0.88rem;
+
+  font-weight: 750;
+
+  color: var(--rm-ink);
+
+  text-decoration: none;
+
+  transition: all 0.2s;
+
+  white-space: nowrap;
+
+}
+
+
+
+.rm-btn-details:hover {
+
+  background: #ffffff;
+
+  border-color: var(--rm-blue);
+
+  color: var(--rm-blue);
+
+  transform: translateY(-1px);
+
+}
+
+
+
+.rm-btn-book {
+
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+
+  color: #ffffff;
+
+  border: 1px solid rgba(255, 255, 255, 0.25);
+
+  border-radius: 12px;
+
+  padding: 10px 18px;
+
+  font-size: 0.88rem;
+
+  font-weight: 800;
+
+  text-decoration: none;
+
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.32);
+
+  transition: all 0.2s;
+
+  white-space: nowrap;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 4px;
+
+}
+
+
+
+.rm-btn-book:hover {
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.45);
+
+  filter: brightness(1.08);
+
+}
+
+
+
+/* ── Spotlight Stay Banner (Liquid Glass) ─────────────────────────── */
+
+.rm-spotlight {
+
+  margin: 52px 0;
+
+  background: linear-gradient(130deg, rgba(15, 23, 42, 0.92) 0%, rgba(30, 41, 59, 0.90) 35%, rgba(37, 99, 235, 0.88) 75%, rgba(217, 119, 6, 0.85) 100%);
+
+  backdrop-filter: blur(24px);
+
+  -webkit-backdrop-filter: blur(24px);
+
+  border-radius: 28px;
+
+  padding: 36px 42px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 24px;
+
+  position: relative;
+
+  overflow: hidden;
+
+  box-shadow: 0 20px 54px rgba(15, 23, 42, 0.25);
+
+  color: #ffffff;
+
+  border: 1.5px solid rgba(245, 158, 11, 0.45);
+
+}
+
+
+
+.rm-spotlight-eyebrow {
+
+  font-size: 0.82rem;
+
+  font-weight: 850;
+
+  letter-spacing: 0.08em;
+
+  text-transform: uppercase;
+
+  color: var(--rm-gold-light);
+
+  margin-bottom: 8px;
+
+}
+
+
+
+.rm-spotlight-title {
+
+  font-size: 1.6rem;
+
+  font-weight: 900;
+
+  margin: 0 0 6px;
+
+  letter-spacing: -0.03em;
+
+  color: #ffffff;
+
+}
+
+
+
+.rm-spotlight-desc {
+
+  margin: 0;
+
+  color: #e2e8f0;
+
+  font-size: 0.95rem;
+
+  max-width: 640px;
+
+  line-height: 1.55;
+
+}
+
+
+
+.rm-spotlight-btn {
+
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+
+  color: #0f172a;
+
+  border: 1px solid rgba(255, 255, 255, 0.4);
+
+  border-radius: 14px;
+
+  padding: 14px 26px;
+
+  font-size: 0.95rem;
+
+  font-weight: 900;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+
+  transition: all 0.2s ease;
+
+  position: relative;
+
+  z-index: 2;
+
+  text-decoration: none;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  flex-shrink: 0;
+
+}
+
+
+
+.rm-spotlight-btn:hover {
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+
+  filter: brightness(1.08);
+
+}
+
+
+
+/* ── Why Choose Us (Liquid Glassmorphism) ─────────────────────────── */
+
+.rm-why-grid {
+
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 22px;
+
+  margin-top: 48px;
+
+}
+
+
+
+.rm-why-card {
+
+  background: rgba(255, 255, 255, 0.76);
+
+  backdrop-filter: blur(16px);
+
+  -webkit-backdrop-filter: blur(16px);
+
+  border: 1.5px solid var(--rm-line);
+
+  border-radius: 20px;
+
+  padding: 24px 20px;
+
+  display: flex;
+
+  gap: 14px;
+
+  align-items: flex-start;
+
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+
+}
+
+
+
+.rm-why-card:hover {
+
+  transform: translateY(-4px);
+
+  border-color: var(--rm-gold-light);
+
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.10);
+
+}
+
+
+
+.rm-why-icon {
+
+  width: 52px;
+
+  height: 52px;
+
+  border-radius: 14px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 1.6rem;
+
+  flex-shrink: 0;
+
+}
+
+
+
+.rm-why-icon.purple { background: #f3e8ff; color: #7c3aed; }
+
+.rm-why-icon.gold   { background: #fef3c7; color: #b45309; }
+
+.rm-why-icon.green  { background: #dcfce7; color: #15803d; }
+
+.rm-why-icon.blue   { background: #dbeafe; color: #1d4ed8; }
+
+
+
+.rm-why-info h4 {
+
+  font-size: 1.05rem;
+
+  font-weight: 850;
+
+  color: var(--rm-ink);
+
+  margin: 0 0 4px;
+
+  letter-spacing: -0.02em;
+
+}
+
+
+
+.rm-why-info p {
+
+  color: var(--rm-muted);
+
+  font-size: 0.86rem;
+
+  line-height: 1.55;
+
+  margin: 0;
+
+}
+
+
+
+/* ── Empty State ──────────────────────────────────────────────────── */
+
+.rm-empty {
+
+  background: var(--rm-glass-card);
+
+  backdrop-filter: var(--rm-glass-blur);
+
+  border: 2px dashed rgba(245, 158, 11, 0.4);
+
+  border-radius: 24px;
+
+  padding: 64px 28px;
+
+  text-align: center;
+
+}
+
+
+
+.rm-empty-icon {
+
+  font-size: 3rem;
+
+  margin-bottom: 16px;
+
+}
+
+
+
+.rm-empty h3 {
+
+  font-size: 1.45rem;
+
+  font-weight: 900;
+
+  color: var(--rm-ink);
+
+  margin: 0 0 8px;
+
+}
+
+
+
+.rm-empty p {
+
+  color: var(--rm-muted);
+
+  font-size: 0.95rem;
+
+  max-width: 480px;
+
+  margin: 0 auto 20px;
+
+}
+
+
+
+.rm-empty a {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 10px 22px;
+
+  background: var(--rm-blue);
+
+  color: #ffffff;
+
+  border-radius: 12px;
+
+  font-size: 0.88rem;
+
+  font-weight: 800;
+
+  text-decoration: none;
+
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+
+}
+
+
+
+/* ── Responsive Polish ────────────────────────────────────────────── */
+
+@media (max-width: 1100px) {
+
+  .rm-grid {
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  }
+
+  .rm-why-grid {
+
+    grid-template-columns: repeat(2, 1fr);
+
+  }
+
+  .rm-filter-form {
+
+    grid-template-columns: 1.8fr 1.2fr 1.2fr 1fr auto;
+
+  }
+
+}
+
+
+
+@media (max-width: 860px) {
+
+  .rm-filter-form {
+
+    grid-template-columns: 1fr 1fr;
+
+  }
+
+  .rm-filter-form .rm-input-field:first-child {
+
+    grid-column: 1 / -1;
+
+  }
+
+  .rm-filter-form .rm-btn-search {
+
+    grid-column: 1 / -1;
+
+  }
+
+  .rm-spotlight {
+
+    flex-direction: column;
+
+    text-align: center;
+
+    padding: 30px 24px;
+
+  }
+
+}
+
+
+
+@media (max-width: 640px) {
+
+  .rm-hero {
+
+    padding: 46px 0 52px;
+
+    min-height: auto;
+
+  }
+
+  .rm-hero h1 {
+
+    font-size: 1.85rem;
+
+  }
+
+  .rm-filter-wrapper {
+
+    margin-top: 20px;
+
+  }
+
+  .rm-filter-box {
+
+    padding: 14px;
+
+    border-radius: 18px;
+
+  }
+
+  .rm-filter-form {
+
+    grid-template-columns: 1fr;
+
+    gap: 8px;
+
+  }
+
+  .rm-grid {
+
+    grid-template-columns: 1fr;
+
+  }
+
+  .rm-why-grid {
+
+    grid-template-columns: 1fr;
+
+  }
+
+  .rm-section-header {
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+  }
+
+}
+
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+<!-- ── Liquid Ambient Canvas (Refractive Floating Glowing Blobs) ──── -->
+
+<div class="rm-ambient-canvas" aria-hidden="true">
+
+  <div class="rm-ambient-blob rm-blob-1"></div>
+
+  <div class="rm-ambient-blob rm-blob-2"></div>
+
+  <div class="rm-ambient-blob rm-blob-3"></div>
+
+  <div class="rm-ambient-blob rm-blob-4"></div>
+
+</div>
+
+
+
+<!-- ══ HERO SECTION ═════════════════════════════════════════════════ -->
+
+<section class="rm-hero">
+
+  <div class="rooms-outer rm-hero-inner">
+
+    <h1>Handpicked Hotel Rooms &amp;<br><span>Luxury Suites</span></h1>
+
+
+
+    <!-- ══ FILTER CONSOLE ═══════════════════════════════════════════════ -->
+
+    <div class="rm-filter-wrapper">
+
+      <div class="rm-filter-box">
+
+        <form method="get" action="{% url 'rooms' %}" class="rm-filter-form" role="search">
+
+          <!-- Search Input -->
+
+          <div class="rm-input-field">
+
+            <span class="filter-icon" aria-hidden="true">🔍</span>
+
+            <input
+
+              type="text"
+
+              name="q"
+
+              value="{{ query }}"
+
+              placeholder="Search by hotel, locality, amenities..."
+
+              aria-label="Search rooms"
+
+            />
+
+          </div>
+
+
+
+          <!-- Room Type Select -->
+
+          <div class="rm-input-field">
+
+            <select name="type" aria-label="Select Room Type">
+
+              <option value="">🏨 All Room Types ({{ total_count }})</option>
+
+              {% for t in room_types %}
+
+              <option value="{{ t }}" {% if room_type == t %}selected{% endif %}>{{ t }}</option>
+
+              {% endfor %}
+
+            </select>
+
+          </div>
+
+
+
+          <!-- Area Select -->
+
+          <div class="rm-input-field">
+
+            <select name="area" aria-label="Select Area">
+
+              <option value="">📍 All Ahmedabad Localities</option>
+
+              {% for pa in popular_areas %}
+
+              <option value="{{ pa.query }}" {% if area == pa.query %}selected{% endif %}>📍 {{ pa.name }}</option>
+
+              {% endfor %}
+
+            </select>
+
+          </div>
+
+
+
+          <!-- Price Range Select -->
+
+          <div class="rm-input-field">
+
+            <select name="price" aria-label="Select Price Range">
+
+              <option value="">💰 Any Nightly Rate</option>
+
+              <option value="low" {% if price == 'low' %}selected{% endif %}>Under ₹5,000 / night</option>
+
+              <option value="mid" {% if price == 'mid' %}selected{% endif %}>₹5,000 – ₹9,000 / night</option>
+
+              <option value="high" {% if price == 'high' %}selected{% endif %}>Above ₹9,000 / night</option>
+
+            </select>
+
+          </div>
+
+
+
+          <!-- Sort Select -->
+
+          <div class="rm-input-field">
+
+            <select name="sort" aria-label="Sort by">
+
+              <option value="price_asc" {% if sort_by == 'price_asc' or not sort_by %}selected{% endif %}>💰 Tariff: Low to High</option>
+
+              <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>💎 Tariff: High to Low</option>
+
+              <option value="rating" {% if sort_by == 'rating' %}selected{% endif %}>★ Highest Guest Rating</option>
+
+              <option value="capacity" {% if sort_by == 'capacity' %}selected{% endif %}>👥 Guest Capacity</option>
+
+              <option value="name" {% if sort_by == 'name' %}selected{% endif %}>🔤 Name (A–Z)</option>
+
+            </select>
+
+          </div>
+
+
+
+          <!-- Search Submit Button -->
+
+          <button type="submit" class="rm-btn-search">
+
+            <span>Find Stays</span>
+
+            <span>→</span>
+
+          </button>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- ══ MAIN ROOMS LISTINGS ══════════════════════════════════════════ -->
+
+<main class="rooms-outer rm-main-section">
+
+  <!-- Section Header -->
+
+  <div class="rm-section-header">
+
+    <div>
+
+      <h2 class="rm-header-title">
+
+        {% if room_type %}
+
+          {{ room_type }}s in Ahmedabad
+
+        {% elif query %}
+
+          Stays matching "{{ query }}"
+
+        {% elif area %}
+
+          Hotels near {{ area }}
+
+        {% else %}
+
+          Available Hotel Rooms &amp; Suites in Ahmedabad ({{ filtered_count }})
+
+        {% endif %}
+
+      </h2>
+
+      <p class="rm-header-sub">
+
+        Showing <strong>{{ filtered_count }}</strong> of <strong>{{ total_count }}</strong> verified stays with transparent per-night tariffs.
+
+      </p>
+
+    </div>
+
+
+
+    <div class="rm-quick-links">
+
+      {% if query or room_type or area or price or sort_by != 'price_asc' or breakfast_only %}
+
+        <a href="{% url 'rooms' %}" class="rm-link-badge rm-link-reset">✕ Clear Filters</a>
+
+      {% endif %}
+
+      <a href="{% url 'wedding_halls' %}" class="rm-link-badge">
+
+        🏛️ Wedding Halls →
+
+      </a>
+
+      <a href="{% url 'party_plots' %}" class="rm-link-badge">
+
+        🌿 Party Plots →
+
+      </a>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- Rooms Grid -->
+
+  {% if rooms %}
+
+  <div class="rm-grid">
+
+    {% for room in rooms %}
+
+    <article class="rm-card">
+
+      <div class="rm-card-media">
+
+        <!-- Room Type Badge -->
+
+        <span class="rm-badge-type">
+
+          {{ room.room_type }}
+
+        </span>
+
+
+
+        <!-- Rating Badge -->
+
+        {% if room.guest_rating %}
+
+          <span class="rm-badge-rating">★ {{ room.guest_rating }} Superb</span>
+
+        {% else %}
+
+          <span class="rm-badge-rating">★ 4.8 Top Rated</span>
+
+        {% endif %}
+
+
+
+        <!-- Image -->
+
+        {% if room.cover_image_url %}
+
+          <img src="{{ room.cover_image_url }}" alt="{{ room.name }}" loading="lazy" />
+
+        {% else %}
+
+          <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=85" alt="{{ room.name }}" loading="lazy" />
+
+        {% endif %}
+
+
+
+        <div class="rm-media-gradient"></div>
+
+
+
+        <!-- Capacity & Bed Overlay -->
+
+        <div class="rm-badge-capacity">
+
+          <span>👥 Up to {{ room.capacity }} Guests</span>
+
+          <span>🛏️ {{ room.bed_type }}</span>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="rm-card-body">
+
+        <h3 class="rm-card-title">
+
+          <a href="{% url 'room_detail' room.pk %}">{{ room.name }}</a>
+
+        </h3>
+
+
+
+        <div class="rm-card-property">
+
+          <span>📍</span>
+
+          <span>{{ room.property_name }} · {{ room.address }}</span>
+
+        </div>
+
+
+
+        <div class="rm-meta-row">
+
+          <span class="rm-meta-pill">👥 {{ room.capacity }} Guests</span>
+
+          <span class="rm-meta-pill">🛏️ {{ room.bed_type }}</span>
+
+          {% if room.breakfast_included %}
+
+          <span class="rm-meta-pill green">☕ Free Breakfast</span>
+
+          {% endif %}
+
+          <span class="rm-meta-pill gold">❄️ Central AC</span>
+
+          <span class="rm-meta-pill">📶 Wi-Fi</span>
+
+        </div>
+
+
+
+        <p class="rm-card-desc">
+
+          {{ room.description|default:"A luxury air-conditioned hotel suite equipped with premium bedding, high-speed Wi-Fi, modern bathroom, and dedicated room service." }}
+
+        </p>
+
+
+
+        <p class="rm-card-amenities">
+
+          <strong>Key Features:</strong>
+
+          {{ room.amenities|default:"Central AC, 55-inch Smart TV, High-speed Wi-Fi, Mini Bar, Luxury Toiletries, 24/7 Room Service, Valet Parking." }}
+
+        </p>
+
+      </div>
+
+
+
+      <div class="rm-card-footer">
+
+        <div class="rm-pricing">
+
+          <span class="rm-price-val">₹{{ room.price_per_night }}</span>
+
+          <span class="rm-price-sub">per night · taxes included</span>
+
+        </div>
+
+
+
+        <div class="rm-actions">
+
+          <a href="{% url 'room_detail' room.pk %}" class="rm-btn-details">View Room</a>
+
+          <a href="{% url 'book_room' room.pk %}" class="rm-btn-book">Book Stay →</a>
+
+        </div>
+
+      </div>
+
+    </article>
+
+    {% endfor %}
+
+  </div>
+
+  {% else %}
+
+  <!-- Empty State -->
+
+  <div class="rm-empty">
+
+    <div class="rm-empty-icon">🏨</div>
+
+    <h3>No hotel rooms found matching your search</h3>
+
+    <p>
+
+      We couldn't find any rooms matching your selected filters. Try clearing your filters or choosing a different locality.
+
+    </p>
+
+    <a href="{% url 'rooms' %}">
+
+      ✨ Show All {{ total_count }} Rooms
+
+    </a>
+
+  </div>
+
+  {% endif %}
+</main>
+
+{% endblock %}
+

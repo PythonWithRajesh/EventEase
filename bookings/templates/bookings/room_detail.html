@@ -1,0 +1,1402 @@
+{% extends "bookings/base.html" %}
+
+{% block title %}{{ room.name }} | {{ room.property_name }} | Amazing Ahmedabad
+  <!-- MOBILE STICKY ROOM DOCK -->
+  <div class="mobile-room-sticky-dock" aria-label="Mobile booking dock">
+    <div class="m-dock-price-info">
+      <span class="m-dock-tag">Rate per Night</span>
+      <span class="m-dock-rate">₹{{ room.price_per_night }} <small>/ night</small></span>
+    </div>
+    {% if room.is_available %}
+      <a href="{% url 'book_room' room.pk %}" class="m-dock-cta-btn">
+        <span>Book Stay</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    {% else %}
+      <button class="m-dock-cta-btn soldout" disabled>Booked Out</button>
+    {% endif %}
+  </div>
+
+{% endblock %}
+
+{% block extra_css %}
+  <style>
+    /* ─── Design Tokens ───────────────────────────────────── */
+    :root {
+      --ink:           #1a1028;
+      --ink-soft:      #3b2f52;
+      --muted:         #7a6f8a;
+      --purple:        #6c3fc5;
+      --purple-dark:   #2e1060;
+      --purple-mid:    #8b5cf6;
+      --purple-light:  #f4effd;
+      --purple-glass:  rgba(108, 63, 197, 0.08);
+      --orange:        #f07b10;
+      --orange-dark:   #c05700;
+      --orange-light:  #fff5ea;
+      --gold:          #f59e0b;
+      --gold-light:    #fffbeb;
+      --green:         #166534;
+      --green-light:   #dcfce7;
+      --green-mid:     #16a34a;
+      --red:           #991b1b;
+      --red-light:     #fee2e2;
+      --paper:         #f8f6f2;
+      --surface:       #ffffff;
+      --surface-off:   #fdfcfe;
+      --line:          #ede8f5;
+      --line-strong:   #d9cff0;
+      --shadow-sm:  0 4px 14px rgba(26, 16, 40, 0.06);
+      --shadow-md:  0 12px 36px rgba(26, 16, 40, 0.10);
+      --shadow-lg:  0 28px 70px rgba(26, 16, 40, 0.16);
+      --shadow-xl:  0 40px 100px rgba(26, 16, 40, 0.22);
+      --r-sm:  10px;
+      --r-md:  18px;
+      --r-lg:  26px;
+      --r-xl:  36px;
+      --r-full: 9999px;
+    }
+
+    /* ─── Reset & Base ────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ─── Utility ─────────────────────────────────────────── */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 22px 80px;
+    }
+
+    /* ─── HERO PARALLAX WRAPPER ───────────────────────────── */
+    .hero-parallax-wrap {
+      position: relative;
+      height: 380px;
+      overflow: hidden;
+      background: var(--purple-dark);
+    }
+    .hero-parallax-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -60px 0 -60px 0;
+      background-image: var(--hero-bg);
+      background-size: cover;
+      background-position: center 30%;
+      background-attachment: fixed; /* CSS parallax */
+      filter: brightness(0.78) saturate(1.1);
+      transition: filter 0.3s ease;
+      z-index: 0;
+    }
+    /* Gradient overlay bottom-up */
+    .hero-parallax-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(26, 16, 40, 0.15) 0%,
+        rgba(26, 16, 40, 0.08) 40%,
+        rgba(26, 16, 40, 0.60) 100%
+      );
+      z-index: 1;
+    }
+    .hero-badges {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 22px 26px;
+    }
+    .hero-badge-left { display: flex; flex-direction: column; gap: 9px; }
+
+    /* Room type pill */
+    .badge-room-type {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(12px) saturate(160%);
+      color: var(--purple-dark);
+      font-size: 0.76rem;
+      font-weight: 800;
+      padding: 6px 14px 6px 10px;
+      border-radius: var(--r-full);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.22);
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+    }
+    .badge-room-type .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--purple);
+      flex-shrink: 0;
+    }
+
+    /* Navratri festival badge */
+    .badge-navratri {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: linear-gradient(135deg, #f07b10 0%, #d946a8 60%, #7c3aed 100%);
+      color: #fff;
+      font-size: 0.74rem;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: var(--r-full);
+      box-shadow: 0 4px 18px rgba(208, 56, 168, 0.42);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      animation: pulse-badge 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse-badge {
+      0%, 100% { box-shadow: 0 4px 18px rgba(208,56,168,0.42); }
+      50% { box-shadow: 0 6px 28px rgba(208,56,168,0.65); }
+    }
+
+    /* Rating badge top-right */
+    .badge-rating {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3px;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(12px);
+      padding: 10px 16px;
+      border-radius: var(--r-md);
+      box-shadow: 0 6px 22px rgba(0,0,0,0.20);
+      text-align: right;
+    }
+    .badge-rating .stars {
+      display: flex;
+      gap: 2px;
+      font-size: 1.0rem;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .badge-rating .score {
+      font-size: 1.45rem;
+      font-weight: 900;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .badge-rating .label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* Bottom hero label */
+    .hero-bottom-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 2;
+      padding: 18px 28px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .hero-room-name-preview {
+      color: rgba(255,255,255,0.9);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .hero-city-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.92);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: var(--r-full);
+    }
+
+    /* ─── BREADCRUMB ──────────────────────────────────────── */
+    .breadcrumb-wrap {
+      padding: 18px 22px 0;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .crumb {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+    .crumb a {
+      color: var(--purple);
+      transition: color 0.18s;
+    }
+    .crumb a:hover { color: var(--purple-dark); text-decoration: underline; }
+    .crumb-sep {
+      width: 5px; height: 5px;
+      background: var(--line-strong);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .crumb-current {
+      color: var(--ink-soft);
+      font-weight: 800;
+      max-width: 250px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* ─── MAIN 2-COL LAYOUT ───────────────────────────────── */
+    .detail-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.85fr);
+      gap: 28px;
+      align-items: start;
+      padding-top: 26px;
+    }
+
+    /* ─── MAIN CARD ───────────────────────────────────────── */
+    .main-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Card cover image (mini) */
+    .card-cover {
+      position: relative;
+      height: 0;
+      overflow: hidden;
+    }
+    /* no separate card cover needed; hero above serves */
+
+    /* ─── CONTENT BODY ────────────────────────────────────── */
+    .content-body { padding: 36px 40px 40px; }
+
+    /* Property name */
+    .prop-name-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--purple);
+      font-size: 0.95rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: 0.01em;
+    }
+    .prop-name-row .hotel-icon { font-size: 1.15rem; }
+
+    /* Room name H1 */
+    .room-h1 {
+      font-size: clamp(1.85rem, 3.5vw, 2.8rem);
+      font-weight: 900;
+      color: var(--ink);
+      line-height: 1.12;
+      letter-spacing: -0.04em;
+      margin-bottom: 12px;
+    }
+
+    /* Location row */
+    .loc-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .loc-row .pin { font-size: 1.05rem; }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: var(--line);
+      margin: 28px 0;
+    }
+
+    /* ─── QUICK FACTS GRID ────────────────────────────────── */
+    .quick-facts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+      border: 1.5px solid var(--line-strong);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      background: var(--surface-off);
+    }
+    .q-fact-cell {
+      padding: 20px 22px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      position: relative;
+    }
+    .q-fact-cell:nth-child(2n) { border-right: none; }
+    .q-fact-cell:nth-last-child(-n+2) { border-bottom: none; }
+    .q-fact-icon {
+      font-size: 1.55rem;
+      margin-bottom: 7px;
+      display: block;
+    }
+    .q-fact-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .q-fact-value {
+      font-size: 0.93rem;
+      font-weight: 800;
+      color: var(--ink-soft);
+      line-height: 1.4;
+    }
+    .q-fact-sub {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .fact-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: var(--r-full);
+      font-size: 0.75rem;
+      font-weight: 800;
+      margin-top: 6px;
+    }
+    .fact-pill.green  { background: var(--green-light); color: var(--green-mid); }
+    .fact-pill.orange { background: var(--orange-light); color: var(--orange-dark); }
+    .fact-pill.blue   { background: #eff6ff; color: #1d4ed8; }
+
+    /* ─── CONTENT SECTIONS ────────────────────────────────── */
+    .content-section { margin-bottom: 8px; }
+    .content-section + .content-section { padding-top: 4px; }
+    .section-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: var(--ink);
+      letter-spacing: -0.025em;
+      margin-bottom: 14px;
+    }
+    .section-heading-icon {
+      width: 36px; height: 36px;
+      background: var(--purple-light);
+      border-radius: var(--r-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .section-body {
+      color: #4b3d62;
+      line-height: 1.75;
+      font-size: 0.95rem;
+    }
+
+    /* ─── AMENITIES CHIPS ─────────────────────────────────── */
+    .amenities-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 4px;
+    }
+    .amenity-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 16px;
+      background: var(--purple-light);
+      border: 1.5px solid rgba(108, 63, 197, 0.18);
+      border-radius: var(--r-full);
+      font-size: 0.84rem;
+      font-weight: 750;
+      color: var(--ink-soft);
+      transition: background 0.18s, border-color 0.18s, transform 0.15s;
+      cursor: default;
+    }
+    .amenity-chip:hover {
+      background: rgba(108, 63, 197, 0.15);
+      border-color: rgba(108, 63, 197, 0.35);
+      transform: translateY(-1px);
+    }
+    .amenity-chip .chip-icon { font-size: 1.05rem; }
+    .amenity-chip.highlight {
+      background: var(--gold-light);
+      border-color: rgba(245, 158, 11, 0.30);
+      color: #92400e;
+    }
+
+    /* ─── HOUSE RULES ─────────────────────────────────────── */
+    .rules-box {
+      background: #fdf8f5;
+      border: 1.5px solid #f0e4d4;
+      border-radius: var(--r-lg);
+      padding: 22px 26px;
+    }
+    .rules-box p {
+      color: #5b4032;
+      font-size: 0.92rem;
+      line-height: 1.75;
+    }
+
+    /* ─── LOCATION BLOCK ──────────────────────────────────── */
+    .location-address {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 18px 22px;
+      background: var(--purple-glass);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      margin-bottom: 14px;
+    }
+    .location-address .loc-icon {
+      font-size: 1.6rem;
+      flex-shrink: 0;
+      line-height: 1;
+      margin-top: 2px;
+    }
+    .location-address .addr-text {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--ink-soft);
+      line-height: 1.5;
+    }
+    .location-address .addr-text small {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .btn-maps {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--surface);
+      border: 1.5px solid var(--line-strong);
+      border-radius: var(--r-md);
+      color: var(--purple);
+      font-weight: 800;
+      font-size: 0.88rem;
+      transition: background 0.18s, border-color 0.18s, transform 0.15s;
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-maps:hover {
+      background: var(--purple-light);
+      border-color: var(--purple);
+      transform: translateY(-1px);
+    }
+
+    /* ─── NAVRATRI BANNER ─────────────────────────────────── */
+    .navratri-banner {
+      background: linear-gradient(135deg, #1e0a38 0%, #5b1fa5 40%, #c72680 70%, #f07b10 100%);
+      border-radius: var(--r-lg);
+      padding: 28px 30px;
+      margin-top: 0;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(103, 58, 183, 0.35);
+    }
+    .navratri-banner::before {
+      content: '🪔';
+      position: absolute;
+      top: -10px;
+      right: 18px;
+      font-size: 5rem;
+      opacity: 0.12;
+      pointer-events: none;
+    }
+    .navratri-banner::after {
+      content: '✦ ✦ ✦';
+      position: absolute;
+      bottom: 10px;
+      right: 22px;
+      color: rgba(255,255,255,0.18);
+      font-size: 1.3rem;
+      letter-spacing: 6px;
+      pointer-events: none;
+    }
+    .navratri-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.22);
+      backdrop-filter: blur(6px);
+      color: rgba(255,255,255,0.95);
+      font-size: 0.73rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: var(--r-full);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 13px;
+    }
+    .navratri-banner h3 {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .navratri-banner p {
+      color: rgba(255,255,255,0.84);
+      font-size: 0.88rem;
+      font-weight: 600;
+      line-height: 1.6;
+      max-width: 420px;
+    }
+    .navratri-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 18px;
+      padding: 11px 24px;
+      background: rgba(255,255,255,0.96);
+      color: var(--purple-dark);
+      border-radius: var(--r-full);
+      font-size: 0.88rem;
+      font-weight: 850;
+      box-shadow: 0 6px 22px rgba(0,0,0,0.22);
+      transition: background 0.18s, transform 0.15s;
+    }
+    .navratri-cta:hover { background: #fff; transform: translateY(-2px); }
+
+    /* ─── EXTENDED STAY BOX ───────────────────────────────── */
+    .extended-stay-box {
+      background: linear-gradient(135deg, #fdf5ff 0%, #f0ebff 100%);
+      border: 1.5px solid #ddd0f8;
+      border-radius: var(--r-lg);
+      padding: 28px 30px;
+    }
+    .extended-stay-box h3 {
+      font-size: 1.08rem;
+      font-weight: 900;
+      color: var(--ink);
+      margin-bottom: 7px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+    .extended-stay-box p {
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+      line-height: 1.65;
+      margin-bottom: 18px;
+    }
+    .btn-secondary-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 22px;
+      background: var(--surface);
+      border: 1.5px solid var(--line-strong);
+      border-radius: var(--r-md);
+      color: var(--purple);
+      font-size: 0.9rem;
+      font-weight: 800;
+      transition: background 0.18s, border-color 0.18s, transform 0.15s;
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-secondary-outline:hover {
+      background: var(--purple-light);
+      border-color: var(--purple);
+      transform: translateY(-1px);
+    }
+
+    /* ─── STICKY SIDEBAR ──────────────────────────────────── */
+    .sidebar-card {
+      background: var(--surface);
+      border: 1.5px solid var(--line-strong);
+      border-radius: var(--r-xl);
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      position: sticky;
+      top: 88px;
+    }
+
+    /* Price block */
+    .price-section {
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 22px;
+    }
+    .price-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+    .price-rupee {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 4px;
+      line-height: 1;
+    }
+    .price-amount {
+      font-size: 2.6rem;
+      font-weight: 950;
+      color: var(--ink);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+    .price-unit {
+      font-size: 0.85rem;
+      font-weight: 650;
+      color: var(--muted);
+    }
+    .price-strike-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .price-strike {
+      font-size: 0.88rem;
+      color: var(--muted);
+      text-decoration: line-through;
+      font-weight: 600;
+    }
+    .navratri-deal-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      background: linear-gradient(90deg, #f07b10, #d946a8);
+      border-radius: var(--r-full);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    /* Guest & bed info */
+    .guest-bed-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      background: var(--purple-glass);
+      border: 1px solid rgba(108, 63, 197, 0.14);
+      border-radius: var(--r-md);
+      margin-bottom: 20px;
+    }
+    .guest-bed-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.86rem;
+      font-weight: 750;
+      color: var(--ink-soft);
+    }
+    .guest-bed-item .icon { font-size: 1.1rem; }
+    .guest-bed-divider {
+      width: 1px;
+      height: 22px;
+      background: var(--line-strong);
+      margin: 0 4px;
+    }
+
+    /* Breakfast badge in sidebar */
+    .sidebar-breakfast {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 14px;
+      background: var(--green-light);
+      border: 1px solid rgba(22, 163, 74, 0.22);
+      border-radius: var(--r-full);
+      color: var(--green);
+      font-size: 0.82rem;
+      font-weight: 850;
+      margin-bottom: 18px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    /* CTA Book Button */
+    .btn-book-primary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      min-height: 56px;
+      background: linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+      color: #ffffff;
+      border-radius: var(--r-lg);
+      font-size: 1.05rem;
+      font-weight: 850;
+      letter-spacing: 0.01em;
+      box-shadow: 0 8px 28px rgba(108, 63, 197, 0.42);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      margin-bottom: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-book-primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.14) 0%, transparent 60%);
+    }
+    .btn-book-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 40px rgba(108, 63, 197, 0.55);
+    }
+    .btn-book-primary:active { transform: translateY(0); }
+    .btn-book-primary .btn-arrow { font-size: 1.1rem; }
+
+    /* Secondary Host Button */
+    .btn-host-secondary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      min-height: 46px;
+      background: var(--surface);
+      border: 1.5px solid var(--line-strong);
+      border-radius: var(--r-md);
+      color: var(--ink-soft);
+      font-size: 0.92rem;
+      font-weight: 800;
+      transition: background 0.18s, border-color 0.18s, transform 0.15s;
+    }
+    .btn-host-secondary:hover {
+      background: var(--purple-light);
+      border-color: var(--purple-mid);
+      color: var(--purple);
+      transform: translateY(-1px);
+    }
+
+    /* Trust bullets */
+    .trust-section {
+      margin-top: 22px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+    .trust-label {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .trust-bullets { display: grid; gap: 10px; }
+    .trust-bullet {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--ink-soft);
+    }
+    .trust-check {
+      width: 22px; height: 22px;
+      background: var(--green-light);
+      border: 1.5px solid rgba(22, 163, 74, 0.25);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--green-mid);
+      font-size: 0.72rem;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    /* Star rating display in sidebar */
+    .sidebar-rating {
+      margin-top: 20px;
+      padding: 16px 18px;
+      background: var(--gold-light);
+      border: 1px solid rgba(245, 158, 11, 0.22);
+      border-radius: var(--r-md);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .sidebar-rating .stars-row {
+      display: flex;
+      gap: 3px;
+      font-size: 1.1rem;
+    }
+    .sidebar-rating .score-big {
+      font-size: 1.6rem;
+      font-weight: 950;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .sidebar-rating .score-label {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    /* Contact phone */
+    .contact-phone-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px;
+      margin-top: 16px;
+      background: var(--surface-off);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      color: var(--ink-soft);
+      font-size: 0.85rem;
+      font-weight: 750;
+      transition: background 0.18s;
+    }
+    .contact-phone-bar:hover { background: var(--purple-light); }
+    .contact-phone-bar strong { color: var(--purple); font-weight: 900; }
+
+    /* ─── SECTION SPACERS ─────────────────────────────────── */
+    .main-sections { display: flex; flex-direction: column; gap: 0; }
+    .section-wrap {
+      padding: 28px 0;
+      border-top: 1px solid var(--line);
+    }
+    .section-wrap:first-child { border-top: none; padding-top: 0; }
+
+    /* ─── MOBILE RESPONSIVE ───────────────────────────────── */
+    @media (max-width: 860px) {
+      .detail-layout {
+        grid-template-columns: 1fr;
+        gap: 22px;
+      }
+      .sidebar-card {
+        position: static;
+        order: -1; /* Sidebar first on mobile */
+      }
+      .hero-parallax-wrap { height: 260px; }
+      .hero-parallax-wrap::before { background-attachment: scroll; }
+      .content-body { padding: 24px 22px 28px; }
+      .quick-facts-grid { grid-template-columns: 1fr; }
+      .q-fact-cell { border-right: none !important; }
+      .q-fact-cell:last-child { border-bottom: none !important; }
+      .navratri-banner h3 { font-size: 1.1rem; }
+      .breadcrumb-wrap { padding: 14px 18px 0; }
+      .container { padding: 0 16px 60px; }
+    }
+    @media (max-width: 540px) {
+      .hero-badges { padding: 14px 16px; }
+      .badge-rating .score { font-size: 1.2rem; }
+      .price-amount { font-size: 2.1rem; }
+      .btn-book-primary { font-size: 0.97rem; min-height: 52px; }
+      .content-body { padding: 20px 18px 22px; }
+      .sidebar-card { padding: 22px 20px; }
+    }
+  
+    .mobile-room-sticky-dock {
+      display: none;
+    }
+    @media (max-width: 860px) {
+      .insta-bottom-nav { display: none !important; }
+      body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important; }
+      .mobile-room-sticky-dock {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 9998;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border-top: 1px solid rgba(103, 58, 183, 0.16);
+        box-shadow: 0 -8px 30px rgba(18, 9, 32, 0.12);
+        padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .m-dock-price-info {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.15;
+      }
+      .m-dock-tag {
+        font-size: 0.65rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+      }
+      .m-dock-rate {
+        font-size: 1.35rem;
+        font-weight: 900;
+        color: var(--purple-deep);
+        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      }
+      .m-dock-rate small {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--muted);
+      }
+      .m-dock-cta-btn {
+        background: linear-gradient(135deg, #7c3aed 0%, #581c87 100%);
+        color: #ffffff !important;
+        font-size: 0.95rem;
+        font-weight: 850;
+        padding: 11px 22px;
+        border-radius: 999px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 4px 18px rgba(124, 58, 237, 0.4);
+        flex-shrink: 0;
+      }
+      .m-dock-cta-btn.soldout {
+        background: #94a3b8;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+    }
+
+  </style>
+{% endblock %}
+
+{% block content %}
+
+  <!-- ═══════════════════════════════════════════════════════
+       HERO PARALLAX IMAGE SECTION
+  ════════════════════════════════════════════════════════ -->
+  <div class="hero-parallax-wrap" style="
+    --hero-bg: url('{% if room.cover_image_url %}{{ room.cover_image_url }}{% else %}https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1400&q=85{% endif %}');
+  ">
+    <!-- Badges layer -->
+    <div class="hero-badges">
+      <!-- TOP-LEFT: Room type + Navratri badge -->
+      <div class="hero-badge-left">
+        <span class="badge-room-type">
+          <span class="dot"></span>
+          {{ room.room_type|default:"Deluxe Room" }}
+        </span>
+        <span class="badge-navratri">🎊 Navratri Special</span>
+      </div>
+
+      <!-- TOP-RIGHT: Rating badge with gold stars -->
+      <div class="badge-rating">
+        <div class="stars">
+          {% if room.guest_rating %}
+            {% with r=room.guest_rating %}
+              {% if r >= 1 %}⭐{% endif %}
+              {% if r >= 2 %}⭐{% endif %}
+              {% if r >= 3 %}⭐{% endif %}
+              {% if r >= 4 %}⭐{% endif %}
+              {% if r >= 5 %}⭐{% endif %}
+            {% endwith %}
+          {% else %}
+            ⭐⭐⭐⭐⭐
+          {% endif %}
+        </div>
+        <div class="score">{{ room.guest_rating|default:"4.9" }}</div>
+        <div class="label">Guest Rating</div>
+      </div>
+    </div>
+
+    <!-- BOTTOM: city tag -->
+    <div class="hero-bottom-label">
+      <div class="hero-room-name-preview">{{ room.property_name }}</div>
+      <span class="hero-city-tag">📍 {{ room.city|default:"Ahmedabad" }}</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       BREADCRUMB
+  ════════════════════════════════════════════════════════ -->
+  <div class="breadcrumb-wrap">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="{% url 'home' %}">Home</a>
+      <span class="crumb-sep"></span>
+      <a href="{% url 'rooms' %}">Stays &amp; Hotels</a>
+      <span class="crumb-sep"></span>
+      <span class="crumb-current" title="{{ room.name }}">{{ room.name }}</span>
+    </nav>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       MAIN 2-COLUMN LAYOUT
+  ════════════════════════════════════════════════════════ -->
+  <main class="container">
+    <div class="detail-layout">
+
+      <!-- ─────────────────────────────────────────────────
+           LEFT: MAIN DETAILS CARD
+      ────────────────────────────────────────────────── -->
+      <article class="main-card">
+        <div class="content-body">
+
+          <!-- Property Name + Room H1 + Location -->
+          <div>
+            <div class="prop-name-row">
+              <span class="hotel-icon">🏨</span>
+              {{ room.property_name }}
+            </div>
+            <h1 class="room-h1">{{ room.name }}</h1>
+            <div class="loc-row">
+              <span class="pin">📍</span>
+              {{ room.address }}{% if room.city %}, {{ room.city }}{% endif %}
+            </div>
+          </div>
+
+          <!-- ── QUICK FACTS GRID (4 cells) ─────────────── -->
+          <div class="quick-facts-grid" style="margin-top: 28px;">
+            <!-- Cell 1: Guests & Bedding -->
+            <div class="q-fact-cell">
+              <span class="q-fact-icon">🛏️</span>
+              <div class="q-fact-label">Guests &amp; Bedding</div>
+              <div class="q-fact-value">Up to {{ room.capacity|default:"2" }} Guests</div>
+              <div class="q-fact-sub">{{ room.bed_type|default:"Double Bed" }}</div>
+            </div>
+
+            <!-- Cell 2: Check-in / Check-out -->
+            <div class="q-fact-cell">
+              <span class="q-fact-icon">🕐</span>
+              <div class="q-fact-label">Check-in / Check-out</div>
+              <div class="q-fact-value">
+                In: {{ room.check_in_time|time:"g:i A"|default:"12:00 PM" }}
+              </div>
+              <div class="q-fact-sub">
+                Out: {{ room.check_out_time|time:"g:i A"|default:"11:00 AM" }}
+              </div>
+            </div>
+
+            <!-- Cell 3: Breakfast -->
+            <div class="q-fact-cell">
+              <span class="q-fact-icon">☕</span>
+              <div class="q-fact-label">Breakfast Option</div>
+              {% if room.breakfast_included %}
+              <div class="q-fact-value">Included</div>
+              <span class="fact-pill green">✓ Complimentary</span>
+              {% else %}
+              <div class="q-fact-value">Not Included</div>
+              <span class="fact-pill orange">Available at Property</span>
+              {% endif %}
+            </div>
+
+            <!-- Cell 4: Cancellation -->
+            <div class="q-fact-cell">
+              <span class="q-fact-icon">🛡️</span>
+              <div class="q-fact-label">Cancellation Policy</div>
+              <div class="q-fact-value">
+                {{ room.cancellation_policy|default:"Free cancellation up to 24h" }}
+              </div>
+              <span class="fact-pill blue">Flexible</span>
+            </div>
+          </div>
+
+          <!-- ── MAIN SECTIONS ─────────────────────────── -->
+          <div class="main-sections" style="margin-top: 30px;">
+
+            <!-- About This Stay -->
+            <div class="section-wrap">
+              <div class="section-heading">
+                <div class="section-heading-icon">✨</div>
+                About This Stay
+              </div>
+              <p class="section-body">
+                {{ room.description|default:"A luxurious, beautifully designed room crafted for the ultimate Ahmedabad festival experience. Wake up refreshed, enjoy premium amenities, and step out into the vibrant heart of the city." }}
+              </p>
+            </div>
+
+            <!-- Amenities -->
+            {% if room.amenities %}
+            <div class="section-wrap">
+              <div class="section-heading">
+                <div class="section-heading-icon">🎁</div>
+                Included Amenities
+              </div>
+              <!-- Smart emoji chips — we parse common words from room.amenities -->
+              <div class="amenities-grid">
+                {% with amenity_text=room.amenities|lower %}
+                  {% if "wifi" in amenity_text or "wi-fi" in amenity_text or "internet" in amenity_text %}
+                  <span class="amenity-chip"><span class="chip-icon">📶</span> Wi-Fi</span>
+                  {% endif %}
+                  {% if "ac" in amenity_text or "air" in amenity_text or "condition" in amenity_text %}
+                  <span class="amenity-chip"><span class="chip-icon">❄️</span> Air Conditioning</span>
+                  {% endif %}
+                  {% if "tv" in amenity_text or "television" in amenity_text %}
+                  <span class="amenity-chip"><span class="chip-icon">📺</span> Smart TV</span>
+                  {% endif %}
+                  {% if "pool" in amenity_text or "swim" in amenity_text %}
+                  <span class="amenity-chip highlight"><span class="chip-icon">🏊</span> Swimming Pool</span>
+                  {% endif %}
+                  {% if "breakfast" in amenity_text %}
+                  <span class="amenity-chip highlight"><span class="chip-icon">☕</span> Breakfast</span>
+                  {% endif %}
+                  {% if "parking" in amenity_text or "park" in amenity_text %}
+                  <span class="amenity-chip"><span class="chip-icon">🅿️</span> Parking</span>
+                  {% endif %}
+                  {% if "gym" in amenity_text or "fitness" in amenity_text %}
+                  <span class="amenity-chip"><span class="chip-icon">🏋️</span> Fitness Centre</span>
+                  {% endif %}
+                  {% if "spa" in amenity_text %}
+                  <span class="amenity-chip highlight"><span class="chip-icon">💆</span> Spa</span>
+                  {% endif %}
+                  {% if "restaurant" in amenity_text or "dining" in amenity_text %}
+                  <span class="amenity-chip"><span class="chip-icon">🍽️</span> Restaurant</span>
+                  {% endif %}
+                  {% if "bar" in amenity_text %}
+                  <span class="amenity-chip"><span class="chip-icon">🍸</span> Bar &amp; Lounge</span>
+                  {% endif %}
+                  {% if "laundry" in amenity_text or "wash" in amenity_text %}
+                  <span class="amenity-chip"><span class="chip-icon">🧺</span> Laundry</span>
+                  {% endif %}
+                  {% if "room service" in amenity_text %}
+                  <span class="amenity-chip"><span class="chip-icon">🛎️</span> Room Service</span>
+                  {% endif %}
+                  {% if "heater" in amenity_text or "heat" in amenity_text %}
+                  <span class="amenity-chip"><span class="chip-icon">🌡️</span> Room Heater</span>
+                  {% endif %}
+                  {% if "balcony" in amenity_text or "terrace" in amenity_text %}
+                  <span class="amenity-chip"><span class="chip-icon">🌅</span> Balcony / Terrace</span>
+                  {% endif %}
+                  {% if "minibar" in amenity_text or "mini bar" in amenity_text %}
+                  <span class="amenity-chip"><span class="chip-icon">🍾</span> Mini Bar</span>
+                  {% endif %}
+                  {% if "safe" in amenity_text or "locker" in amenity_text %}
+                  <span class="amenity-chip"><span class="chip-icon">🔒</span> In-room Safe</span>
+                  {% endif %}
+                {% endwith %}
+                <!-- Fallback raw text chip if nothing matched -->
+                <span class="amenity-chip" style="background:var(--surface-off); border-style:dashed;">
+                  <span class="chip-icon">📋</span>
+                  <span style="font-size:0.8rem; color:var(--muted);">{{ room.amenities|truncatechars:80 }}</span>
+                </span>
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- House Rules -->
+            {% if room.house_rules %}
+            <div class="section-wrap">
+              <div class="section-heading">
+                <div class="section-heading-icon">📜</div>
+                House Rules &amp; Guest Guidelines
+              </div>
+              <div class="rules-box">
+                <p>{{ room.house_rules }}</p>
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- Location & Directions -->
+            <div class="section-wrap">
+              <div class="section-heading">
+                <div class="section-heading-icon">🗺️</div>
+                Property Location &amp; Directions
+              </div>
+              <div class="location-address">
+                <div class="loc-icon">📍</div>
+                <div>
+                  <div class="addr-text">
+                    {{ room.address }}{% if room.city %}, {{ room.city }}{% endif %}
+                    <small>Gujarat, India — Click below for turn-by-turn directions</small>
+                  </div>
+                </div>
+              </div>
+              <a class="btn-maps"
+                 href="https://maps.google.com/?q={{ room.address|urlencode }}{% if room.city %}+{{ room.city|urlencode }}{% endif %}"
+                 target="_blank"
+                 rel="noopener noreferrer">
+                🗺️ Open in Google Maps &rarr;
+              </a>
+            </div>
+
+            <!-- NAVRATRI SPECIAL RATES BANNER -->
+            <div class="section-wrap">
+              <div class="navratri-banner">
+                <div class="navratri-eyebrow">🪔 Limited Period Offer</div>
+                <h3>Special Navratri Festival Rates Available!</h3>
+                <p>
+                  Book <strong style="color:#fff;">3+ nights</strong> during the Navratri season and unlock an exclusive festival package — including special room décor, complimentary garba event passes &amp; extended check-out.
+                </p>
+                <a class="navratri-cta" href="{% url 'book_room' room.pk %}">
+                  🎊 Claim Festival Package &rarr;
+                </a>
+              </div>
+            </div>
+
+            <!-- EXTENDED STAY INQUIRY -->
+            <div class="section-wrap" style="border-top:none; padding-top:0;">
+              <div class="extended-stay-box">
+                <h3>
+                  <span style="font-size:1.3rem;">🤝</span>
+                  Need an Extended Stay or Group Booking?
+                </h3>
+                <p>
+                  Traveling with wedding guests, a corporate delegation, or a large family group? Get in touch directly for tailor-made multi-night packages, group discounts, and dedicated on-site assistance throughout your stay.
+                </p>
+                <a class="btn-secondary-outline"
+                   href="{% url 'contact' %}?topic=stay&subject=Extended+Stay+Inquiry+for+{{ room.name|urlencode }}">
+                  ✉️ Send Extended Stay / Group Inquiry &rarr;
+                </a>
+              </div>
+            </div>
+
+          </div><!-- /main-sections -->
+        </div><!-- /content-body -->
+      </article>
+
+      <!-- ─────────────────────────────────────────────────
+           RIGHT: STICKY BOOKING SIDEBAR
+      ────────────────────────────────────────────────── -->
+      <aside class="sidebar-card">
+
+        <!-- Price -->
+        <div class="price-section">
+          <div class="price-eyebrow">Starting From</div>
+          <div class="price-row">
+            <div>
+              <div style="display:flex; align-items:baseline; gap:4px;">
+                <span class="price-rupee">₹</span>
+                <span class="price-amount">{{ room.price_per_night }}</span>
+              </div>
+              <span class="price-unit">per night &mdash; taxes may apply</span>
+            </div>
+          </div>
+          <div class="price-strike-row">
+            <span class="price-strike">₹{{ room.price_per_night|add:"500" }}</span>
+            <span class="navratri-deal-pill">🎊 Navratri Deal</span>
+          </div>
+        </div>
+
+        <!-- Guest count + Bed type -->
+        <div class="guest-bed-row">
+          <div class="guest-bed-item">
+            <span class="icon">👥</span>
+            <span>Up to {{ room.capacity|default:"2" }} guests</span>
+          </div>
+          <div class="guest-bed-divider"></div>
+          <div class="guest-bed-item">
+            <span class="icon">🛏️</span>
+            <span>{{ room.bed_type|default:"Double Bed" }}</span>
+          </div>
+        </div>
+
+        <!-- Breakfast badge (conditional) -->
+        {% if room.breakfast_included %}
+        <div class="sidebar-breakfast">
+          ☕ Complimentary Breakfast Included
+        </div>
+        {% endif %}
+
+        <!-- PRIMARY CTA -->
+        <a class="btn-book-primary" href="{% url 'book_room' room.pk %}">
+          <span>🗓️</span>
+          <span>Select Dates &amp; Book Room</span>
+          <span class="btn-arrow">&rarr;</span>
+        </a>
+
+        <!-- Secondary host button -->
+        <a class="btn-host-secondary"
+           href="{% url 'contact' %}?topic=stay&subject=Question+regarding+{{ room.name|urlencode }}">
+          💬 Ask Property Host
+        </a>
+
+        <!-- Trust bullets -->
+        <div class="trust-section">
+          <div class="trust-label">Why Book With Us</div>
+          <div class="trust-bullets">
+            <div class="trust-bullet">
+              <span class="trust-check">✓</span>
+              Instant Reservation Confirmation
+            </div>
+            <div class="trust-bullet">
+              <span class="trust-check">✓</span>
+              Zero Upfront Fees — Pay at Check-in
+            </div>
+            <div class="trust-bullet">
+              <span class="trust-check">✓</span>
+              Verified Property &amp; Cleanliness
+            </div>
+            <div class="trust-bullet">
+              <span class="trust-check">✓</span>
+              Free Cancellation up to 24 Hours Prior
+            </div>
+          </div>
+        </div>
+
+        <!-- Rating display (if exists) -->
+        {% if room.guest_rating %}
+        <div class="sidebar-rating">
+          <div>
+            <div class="stars-row">
+              {% with r=room.guest_rating %}
+                {% if r >= 1 %}⭐{% endif %}
+                {% if r >= 2 %}⭐{% endif %}
+                {% if r >= 3 %}⭐{% endif %}
+                {% if r >= 4 %}⭐{% endif %}
+                {% if r >= 5 %}⭐{% endif %}
+              {% endwith %}
+            </div>
+            <div class="score-label">Guest Satisfaction</div>
+          </div>
+          <div>
+            <div class="score-big">{{ room.guest_rating }}<span style="font-size:1rem; color:var(--muted); font-weight:600;">/5</span></div>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Contact phone -->
+        {% if room.contact_phone %}
+        <a class="contact-phone-bar" href="tel:{{ room.contact_phone }}">
+          📞 <strong>{{ room.contact_phone }}</strong> &mdash; Call Property
+        </a>
+        {% endif %}
+
+      </aside>
+
+    </div><!-- /detail-layout -->
+  </main>
+{% endblock %}

@@ -1,0 +1,263 @@
+<!-- ══════════════════════════════════════════════════════════════
+     ULTRA-COMPACT FLOATING TOP NOTIFICATION: ONLINE PAYMENT & ABOUT PAGE
+     (Haav Small · 100% Mobile Friendly · Sleek Glassmorphism Pill)
+══════════════════════════════════════════════════════════════ -->
+<aside id="rzpTopNotification" class="rzp-compact-toast" role="status" aria-live="polite">
+  <div class="rzp-compact-inner">
+    
+    <!-- Mini Glowing Icon -->
+    <span class="rzp-mini-icon" aria-hidden="true">⚡</span>
+
+    <!-- Gujarati Message Text Requested by User -->
+    <div class="rzp-mini-content">
+      <span class="rzp-mini-guj">ઑનલાઇન પેમેન્ટ વિશે વધારે જાણવું હોય તો About પેજ ખોલો</span>
+    </div>
+
+    <!-- Direct About Page Guide Button Link -->
+    <a href="{% url 'about' %}#payment-guide" target="_blank" rel="noopener noreferrer" class="rzp-mini-link-btn" title="About પેજ પર પેમેન્ટ ગાઇડ જુઓ">
+      <span>About Page</span>
+      <span class="rzp-arrow">➔</span>
+    </a>
+
+    <!-- Dismiss Button -->
+    <button type="button" class="rzp-mini-close" onclick="hideRazorpayTopNotification()" aria-label="Close notification" title="Close">✕</button>
+
+  </div>
+
+  <!-- 5-Second Micro Progress Fill Line -->
+  <div class="rzp-mini-track">
+    <div class="rzp-mini-progress" id="rzpMiniProgress"></div>
+  </div>
+</aside>
+
+<style>
+/* ══════════════════════════════════════════════════════════════
+   ULTRA-COMPACT TOP PILL STYLES (HAAV SMALL & MOBILE FRIENDLY)
+══════════════════════════════════════════════════════════════ */
+.rzp-compact-toast {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translate(-50%, -180%);
+  z-index: 99999999;
+  width: auto;
+  max-width: min(520px, calc(100vw - 20px));
+  background: rgba(15, 10, 30, 0.94);
+  border: 1px solid rgba(139, 92, 246, 0.45);
+  border-radius: 999px;
+  padding: 6px 10px 5px 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 16px rgba(124, 58, 237, 0.25);
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease, visibility 0.22s ease;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.rzp-compact-toast.rzp-toast-active {
+  transform: translate(-50%, 0);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.rzp-compact-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.25;
+}
+
+.rzp-mini-icon {
+  font-size: 13px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(124, 58, 237, 0.35);
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  flex-shrink: 0;
+}
+
+.rzp-mini-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.rzp-mini-guj {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #f1f5f9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+.rzp-mini-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff !important;
+  font-size: 10.5px;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.rzp-mini-link-btn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 3px 12px rgba(16, 185, 129, 0.6);
+  color: #ffffff;
+}
+
+.rzp-arrow {
+  font-size: 11px;
+  transition: transform 0.15s ease;
+}
+.rzp-mini-link-btn:hover .rzp-arrow {
+  transform: translateX(2px);
+}
+
+.rzp-mini-close {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: color 0.15s ease;
+}
+
+.rzp-mini-close:hover {
+  color: #ffffff;
+}
+
+.rzp-mini-track {
+  width: 100%;
+  height: 1.5px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.rzp-mini-progress {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #10b981, #6366f1, #a855f7);
+  transform-origin: left;
+}
+
+@keyframes rzpBarProgressCompact {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+@media (max-width: 520px) {
+  .rzp-compact-toast {
+    top: 8px;
+    padding: 5px 8px 4px 10px;
+    border-radius: 12px;
+    width: calc(100vw - 16px);
+    max-width: calc(100vw - 16px);
+  }
+  .rzp-mini-guj {
+    font-size: 10.5px;
+  }
+  .rzp-mini-link-btn {
+    padding: 3px 8px;
+    font-size: 10px;
+  }
+  .rzp-mini-icon {
+    width: 19px;
+    height: 19px;
+    font-size: 11px;
+  }
+}
+</style>
+
+<script>
+window.rzpToastTimer = null;
+window.rzpActiveCallback = null;
+
+window.triggerRazorpayTopNotification = function(onProceedOrMs, durationMs) {
+  let cb = null;
+  let ms = 5000; // Default 5 seconds as requested by user
+
+  if (typeof onProceedOrMs === 'function') {
+    cb = onProceedOrMs;
+    ms = durationMs || 5000;
+  } else if (typeof onProceedOrMs === 'number') {
+    ms = onProceedOrMs;
+    cb = (typeof durationMs === 'function') ? durationMs : null;
+  }
+
+  const toast = document.getElementById('rzpTopNotification');
+  const fill = document.getElementById('rzpMiniProgress');
+
+  if (!toast) {
+    if (typeof cb === 'function') cb();
+    return;
+  }
+
+  if (window.rzpToastTimer) clearTimeout(window.rzpToastTimer);
+  window.rzpActiveCallback = cb;
+
+  // Restart 5-second progress bar animation
+  if (fill) {
+    fill.style.animation = 'none';
+    fill.offsetHeight; // reflow
+    fill.style.animation = 'rzpBarProgressCompact ' + ms + 'ms linear forwards';
+  }
+
+  toast.classList.add('rzp-toast-active');
+
+  const executeProceed = () => {
+    if (window.rzpToastTimer) clearTimeout(window.rzpToastTimer);
+    toast.classList.remove('rzp-toast-active');
+    const fn = window.rzpActiveCallback;
+    window.rzpActiveCallback = null;
+    if (typeof fn === 'function') {
+      fn();
+    }
+  };
+
+  window.rzpToastTimer = setTimeout(executeProceed, ms);
+};
+
+window.hideRazorpayTopNotification = function() {
+  const toast = document.getElementById('rzpTopNotification');
+  if (window.rzpToastTimer) clearTimeout(window.rzpToastTimer);
+  if (toast) toast.classList.remove('rzp-toast-active');
+};
+
+// Aliases for compatibility
+window.showOnlinePaymentGuideModal = function() {
+  window.triggerRazorpayTopNotification(5000);
+};
+window.closeOnlinePayGuideModal = function() {
+  window.hideRazorpayTopNotification();
+};
+</script>

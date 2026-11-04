@@ -1,0 +1,140 @@
+{% load static %}
+<style>
+.aa-brand-mark {
+  width: 44px;
+  height: 44px;
+  display: block;
+  flex: none;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 50%;
+  border: 2px solid #edbd7a;
+  background: #35205f;
+  filter: drop-shadow(0 3px 7px rgba(53, 32, 95, 0.35));
+}
+.aa-brand-mark-large {
+  width: 136px;
+  height: 136px;
+}
+.aa-intro-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 50% 45%, #3d2358 0%, #17101f 75%);
+  animation: aa-intro-fade 2.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  pointer-events: none;
+}
+.aa-intro-center {
+  display: grid;
+  justify-items: center;
+  gap: 20px;
+  animation: aa-intro-rise 0.75s cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+/* ── Live Continuous Rotating Dual Blue & Red Glowing Ring ──── */
+.aa-intro-ring-wrap {
+  position: relative;
+  width: 148px;
+  height: 148px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 25px rgba(0, 210, 255, 0.45)) drop-shadow(0 0 35px rgba(239, 68, 68, 0.45));
+}
+
+.aa-intro-ring-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    #00d2ff 0deg,
+    #2563eb 85deg,
+    transparent 110deg,
+    #ff0055 180deg,
+    #ef4444 265deg,
+    transparent 290deg,
+    #00d2ff 360deg
+  );
+  animation: aaLiveSpinRing 2s linear infinite;
+  z-index: 1;
+}
+
+.aa-intro-ring-wrap::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    #00d2ff 0deg,
+    #2563eb 85deg,
+    transparent 110deg,
+    #ff0055 180deg,
+    #ef4444 265deg,
+    transparent 290deg,
+    #00d2ff 360deg
+  );
+  filter: blur(14px);
+  opacity: 0.9;
+  animation: aaLiveSpinRing 2s linear infinite;
+  z-index: 0;
+}
+
+@keyframes aaLiveSpinRing {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.aa-intro-ring-wrap .aa-brand-mark {
+  position: relative;
+  z-index: 2;
+  width: 136px;
+  height: 136px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  border: 3.5px solid #1a102a;
+  background: #17101f;
+  box-shadow: 0 4px 22px rgba(0, 0, 0, 0.65), inset 0 0 12px rgba(0, 0, 0, 0.45);
+  display: block;
+}
+
+.aa-intro-name {
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 850;
+  line-height: 1.2;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.8), 0 0 24px rgba(188, 155, 255, 0.45);
+}
+
+@keyframes aa-intro-rise {
+  from { opacity: 0; transform: translateY(14px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes aa-intro-fade {
+  0%, 75% { opacity: 1; visibility: visible; }
+  100% { opacity: 0; visibility: hidden; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aa-intro-screen { animation: aa-intro-fade 0.15s ease forwards; }
+  .aa-intro-center { animation-duration: 0.01ms; }
+  .aa-intro-ring-wrap::before, .aa-intro-ring-wrap::after { animation-duration: 0.01ms; }
+}
+</style>
+<div class="aa-intro-screen" aria-hidden="true">
+  <div class="aa-intro-center">
+    <div class="aa-intro-ring-wrap">
+      {% include "bookings/_brand_mark.html" with large=True %}
+    </div>
+    <div class="aa-intro-name">Amazing Ahmedabad</div>
+  </div>
+</div>

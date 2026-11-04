@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Staff sign in | Amazing Ahmedabad</title>
+    <style>
+      :root {
+        --ink: #241c31;
+        --muted: #746e7d;
+        --purple: #673ab7;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(ellipse at 84% 15%, #f8bc91 0, transparent 29%),
+          linear-gradient(135deg, #281246, #6844a0 60%, #f8f5fb);
+        font: 16px/1.55 system-ui;
+        color: var(--ink);
+        display: grid;
+        place-items: center;
+        padding: 22px;
+      }
+      .card {
+        width: min(100%, 450px);
+        background: #fff;
+        border: 1px solid #ffffff80;
+        border-radius: 23px;
+        padding: clamp(25px, 6vw, 42px);
+        box-shadow: 0 30px 90px #16063855;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.05rem;
+        font-weight: 900;
+        text-decoration: none;
+        color: var(--ink);
+      }
+      .brand span {
+        color: var(--purple);
+      }
+      .eyebrow {
+        margin: 29px 0 3px;
+        color: var(--purple);
+        font-size: 0.74rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        font-weight: 900;
+      }
+      h1 {
+        font-size: 2.15rem;
+        letter-spacing: -0.05em;
+        margin: 0;
+      }
+      .hint {
+        color: var(--muted);
+        margin: 7px 0 22px;
+      }
+      form p {
+        margin: 15px 0;
+      }
+      label {
+        display: block;
+        font-weight: 750;
+        margin-bottom: 6px;
+      }
+      input {
+        width: 100%;
+        border: 1px solid #ddd8e5;
+        border-radius: 10px;
+        padding: 12px 13px;
+        font: inherit;
+      }
+      input:focus {
+        outline: 3px solid #6938c52e;
+        border-color: var(--purple);
+      }
+      button {
+        width: 100%;
+        border: 0;
+        border-radius: 11px;
+        background: var(--purple);
+        color: white;
+        padding: 13px;
+        font: inherit;
+        font-weight: 850;
+        cursor: pointer;
+        margin-top: 9px;
+      }
+      button:hover {
+        background: #51289b;
+      }
+      .errorlist {
+        color: #ae2920;
+        margin: 5px 0;
+        padding-left: 20px;
+      }
+      .nonfield {
+        background: #fff0ed;
+        padding: 12px;
+        border-radius: 9px;
+      }
+      .back {
+        display: inline-block;
+        margin-top: 18px;
+        color: var(--purple);
+        font-weight: 800;
+        text-decoration: none;
+      }
+      .helptext {
+        display: block;
+        color: var(--muted);
+        font-size: 0.82rem;
+        margin-top: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    {% include "bookings/_intro.html" %}
+    <main class="card">
+      <div class="brand">
+        {% include "bookings/_brand_mark.html" %}<span>Amazing Ahmedabad</span>
+      </div>
+      <div class="eyebrow">Team access</div>
+      <h1>Admin sign in</h1>
+      <p class="hint">
+        Sign in with your staff account to review customer bookings and payment
+        records.
+      </p>
+      <form method="post">
+        {% csrf_token %}<input type="hidden" name="next" value="{{ next }}" />{{
+        form.as_p }}<button type="submit">Continue to dashboard</button>
+      </form>
+    </main>
+    {% include "bookings/_password_toggle.html" %}
+  </body>
+</html>

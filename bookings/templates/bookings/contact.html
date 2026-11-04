@@ -1,0 +1,1234 @@
+{% extends "bookings/base.html" %}
+{% load static %}
+
+{% block title %}Contact &amp; Inquiries | Amazing Ahmedabad{% endblock %}
+
+{% block extra_css %}
+  <style>
+    /* ══════════════════════════════════════════════════════════════
+       NEO-BRUTALISM DESIGN SYSTEM — AMAZING AHMEDABAD CONTACT
+    ══════════════════════════════════════════════════════════════ */
+    :root {
+      --brutal-black:      #18181b;
+      --brutal-charcoal:   #27272a;
+      --brutal-cream:      #f7f5ef;
+      --brutal-yellow:     #ffde59;
+      --brutal-yellow-lt:  #fef08a;
+      --brutal-purple:     #7c3aed;
+      --brutal-purple-lt:  #ddd6fe;
+      --brutal-purple-bg:  #f5f3ff;
+      --brutal-green:      #22c55e;
+      --brutal-green-lt:   #bbf7d0;
+      --brutal-orange:     #f97316;
+      --brutal-orange-lt:  #fed7aa;
+      --brutal-rose:       #f43f5e;
+      --brutal-rose-lt:    #fecdd3;
+      --brutal-blue:       #0ea5e9;
+      --brutal-blue-lt:    #bae6fd;
+      
+      --brutal-border:     2.5px solid var(--brutal-black);
+      --brutal-border-lg:  3px solid var(--brutal-black);
+      --brutal-shadow:     4px 4px 0px var(--brutal-black);
+      --brutal-shadow-lg:  7px 7px 0px var(--brutal-black);
+      --brutal-shadow-sm:  2.5px 2.5px 0px var(--brutal-black);
+    }
+
+    /* Architectural canvas with subtle micro-dot grid */
+    body {
+      background-color: var(--brutal-cream) !important;
+      background-image: radial-gradient(rgba(24, 24, 27, 0.12) 1.2px, transparent 1.2px) !important;
+      background-size: 22px 22px !important;
+      color: var(--brutal-black);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Main Container */
+    .brutal-contact-wrap {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 36px 20px 80px;
+      box-sizing: border-box;
+    }
+
+    /* Top Breadcrumb & Status Bar */
+    .brutal-top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 26px;
+    }
+
+    .brutal-top-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .brutal-pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--brutal-yellow);
+      color: var(--brutal-black);
+      border: var(--brutal-border);
+      box-shadow: var(--brutal-shadow-sm);
+      border-radius: 999px;
+      padding: 7px 18px;
+      font-weight: 900;
+      font-size: 0.82rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .brutal-pill-sub {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #ffffff;
+      color: var(--brutal-black);
+      border: var(--brutal-border);
+      box-shadow: var(--brutal-shadow-sm);
+      border-radius: 999px;
+      padding: 7px 16px;
+      font-weight: 700;
+      font-size: 0.82rem;
+    }
+
+    .brutal-crumb-link {
+      color: var(--brutal-black);
+      text-decoration: none;
+      font-weight: 800;
+      transition: color 0.15s ease;
+    }
+    .brutal-crumb-link:hover {
+      text-decoration: underline;
+      color: var(--brutal-purple);
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       THE 2-COLUMN NEO-BRUTALISM GRID
+    ══════════════════════════════════════════════════════════════ */
+    .brutal-grid {
+      display: grid;
+      grid-template-columns: 1.42fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    @media (max-width: 960px) {
+      .brutal-grid {
+        grid-template-columns: 1fr;
+        gap: 26px;
+      }
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       LEFT COLUMN: MAIN CONTACT FORM CARD
+    ══════════════════════════════════════════════════════════════ */
+    .brutal-form-card {
+      background: #ffffff;
+      border: var(--brutal-border-lg);
+      box-shadow: var(--brutal-shadow-lg);
+      border-radius: 20px;
+      padding: 38px 36px 42px;
+      box-sizing: border-box;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    @media (max-width: 640px) {
+      .brutal-form-card {
+        padding: 24px 20px 28px;
+        box-shadow: 5px 5px 0px var(--brutal-black);
+        border-radius: 16px;
+      }
+    }
+
+    .brutal-form-header {
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 2.5px dashed #e4e4e7;
+    }
+
+    .brutal-form-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: var(--brutal-black);
+      line-height: 1.15;
+      margin: 0 0 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .brutal-form-sub {
+      font-size: 1rem;
+      color: #52525b;
+      font-weight: 500;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Step Indicator */
+    .brutal-steps {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .brutal-step {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #f4f4f5;
+      color: #71717a;
+      border: 2px solid var(--brutal-black);
+      box-shadow: 2px 2px 0px var(--brutal-black);
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-weight: 800;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .brutal-step.active {
+      background: var(--brutal-yellow);
+      color: var(--brutal-black);
+    }
+
+    .brutal-step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      background: var(--brutal-black);
+      color: #ffffff;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 900;
+    }
+
+    .brutal-step.active .brutal-step-num {
+      background: var(--brutal-black);
+      color: var(--brutal-yellow);
+    }
+
+    .brutal-step-sep {
+      font-weight: 900;
+      color: var(--brutal-black);
+      font-size: 1rem;
+    }
+
+    /* Django Notifications */
+    .brutal-messages {
+      margin-bottom: 24px;
+    }
+
+    .brutal-msg {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      border: 2.5px solid var(--brutal-black);
+      box-shadow: 4px 4px 0px var(--brutal-black);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 14px;
+      font-weight: 600;
+    }
+
+    .brutal-msg.msg-success {
+      background: #ecfdf5;
+      color: #065f46;
+      border-color: #059669;
+      box-shadow: 4px 4px 0px #059669;
+    }
+
+    .brutal-msg.msg-info {
+      background: #eff6ff;
+      color: #1e40af;
+      border-color: #2563eb;
+      box-shadow: 4px 4px 0px #2563eb;
+    }
+
+    .brutal-msg.msg-error {
+      background: #fef2f2;
+      color: #991b1b;
+      border-color: #dc2626;
+      box-shadow: 4px 4px 0px #dc2626;
+    }
+
+    .brutal-msg-icon {
+      font-size: 1.25rem;
+      line-height: 1;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .brutal-msg-body strong {
+      display: block;
+      font-weight: 800;
+      font-size: 0.95rem;
+      margin-bottom: 2px;
+    }
+
+    /* Form Fields Grid */
+    .brutal-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px 20px;
+    }
+
+    .brutal-field.full {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 640px) {
+      .brutal-form-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    .brutal-field {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brutal-field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.86rem;
+      font-weight: 800;
+      color: var(--brutal-black);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .brutal-field label .req {
+      color: #e11d48;
+      font-weight: 900;
+      margin-left: 3px;
+    }
+
+    .brutal-field input[type="text"],
+    .brutal-field input[type="email"],
+    .brutal-field input[type="tel"],
+    .brutal-field select,
+    .brutal-field textarea {
+      width: 100%;
+      padding: 13px 16px;
+      background: #ffffff;
+      color: var(--brutal-black);
+      border: var(--brutal-border);
+      box-shadow: 3px 3px 0px var(--brutal-black);
+      border-radius: 10px;
+      font-size: 0.98rem;
+      font-weight: 600;
+      font-family: inherit;
+      box-sizing: border-box;
+      transition: all 0.12s ease;
+    }
+
+    .brutal-field input:focus,
+    .brutal-field select:focus,
+    .brutal-field textarea:focus {
+      outline: none;
+      border-color: var(--brutal-black);
+      background: var(--brutal-purple-bg);
+      box-shadow: 5px 5px 0px var(--brutal-purple);
+      transform: translate(-1px, -1px);
+    }
+
+    .brutal-field select {
+      cursor: pointer;
+      appearance: auto;
+    }
+
+    .brutal-field textarea {
+      min-height: 135px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .field-error {
+      margin-top: 6px;
+      font-size: 0.84rem;
+      font-weight: 800;
+      color: #b91c1c;
+      background: #fee2e2;
+      border: 1.5px solid #b91c1c;
+      border-radius: 6px;
+      padding: 5px 10px;
+      box-shadow: 2px 2px 0px #b91c1c;
+    }
+
+    .brutal-field .help {
+      margin-top: 5px;
+      font-size: 0.82rem;
+      color: #71717a;
+      font-weight: 500;
+    }
+
+    /* Honeypot field (hidden from genuine users) */
+    .hp-field {
+      position: absolute;
+      left: -9999px;
+      opacity: 0;
+      pointer-events: none;
+      height: 0;
+      width: 0;
+    }
+
+    /* Submit Row */
+    .brutal-submit-row {
+      margin-top: 28px;
+      padding-top: 22px;
+      border-top: 2.5px dashed #e4e4e7;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .brutal-privacy {
+      font-size: 0.86rem;
+      color: #71717a;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      max-width: 330px;
+      line-height: 1.45;
+      margin: 0;
+    }
+
+    .brutal-privacy a {
+      color: var(--brutal-purple);
+      text-decoration: underline;
+      font-weight: 700;
+    }
+
+    .brutal-btn-send {
+      background: var(--brutal-purple);
+      color: #ffffff;
+      border: var(--brutal-border-lg);
+      box-shadow: 5px 5px 0px var(--brutal-black);
+      border-radius: 12px;
+      padding: 14px 32px;
+      font-size: 1.05rem;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.12s ease;
+      font-family: inherit;
+    }
+
+    .brutal-btn-send:hover {
+      background: #6d28d9;
+      transform: translate(-2px, -2px);
+      box-shadow: 7px 7px 0px var(--brutal-black);
+    }
+
+    .brutal-btn-send:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px var(--brutal-black);
+    }
+
+    .btn-send-arrow {
+      font-size: 1.25rem;
+      line-height: 1;
+      transition: transform 0.15s ease;
+    }
+    .brutal-btn-send:hover .btn-send-arrow {
+      transform: translateX(4px);
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       RIGHT COLUMN: NEO-BRUTALIST SIDEBAR
+    ══════════════════════════════════════════════════════════════ */
+    .brutal-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Common Side Card */
+    .brutal-side-card {
+      background: #ffffff;
+      border: var(--brutal-border-lg);
+      box-shadow: var(--brutal-shadow);
+      border-radius: 18px;
+      padding: 24px;
+      box-sizing: border-box;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .brutal-side-card:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px var(--brutal-black);
+    }
+
+    .brutal-side-title {
+      font-size: 0.88rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--brutal-black);
+      margin: 0 0 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--brutal-black);
+    }
+
+    /* CARD 1: DEVELOPER & ON-DUTY CONCIERGE (DARK HIGH-CONTRAST) */
+    .brutal-dev-card {
+      background: #181126;
+      color: #ffffff;
+      border: var(--brutal-border-lg);
+      box-shadow: var(--brutal-shadow-lg);
+      border-radius: 18px;
+      padding: 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brutal-dev-card::before {
+      content: '';
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 140px;
+      height: 140px;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.45) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .brutal-dev-top {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    /* Rotating Blue & Red Neon Ring */
+    .brutal-avatar-ring-wrap {
+      position: relative;
+      width: 76px;
+      height: 76px;
+      flex-shrink: 0;
+    }
+
+    .brutal-avatar-ring-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      background: conic-gradient(#00d2ff, #ff2a5f, #00f2fe, #ff0844, #00d2ff);
+      animation: spinDualNeon 3.5s linear infinite;
+      z-index: 1;
+      filter: drop-shadow(0 0 8px rgba(0, 210, 255, 0.85)) drop-shadow(0 0 10px rgba(255, 42, 95, 0.85));
+    }
+
+    @keyframes spinDualNeon {
+      0%   { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .brutal-avatar-img {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      z-index: 2;
+      border: 3px solid #181126;
+      background: #ffffff;
+      display: block;
+    }
+
+    .brutal-dev-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .brutal-dev-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--brutal-yellow);
+      color: var(--brutal-black);
+      border: 1.5px solid #000000;
+      box-shadow: 2px 2px 0px #000000;
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .brutal-dev-name {
+      font-size: 1.28rem;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.2;
+      margin-bottom: 4px;
+      letter-spacing: -0.01em;
+    }
+
+    .brutal-dev-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: #d4d4d8;
+      font-weight: 600;
+    }
+
+    .brutal-live-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+      animation: livePulseDot 1.8s infinite;
+      display: inline-block;
+    }
+
+    @keyframes livePulseDot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.35); opacity: 0.65; }
+    }
+
+    .brutal-dev-desc {
+      font-size: 0.92rem;
+      line-height: 1.55;
+      color: #e4e4e7;
+      margin: 0 0 20px 0;
+    }
+
+    /* Developer Action Buttons */
+    .brutal-btn-wa {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #25D366;
+      color: #000000;
+      border: 2.5px solid #000000;
+      box-shadow: 4px 4px 0px #000000;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-weight: 900;
+      font-size: 0.95rem;
+      text-decoration: none;
+      margin-bottom: 12px;
+      transition: all 0.12s ease;
+      cursor: pointer;
+    }
+
+    .brutal-btn-wa:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px #000000;
+      text-decoration: none;
+      color: #000000;
+      background: #22c35e;
+    }
+
+    .brutal-btn-wa:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px #000000;
+    }
+
+    .brutal-btn-call {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #ffffff;
+      color: var(--brutal-black);
+      border: 2.5px solid #000000;
+      box-shadow: 4px 4px 0px #000000;
+      border-radius: 10px;
+      padding: 11px 18px;
+      font-weight: 800;
+      font-size: 0.92rem;
+      text-decoration: none;
+      transition: all 0.12s ease;
+      cursor: pointer;
+    }
+
+    .brutal-btn-call:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px #000000;
+      text-decoration: none;
+      color: var(--brutal-black);
+      background: #f4f4f5;
+    }
+
+    .brutal-btn-call:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px #000000;
+    }
+
+    /* CARD 2: VERIFIED TRACK RECORD */
+    .brutal-stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .brutal-stat-box {
+      border: 2px solid var(--brutal-black);
+      box-shadow: 3px 3px 0px var(--brutal-black);
+      border-radius: 10px;
+      padding: 14px 10px;
+      text-align: center;
+      transition: transform 0.1s ease;
+    }
+
+    .brutal-stat-box:hover {
+      transform: translate(-1px, -1px);
+    }
+
+    .brutal-stat-box.box-yellow { background: var(--brutal-yellow-lt); }
+    .brutal-stat-box.box-purple { background: var(--brutal-purple-lt); }
+    .brutal-stat-box.box-green  { background: var(--brutal-green-lt); }
+    .brutal-stat-box.box-orange { background: var(--brutal-orange-lt); }
+
+    .brutal-stat-val {
+      font-size: 1.55rem;
+      font-weight: 900;
+      color: var(--brutal-black);
+      line-height: 1.1;
+      margin-bottom: 3px;
+    }
+
+    .brutal-stat-lbl {
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #3f3f46;
+    }
+
+    /* CARD 3: CONCIERGE HOURS */
+    .brutal-hours-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .brutal-hours-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      padding-bottom: 9px;
+      border-bottom: 1.5px dashed #e4e4e7;
+    }
+
+    .brutal-hours-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .brutal-hours-day {
+      color: var(--brutal-black);
+      font-weight: 800;
+    }
+
+    .brutal-hours-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      border: 1.5px solid var(--brutal-black);
+      box-shadow: 1.5px 1.5px 0px var(--brutal-black);
+    }
+
+    .brutal-hours-badge.open {
+      background: var(--brutal-blue-lt);
+      color: #0369a1;
+    }
+
+    .brutal-hours-badge.festive {
+      background: var(--brutal-orange-lt);
+      color: #c2410c;
+      border-color: #ea580c;
+      box-shadow: 2px 2px 0px #ea580c;
+    }
+
+    .brutal-hours-badge.closed {
+      background: var(--brutal-rose-lt);
+      color: #be123c;
+      border-color: #e11d48;
+    }
+
+    /* CARD 4: GUEST GUARANTEES */
+    .brutal-trust-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .brutal-trust-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .brutal-trust-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 2px solid var(--brutal-black);
+      box-shadow: 2px 2px 0px var(--brutal-black);
+      background: var(--brutal-yellow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+
+    .brutal-trust-item:nth-child(2) .brutal-trust-icon { background: var(--brutal-green-lt); }
+    .brutal-trust-item:nth-child(3) .brutal-trust-icon { background: var(--brutal-purple-lt); }
+    .brutal-trust-item:nth-child(4) .brutal-trust-icon { background: var(--brutal-orange-lt); }
+
+    .brutal-trust-text strong {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 900;
+      color: var(--brutal-black);
+      line-height: 1.25;
+      margin-bottom: 2px;
+    }
+
+    .brutal-trust-text span {
+      display: block;
+      font-size: 0.82rem;
+      color: #71717a;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       COMPREHENSIVE MOBILE RESPONSIVENESS (iOS & Android)
+    ══════════════════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .brutal-field input[type="text"],
+      .brutal-field input[type="email"],
+      .brutal-field input[type="tel"],
+      .brutal-field select,
+      .brutal-field textarea {
+        font-size: 16px !important; /* Prevents iOS Safari auto-zoom on focus */
+      }
+      .brutal-page {
+        padding-top: 20px;
+        padding-bottom: 56px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .brutal-container {
+        padding: 0 14px;
+      }
+      .brutal-form-card {
+        padding: 22px 16px 26px !important;
+        box-shadow: 4px 4px 0px var(--brutal-black) !important;
+        border-radius: 16px;
+      }
+      .brutal-form-title {
+        font-size: 1.65rem;
+      }
+      .brutal-steps {
+        gap: 6px;
+        margin-bottom: 22px;
+      }
+      .brutal-step {
+        padding: 5px 10px;
+        font-size: 0.74rem;
+      }
+      .brutal-submit-row {
+        flex-direction: column-reverse;
+        align-items: stretch;
+        gap: 16px;
+        margin-top: 22px;
+        padding-top: 18px;
+      }
+      .brutal-btn-send {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 20px;
+        font-size: 1.02rem;
+        min-height: 50px;
+        touch-action: manipulation;
+      }
+      .brutal-privacy {
+        max-width: 100%;
+        text-align: center;
+        justify-content: center;
+        font-size: 0.8rem;
+      }
+      .brutal-side-card {
+        padding: 20px 16px;
+        box-shadow: 4px 4px 0px var(--brutal-black);
+      }
+      .brutal-dev-card {
+        padding: 22px 16px;
+        box-shadow: 5px 5px 0px var(--brutal-black);
+      }
+      .brutal-btn-wa, .brutal-btn-call {
+        min-height: 48px;
+        touch-action: manipulation;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .brutal-container {
+        padding: 0 10px;
+      }
+      .brutal-avatar-ring-wrap {
+        width: 68px;
+        height: 68px;
+      }
+      .brutal-dev-name {
+        font-size: 1.15rem;
+      }
+      .brutal-metrics-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .brutal-metric-box {
+        padding: 10px 8px;
+      }
+      .brutal-metric-num {
+        font-size: 1.35rem;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<main class="brutal-contact-wrap" id="contact-main">
+
+  <!-- Neo-Brutalist Top Status & Breadcrumb -->
+  <div class="brutal-top-bar">
+    <div class="brutal-top-left">
+      <div class="brutal-pill-badge">
+        ✦ DIRECT CONCIERGE DESK · AHMEDABAD
+      </div>
+      <div class="brutal-pill-sub">
+        <a href="{% url 'home' %}" class="brutal-crumb-link">Home</a>
+        <span style="opacity:0.4;">/</span>
+        <span>Contact</span>
+      </div>
+    </div>
+    <div class="brutal-pill-sub" style="background: #fef08a;">
+      ⚡ 15-MIN TYPICAL RESPONSE TIME
+    </div>
+  </div>
+
+  <!-- Neo-Brutalist 2-Column Grid -->
+  <div class="brutal-grid">
+
+    <!-- ── LEFT COLUMN: MAIN FORM CARD ── -->
+    <article class="brutal-form-card" id="contact-form" aria-label="Contact form">
+      
+      <div class="brutal-form-header">
+        <h1 class="brutal-form-title">
+          Send us a message
+        </h1>
+        <p class="brutal-form-sub">
+          Fill in the details below — our concierge team replies within 15 minutes during business hours.
+        </p>
+      </div>
+
+      <!-- Step Indicator -->
+      <div class="brutal-steps" aria-hidden="true">
+        <div class="brutal-step active" id="step-pill-1">
+          <span class="brutal-step-num">1</span> Your Details
+        </div>
+        <span class="brutal-step-sep">›</span>
+        <div class="brutal-step active" id="step-pill-2">
+          <span class="brutal-step-num">2</span> Inquiry Topic
+        </div>
+        <span class="brutal-step-sep">›</span>
+        <div class="brutal-step" id="step-pill-3">
+          <span class="brutal-step-num">3</span> Your Message
+        </div>
+      </div>
+
+      <!-- Django Messages Notification -->
+      {% if messages %}
+        <div class="brutal-messages" role="status" aria-live="polite">
+          {% for message in messages %}
+            <div class="brutal-msg {% if message.tags == 'success' %}msg-success{% else %}msg-info{% endif %}">
+              <span class="brutal-msg-icon">{% if message.tags == 'success' %}✓{% else %}ℹ{% endif %}</span>
+              <div class="brutal-msg-body">
+                <strong>{% if message.tags == 'success' %}Message Sent! Our Concierge will reach out shortly.{% else %}Notification{% endif %}</strong>
+                <span>{{ message }}</span>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <!-- Form Errors Alert -->
+      {% if form.errors %}
+        <div class="brutal-msg msg-error" role="alert">
+          <span class="brutal-msg-icon">⚠</span>
+          <div class="brutal-msg-body">
+            <strong>Please check the highlighted fields below and submit again.</strong>
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Main Form -->
+      <form method="post" action="{% url 'contact' %}" novalidate id="concierge-inquiry-form">
+        {% csrf_token %}
+
+        {# Honeypot anti-spam field #}
+        <div class="hp-field" aria-hidden="true" tabindex="-1">{{ form.website }}</div>
+
+        <div class="brutal-form-grid">
+          {% for field in form %}
+            {% if field.name != 'website' %}
+              <div class="brutal-field{% if field.name == 'subject' or field.name == 'message' or field.name == 'topic' or field.name == 'phone_country' %} full{% endif %}">
+                <label for="{{ field.id_for_label }}">
+                  {{ field.label }}
+                  {% if field.field.required %}<span class="req" aria-hidden="true">*</span>{% endif %}
+                </label>
+                {{ field }}
+                {% for error in field.errors %}
+                  <div class="field-error" role="alert">{{ error }}</div>
+                {% endfor %}
+                {% if field.help_text %}
+                  <div class="help">{{ field.help_text }}</div>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <div class="brutal-submit-row">
+          <p class="brutal-privacy">
+            <span>🔒</span>
+            <span>We use your details only to respond to this celebration inquiry.</span>
+          </p>
+          <button class="brutal-btn-send" type="submit" id="btn-submit-inquiry">
+            <span>Send Message</span>
+            <span class="btn-send-arrow" aria-hidden="true">→</span>
+          </button>
+        </div>
+      </form>
+    </article>
+
+    <!-- ── RIGHT COLUMN: SIDEBAR ── -->
+    <aside class="brutal-sidebar" aria-label="Concierge and verified trust details">
+
+      <!-- 1. Founder & Developer On-Duty Concierge -->
+      <div class="brutal-dev-card">
+        <div class="brutal-dev-top">
+          <div class="brutal-avatar-ring-wrap">
+            <img src="{% static 'bookings/developer-badge.jpg' %}?v=20261031v2" alt="Founder &amp; Developer Rutvik" class="brutal-avatar-img">
+          </div>
+          <div class="brutal-dev-info">
+            <div class="brutal-dev-badge">⚡ ON-DUTY CONCIERGE</div>
+            <div class="brutal-dev-name">Founder &amp; Developer</div>
+            <div class="brutal-dev-status">
+              <span class="brutal-live-dot"></span>
+              <span>Online in Ahmedabad</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="brutal-dev-desc">
+          Need personalized help planning your wedding banquet, bulk event passes, or hourly lawn visit? Connect directly with our concierge desk.
+        </p>
+
+        <a class="brutal-btn-wa"
+           href="https://wa.me/917203928160?text=Hi%2C+I+have+an+inquiry+about+Amazing+Ahmedabad"
+           target="_blank" rel="noopener noreferrer"
+           aria-label="Chat on WhatsApp">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          <span>Chat on WhatsApp (15-min reply)</span>
+        </a>
+
+        <a class="brutal-btn-call" href="tel:+917203928160">
+          <span>📞</span>
+          <span>Direct Call: +91 72039 28160</span>
+        </a>
+      </div>
+
+      <!-- 2. Verified Track Record -->
+      <div class="brutal-side-card">
+        <h3 class="brutal-side-title">
+          <span>🏆</span>
+          <span>Verified Track Record</span>
+        </h3>
+        <div class="brutal-stat-grid">
+          <div class="brutal-stat-box box-yellow">
+            <div class="brutal-stat-val">4.9★</div>
+            <div class="brutal-stat-lbl">Guest Rating</div>
+          </div>
+          <div class="brutal-stat-box box-purple">
+            <div class="brutal-stat-val">2.4K+</div>
+            <div class="brutal-stat-lbl">Reviews</div>
+          </div>
+          <div class="brutal-stat-box box-green">
+            <div class="brutal-stat-val">15 min</div>
+            <div class="brutal-stat-lbl">Avg. Response</div>
+          </div>
+          <div class="brutal-stat-box box-orange">
+            <div class="brutal-stat-val">500+</div>
+            <div class="brutal-stat-lbl">Events Hosted</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Concierge Hours -->
+      <div class="brutal-side-card">
+        <h3 class="brutal-side-title">
+          <span>🕒</span>
+          <span>Concierge Hours</span>
+        </h3>
+        <div class="brutal-hours-list">
+          <div class="brutal-hours-row">
+            <span class="brutal-hours-day">Mon – Fri</span>
+            <span class="brutal-hours-badge open">9 am – 7 pm</span>
+          </div>
+          <div class="brutal-hours-row">
+            <span class="brutal-hours-day">Saturday</span>
+            <span class="brutal-hours-badge open">10 am – 6 pm</span>
+          </div>
+          <div class="brutal-hours-row">
+            <span class="brutal-hours-day">Sunday</span>
+            <span class="brutal-hours-badge open">10 am – 4 pm</span>
+          </div>
+          <div class="brutal-hours-row">
+            <span class="brutal-hours-day">Navratri Season</span>
+            <span class="brutal-hours-badge festive">🔥 8 am – 11 pm</span>
+          </div>
+          <div class="brutal-hours-row">
+            <span class="brutal-hours-day">Public Holidays</span>
+            <span class="brutal-hours-badge closed">Urgent WhatsApp Only</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Guest Guarantees -->
+      <div class="brutal-side-card">
+        <h3 class="brutal-side-title">
+          <span>🛡️</span>
+          <span>Guest Guarantees</span>
+        </h3>
+        <div class="brutal-trust-list">
+          <div class="brutal-trust-item">
+            <div class="brutal-trust-icon">🔒</div>
+            <div class="brutal-trust-text">
+              <strong>Secure Booking</strong>
+              <span>256-bit SSL encrypted &amp; verified</span>
+            </div>
+          </div>
+          <div class="brutal-trust-item">
+            <div class="brutal-trust-icon">⚡</div>
+            <div class="brutal-trust-text">
+              <strong>Instant Confirmation</strong>
+              <span>Collision-protected booking lock</span>
+            </div>
+          </div>
+          <div class="brutal-trust-item">
+            <div class="brutal-trust-icon">📅</div>
+            <div class="brutal-trust-text">
+              <strong>Flexible Policy</strong>
+              <span>Free cancellation up to 48 hrs</span>
+            </div>
+          </div>
+          <div class="brutal-trust-item">
+            <div class="brutal-trust-icon">📍</div>
+            <div class="brutal-trust-text">
+              <strong>Ahmedabad Concierge</strong>
+              <span>Direct on-ground venue coordinator support</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+  {# International phone code dropdown handler #}
+  {% include "bookings/_phone_country_script.html" %}
+
+  <script>
+    /* ══════════════════════════════════════════════════════════════
+       NEO-BRUTALISM UX SCRIPTS & INTERACTION
+    ══════════════════════════════════════════════════════════════ */
+    (function() {
+      // Step 3 Highlight on Message field focus
+      var stepPill3 = document.getElementById('step-pill-3');
+      var msgField = document.querySelector('textarea[name="message"], input[name="message"]');
+      if (stepPill3 && msgField) {
+        msgField.addEventListener('focus', function() {
+          stepPill3.classList.add('active');
+        });
+      }
+
+      // Submit Button Loading state
+      var form = document.getElementById('concierge-inquiry-form');
+      var submitBtn = document.getElementById('btn-submit-inquiry');
+      if (form && submitBtn) {
+        form.addEventListener('submit', function() {
+          submitBtn.disabled = true;
+          submitBtn.style.opacity = '0.85';
+          submitBtn.innerHTML = '<span>Sending Message...</span> <span style="display:inline-block;animation:spin 1s linear infinite;">⏳</span>';
+        });
+      }
+
+      // Auto-select topic if query param is present (e.g. ?topic=venue)
+      try {
+        var urlParams = new URLSearchParams(window.location.search);
+        var topicParam = urlParams.get('topic');
+        if (topicParam) {
+          var topicSelect = document.querySelector('select[name="topic"]');
+          if (topicSelect) {
+            for (var i = 0; i < topicSelect.options.length; i++) {
+              if (topicSelect.options[i].value.toLowerCase().includes(topicParam.toLowerCase()) ||
+                  topicSelect.options[i].text.toLowerCase().includes(topicParam.toLowerCase())) {
+                topicSelect.selectedIndex = i;
+                break;
+              }
+            }
+          }
+        }
+      } catch (err) {}
+    })();
+  </script>
+{% endblock %}

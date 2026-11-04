@@ -1,0 +1,332 @@
+/* ===== AMAZING AHMEDABAD – GLOBAL SITE CSS ===== */
+:root{
+  --aa-accent:#6b3db7;
+  --aa-accent-dark:#4f278f;
+  --aa-accent-light:#f3ecfb;
+  --aa-orange:#f2720c;
+  --aa-gold:#f59e0b;
+  --aa-green:#16803d;
+  --aa-red:#dc2626;
+  --aa-ink:#241c31;
+  --aa-line:#ece7f0;
+  --aa-focus:#a987dc;
+  --aa-paper:#faf8f5;
+  --aa-surface:#ffffff;
+  --aa-muted:#6e647b;
+  --shadow-sm:0 4px 16px rgba(33,17,56,.05);
+  --shadow-md:0 12px 32px rgba(33,17,56,.08);
+  --shadow-lg:0 22px 55px rgba(33,17,56,.13);
+  --radius-sm:10px;
+  --radius-md:16px;
+  --radius-lg:22px;
+  --radius-xl:28px;
+  --radius-full:9999px;
+}
+
+/* ── Base ── */
+html{scroll-behavior:smooth;scroll-padding-top:86px}
+body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+::selection{background:#e7dcf7;color:#2d174d}
+
+/* ── Global transition ── */
+a,button,input,select,textarea{
+  transition:color .18s ease,background-color .18s ease,border-color .18s ease,
+             box-shadow .18s ease,transform .18s ease
+}
+
+/* ── Focus rings ── */
+a:focus-visible,button:focus-visible,
+input:focus-visible,select:focus-visible,
+textarea:focus-visible,summary:focus-visible{
+  outline:3px solid #b99be5;outline-offset:3px
+}
+
+/* ── Form elements accent ── */
+input:not([type=checkbox]):not([type=radio]),select,textarea{
+  accent-color:var(--aa-accent)
+}
+input:not([type=checkbox]):not([type=radio]):focus,
+select:focus,textarea:focus{
+  border-color:var(--aa-focus)!important;
+  box-shadow:0 0 0 4px rgba(107,61,183,.1)!important
+}
+button:disabled{cursor:wait;opacity:.72}
+img{max-width:100%}
+
+/* ── Navigation ── */
+.site-nav{box-shadow:0 7px 24px rgba(41,22,58,.033)}
+.site-nav-links>a,.site-nav-logout{transition:color .18s ease,transform .18s ease}
+.site-nav-links>a:hover,.site-nav-logout:hover{transform:translateY(-1px)}
+
+/* ── Account dropdown animation ── */
+.account-panel{animation:aa-menu-in .16s ease-out both;transform-origin:top right}
+@keyframes aa-menu-in{
+  from{opacity:0;transform:translateY(-5px) scale(.98)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+
+/* ── Card / Panel hover effects ── */
+.card,.panel,.bookbox,.booking-card,.auth,.box,.receipt{
+  transition:box-shadow .2s ease,border-color .2s ease
+}
+.card:hover,.booking-card:hover{box-shadow:0 20px 48px rgba(43,23,67,.1)}
+.button:hover,.cta:hover,.book:hover,.primary:hover{transform:translateY(-1px)}
+
+/* ── Error lists ── */
+.field-error,.errorlist{line-height:1.4}
+
+/* ── Report downloads ── */
+.report-downloads{display:flex;gap:9px;flex-wrap:wrap}
+
+/* ── Navratri theme accent ── */
+.navratri-glow{
+  background:linear-gradient(135deg,#ff6b35 0%,#f7931e 30%,#ffcd3c 60%,#a855f7 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+}
+.navratri-badge{
+  background:linear-gradient(135deg,#ff6b35,#f7931e);
+  color:#fff;border-radius:var(--radius-full);
+  font-size:.72rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;
+  padding:4px 10px
+}
+.navratri-banner{
+  background:linear-gradient(135deg,#1b0e2f 0%,#4a1460 50%,#8b1a6b 100%);
+  border:1px solid rgba(255,107,53,.3);
+  border-radius:var(--radius-lg);padding:20px 24px;
+  color:#fff;position:relative;overflow:hidden;
+}
+.navratri-banner::before{
+  content:"🪔";position:absolute;right:18px;top:50%;
+  transform:translateY(-50%);font-size:2.5rem;opacity:.3
+}
+
+/* ── Luxury room badge ── */
+.luxury-badge{
+  background:linear-gradient(135deg,#f59e0b,#d97706);
+  color:#fff;border-radius:var(--radius-full);
+  font-size:.72rem;font-weight:900;text-transform:uppercase;
+  letter-spacing:.08em;padding:4px 10px
+}
+
+/* ── Slot availability pill ── */
+.slot-available{
+  display:inline-flex;align-items:center;gap:5px;
+  background:#ecfdf5;color:#15803d;border:1px solid #bbf7d0;
+  border-radius:var(--radius-full);font-size:.78rem;font-weight:800;
+  padding:4px 10px
+}
+.slot-available::before{
+  content:"";width:7px;height:7px;border-radius:50%;
+  background:#15803d;animation:pulse-dot 1.4s infinite
+}
+@keyframes pulse-dot{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.5;transform:scale(1.3)}
+}
+
+/* ── Inquiry form improvements ── */
+.inquiry-floating-card{
+  background:linear-gradient(135deg,#fdf8f4 0%,#f6f0fb 100%);
+  border:2px solid #e8d5f5;border-radius:var(--radius-lg);
+  padding:28px;box-shadow:var(--shadow-md);
+}
+.inquiry-floating-card:hover{border-color:#c4a0e8}
+
+/* ── Booking confirmation animation ── */
+@keyframes booking-success{
+  0%{transform:scale(.8);opacity:0}
+  60%{transform:scale(1.1)}
+  100%{transform:scale(1);opacity:1}
+}
+.booking-success-icon{animation:booking-success .5s cubic-bezier(.34,1.56,.64,1) both}
+
+/* ── Admin dashboard ── */
+.stat-card-glow{
+  box-shadow:0 0 0 1px rgba(107,61,183,.12),0 8px 24px rgba(107,61,183,.1)
+}
+
+/* ── Responsive & Overflow Containment ── */
+html {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: clip !important;
+  overflow-x: hidden !important;
+  -webkit-text-size-adjust: 100% !important;
+}
+body {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow-x: clip !important;
+  overflow-x: hidden !important;
+  -webkit-text-size-adjust: 100% !important;
+}
+img, svg, video, canvas, iframe {
+  max-width: 100%;
+}
+
+@media(max-width:860px){
+  :root{
+    --radius-lg:18px;
+    --radius-xl:22px;
+  }
+  .container{
+    padding-left:16px !important;
+    padding-right:16px !important;
+  }
+}
+
+@media(max-width:768px){
+  html{scroll-padding-top:80px}
+  /* Prevent iOS zoom on input focus */
+  input:not([type=checkbox]):not([type=radio]),
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+  /* Buttons touch target */
+  button, .button, .primary, .cta, .btn-search, .btn-submit-booking {
+    min-height: 44px;
+  }
+  /* Table touch scroll */
+  .table-scroll, .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Floating help / WhatsApp */
+  .wa-float, .float-help {
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px)) !important;
+    right: 16px !important;
+  }
+  .report-downloads{width:100%}
+  .report-downloads>*{flex:1}
+}
+
+@media(max-width:620px){
+  html{scroll-padding-top:76px}
+  .site-nav{box-shadow:0 5px 18px rgba(41,22,58,.06)}
+  .inquiry-floating-card{padding:20px 16px}
+  .navratri-banner{padding:18px 16px}
+  .card{border-radius:16px}
+}
+
+@media(max-width:400px){
+  :root{
+    --radius-md:12px;
+    --radius-lg:16px;
+  }
+  .container{
+    padding-left:12px !important;
+    padding-right:12px !important;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+
+
+/* ── Skeleton Loading Utility System ────────────────────────────── */
+@keyframes aa-skeleton-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton, .skeleton-box, .sk-shimmer {
+  background: linear-gradient(90deg, #eee9f4 0%, #fcfbfe 35%, #eee9f4 70%) !important;
+  background-size: 200% 100% !important;
+  animation: aa-skeleton-shimmer 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite !important;
+  border-radius: var(--radius-sm);
+  color: transparent !important;
+  user-select: none;
+  pointer-events: none;
+}
+.skeleton-text {
+  height: 14px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+}
+.skeleton-title {
+  height: 24px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+}
+.skeleton-circle {
+  border-radius: 50% !important;
+}
+.skeleton-card {
+  background: #ffffff;
+  border: 1px solid var(--aa-line);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Image Shimmer Container Placeholder */
+.card-media, .listing-card .card-media, .food-card-item .card-media, .food-card .card-media, .venue-media {
+  background: linear-gradient(90deg, #ede8f3 0%, #fcfbfe 35%, #ede8f3 70%);
+  background-size: 200% 100%;
+  animation: aa-skeleton-shimmer 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+.card-media img, .listing-card img, .food-card img {
+  transition: opacity 0.3s ease-in-out;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   ADVANCED MOBILE UI/UX & TOUCH RESPONSE SYSTEM (360px - 768px)
+══════════════════════════════════════════════════════════════ */
+html, body {
+  max-width: 100vw !important;
+  overflow-x: clip !important;
+  overflow-x: hidden !important;
+  position: relative !important;
+  -webkit-text-size-adjust: 100% !important;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box !important;
+}
+
+/* Fast tap response & no tap grey box */
+button, a, input, select, textarea, .btn, .chip, .insta-nav-item, .card {
+  -webkit-tap-highlight-color: transparent !important;
+  touch-action: manipulation;
+}
+
+@media (max-width: 768px) {
+  /* Prevent iOS Safari aggressive auto-zoom on form inputs */
+  input:not([type=checkbox]):not([type=radio]),
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+
+  /* Touch-friendly buttons */
+  button, .button, .primary, .cta, .btn-submit-booking, .btn-book-primary {
+    min-height: 46px;
+  }
+
+  /* Universal touch scroll for wide elements */
+  .table-scroll, .table-responsive, .table-wrap, .data-table-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Compact containers on small mobile screens */
+  .container, .page-container, .events-container, .food-container {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .container, .page-container, .events-container, .food-container {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+}

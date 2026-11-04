@@ -1,0 +1,2533 @@
+{% extends "bookings/base.html" %}
+
+
+
+{% block title %}Events &amp; Navratri Garba in Ahmedabad | Amazing Ahmedabad{% endblock %}
+
+
+
+{% block extra_css %}
+
+<style>
+
+/* ── Reset & Variables (Liquid Glassmorphism Edition) ──────────────── */
+
+:root {
+
+  --ink: #1c132d;
+
+  --ink-soft: #382952;
+
+  --muted: #6b5e80;
+
+  --faint: rgba(245, 240, 255, 0.65);
+
+  --line: rgba(255, 255, 255, 0.65);
+
+  --paper: #f6f3fc;
+
+  --white: #ffffff;
+
+  --purple: #7c3aed;
+
+  --purple-light: #8b5cf6;
+
+  --purple-dark: #3b1464;
+
+  --orange: #f97316;
+
+  --orange-light: #fb923c;
+
+  --orange-pale: #fff4ea;
+
+  --gold: #f59e0b;
+
+  --green: #10b981;
+
+  --green-light: #ecfdf5;
+
+
+
+  /* Liquid Glassmorphism Tokens */
+
+  --glass-base: rgba(255, 255, 255, 0.78);
+
+  --glass-base-hover: rgba(255, 255, 255, 0.92);
+
+  --glass-border: rgba(255, 255, 255, 0.88);
+
+  --glass-border-subtle: rgba(255, 255, 255, 0.65);
+
+  --glass-specular: inset 0 1.5px 2px rgba(255, 255, 255, 0.98);
+
+  --glass-specular-soft: inset 0 1px 1px rgba(255, 255, 255, 0.8);
+
+  --glass-blur: blur(24px) saturate(190%);
+
+  --glass-blur-sm: blur(16px) saturate(170%);
+
+  --shadow-glass-sm: 0 10px 28px rgba(24, 9, 56, 0.05);
+
+  --shadow-glass-md: 0 18px 45px rgba(24, 9, 56, 0.08);
+
+  --shadow-glass-lg: 0 28px 70px rgba(24, 9, 56, 0.13);
+
+  --radius-card: 22px;
+
+  --radius-pill: 9999px;
+
+  --transition: 0.24s cubic-bezier(0.34, 1.25, 0.64, 1);
+
+}
+
+
+
+*, *::before, *::after {
+
+  box-sizing: border-box;
+
+}
+
+
+
+body {
+
+  margin: 0;
+
+  background: var(--paper);
+
+  background-image:
+
+    radial-gradient(circle at 12% 16%, rgba(249, 115, 22, 0.08) 0%, transparent 45%),
+
+    radial-gradient(circle at 88% 22%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
+
+    radial-gradient(circle at 50% 55%, rgba(236, 72, 153, 0.06) 0%, transparent 45%),
+
+    radial-gradient(circle at 18% 85%, rgba(6, 182, 212, 0.07) 0%, transparent 48%),
+
+    radial-gradient(circle at 82% 92%, rgba(168, 85, 247, 0.09) 0%, transparent 45%);
+
+  background-attachment: fixed;
+
+  color: var(--ink);
+
+  font: 16px/1.6 Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  -webkit-font-smoothing: antialiased;
+
+  overflow-x: clip !important;
+
+  position: relative;
+
+}
+
+
+
+a {
+
+  color: inherit;
+
+  text-decoration: none;
+
+}
+
+
+
+/* ── Liquid Ambient Canvas (Refractive Floating Color Blobs) ──── */
+
+.ev-ambient-canvas {
+
+  position: fixed;
+
+  top: 0;
+
+  left: 0;
+
+  width: 100vw;
+
+  height: 100vh;
+
+  pointer-events: none;
+
+  overflow: hidden;
+
+  z-index: 0;
+
+}
+
+
+
+.ev-ambient-blob {
+
+  position: absolute;
+
+  border-radius: 50%;
+
+  filter: blur(85px);
+
+  opacity: 0.48;
+
+  will-change: transform;
+
+  pointer-events: none;
+
+}
+
+
+
+.ev-blob-1 {
+
+  width: 520px;
+
+  height: 520px;
+
+  top: 15%;
+
+  right: -80px;
+
+  background: radial-gradient(circle, #8b5cf6 0%, #ec4899 65%, transparent 100%);
+
+  animation: ev-float-1 16s ease-in-out infinite alternate;
+
+}
+
+
+
+.ev-blob-2 {
+
+  width: 480px;
+
+  height: 480px;
+
+  top: 45%;
+
+  left: -100px;
+
+  background: radial-gradient(circle, #f97316 0%, #fbbf24 65%, transparent 100%);
+
+  animation: ev-float-2 18s ease-in-out infinite alternate;
+
+}
+
+
+
+.ev-blob-3 {
+
+  width: 420px;
+
+  height: 420px;
+
+  bottom: 10%;
+
+  right: 15%;
+
+  background: radial-gradient(circle, #3b82f6 0%, #a855f7 65%, transparent 100%);
+
+  animation: ev-float-3 14s ease-in-out infinite alternate;
+
+}
+
+
+
+@keyframes ev-float-1 {
+
+  0%   { transform: translate(0, 0) scale(1); }
+
+  100% { transform: translate(-80px, 100px) scale(1.15); }
+
+}
+
+
+
+@keyframes ev-float-2 {
+
+  0%   { transform: translate(0, 0) scale(1); }
+
+  100% { transform: translate(90px, -70px) scale(1.12); }
+
+}
+
+
+
+@keyframes ev-float-3 {
+
+  0%   { transform: translate(0, 0) scale(1); }
+
+  100% { transform: translate(-60px, -80px) scale(1.18); }
+
+}
+
+
+
+/* ── Container Helper ─────────────────────────────────────────── */
+
+.events-container {
+
+  max-width: 1220px;
+
+  margin: 0 auto;
+
+  padding: 0 20px;
+
+  box-sizing: border-box;
+
+  width: 100%;
+
+  position: relative;
+
+  z-index: 2;
+
+}
+
+
+
+/* ── Hero Section (with Event Celebration Crowd Background) ───── */
+
+.ev-hero {
+
+  position: relative;
+
+  background-color: #15092a;
+
+  background-image:
+
+    linear-gradient(180deg, rgba(16, 7, 34, 0.74) 0%, rgba(29, 11, 56, 0.86) 60%, rgba(246, 243, 252, 1) 100%),
+
+    url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=2000&q=85');
+
+  background-size: cover;
+
+  background-position: center 30%;
+
+  background-repeat: no-repeat;
+
+  color: #fff;
+
+  padding: 52px 0 84px;
+
+  overflow: hidden;
+
+  z-index: 2;
+
+}
+
+
+
+.ev-hero::after {
+
+  content: '';
+
+  position: absolute;
+
+  inset: 0;
+
+  background: radial-gradient(ellipse 75% 60% at 85% 15%, rgba(251, 146, 60, 0.28) 0, transparent 65%),
+
+              radial-gradient(ellipse 60% 65% at 10% 85%, rgba(139, 92, 246, 0.28) 0, transparent 60%);
+
+  pointer-events: none;
+
+}
+
+
+
+.ev-crumb {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  font-size: 0.82rem;
+
+  font-weight: 750;
+
+  color: rgba(255, 255, 255, 0.85);
+
+  margin-bottom: 20px;
+
+  position: relative;
+
+  z-index: 2;
+
+  background: rgba(255, 255, 255, 0.14);
+
+  backdrop-filter: blur(14px);
+
+  -webkit-backdrop-filter: blur(14px);
+
+  padding: 6px 16px;
+
+  border-radius: var(--radius-pill);
+
+  border: 1px solid rgba(255, 255, 255, 0.28);
+
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+
+}
+
+
+
+.ev-crumb a {
+
+  color: #ffd8a8;
+
+  transition: opacity 0.2s;
+
+}
+
+
+
+.ev-crumb a:hover {
+
+  opacity: 0.85;
+
+}
+
+
+
+.ev-hero-eyebrow {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  background: rgba(255, 255, 255, 0.16);
+
+  border: 1px solid rgba(255, 255, 255, 0.32);
+
+  border-radius: var(--radius-pill);
+
+  padding: 6px 15px;
+
+  font-size: 0.76rem;
+
+  font-weight: 850;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+
+  color: #ffd8a8;
+
+  margin-bottom: 18px;
+
+  backdrop-filter: blur(14px);
+
+  -webkit-backdrop-filter: blur(14px);
+
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+
+  position: relative;
+
+  z-index: 2;
+
+}
+
+
+
+.ev-hero .events-container {
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  text-align: center;
+
+}
+
+
+
+.ev-hero h1 {
+
+  font-size: clamp(2.25rem, 5.4vw, 3.85rem);
+
+  line-height: 1.15;
+
+  letter-spacing: -0.035em;
+
+  font-weight: 900;
+
+  margin: 0 auto 20px;
+
+  max-width: 980px;
+
+  text-align: center;
+
+  color: #ffffff;
+
+  filter: drop-shadow(0 4px 22px rgba(0, 0, 0, 0.85)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.95));
+
+  position: relative;
+
+  z-index: 2;
+
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+
+}
+
+
+
+.ev-hero h1 span {
+
+  display: inline-block;
+
+  background: linear-gradient(135deg, #ffffff 0%, #fed7aa 30%, #f472b6 70%, #ec4899 100%);
+
+  -webkit-background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+
+  background-clip: text;
+
+  filter: drop-shadow(0 2px 16px rgba(244, 114, 182, 0.55));
+
+}
+
+
+
+.ev-hero-lead {
+
+  font-size: 1.05rem;
+
+  line-height: 1.6;
+
+  color: rgba(255, 255, 255, 0.9);
+
+  max-width: 740px;
+
+  margin: 0;
+
+  position: relative;
+
+  z-index: 2;
+
+}
+
+
+
+/* ── Filter Console (Liquid Glassmorphism) ─────────────────────── */
+
+.ev-filter-wrapper {
+
+  margin-top: -46px;
+
+  position: relative;
+
+  z-index: 20;
+
+}
+
+
+
+.ev-filter-box {
+
+  background: var(--glass-base);
+
+  backdrop-filter: var(--glass-blur);
+
+  -webkit-backdrop-filter: var(--glass-blur);
+
+  border: 1.5px solid var(--glass-border);
+
+  border-radius: 24px;
+
+  padding: 18px 22px;
+
+  box-shadow: var(--shadow-glass-lg), var(--glass-specular);
+
+}
+
+
+
+.ev-filter-form {
+
+  display: grid;
+
+  grid-template-columns: 2fr 1.25fr 1.25fr 1.25fr auto auto;
+
+  gap: 12px;
+
+  align-items: center;
+
+}
+
+
+
+.ev-input-field {
+
+  display: flex;
+
+  flex-direction: column;
+
+  position: relative;
+
+}
+
+
+
+.ev-input-field input,
+
+.ev-input-field select {
+
+  width: 100%;
+
+  height: 48px;
+
+  background: rgba(255, 255, 255, 0.65);
+
+  backdrop-filter: blur(12px);
+
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+
+  border-radius: 14px;
+
+  padding: 0 15px;
+
+  font-size: 0.9rem;
+
+  font-weight: 650;
+
+  color: var(--ink);
+
+  outline: none;
+
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8);
+
+  transition: all 0.2s ease;
+
+  font-family: inherit;
+
+}
+
+
+
+.ev-input-field select {
+
+  cursor: pointer;
+
+  appearance: none;
+
+  -webkit-appearance: none;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%237c3aed' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+
+  background-repeat: no-repeat;
+
+  background-position: right 14px center;
+
+  padding-right: 32px;
+
+}
+
+
+
+.ev-input-field input:focus,
+
+.ev-input-field select:focus {
+
+  border-color: #8b5cf6;
+
+  background: rgba(255, 255, 255, 0.95);
+
+  box-shadow: 0 0 0 3.5px rgba(124, 58, 237, 0.18), inset 0 1px 1px #ffffff;
+
+}
+
+
+
+.ev-btn-search {
+
+  height: 48px;
+
+  padding: 0 24px;
+
+  background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+
+  color: #ffffff;
+
+  border: none;
+
+  border-radius: 14px;
+
+  font-size: 0.92rem;
+
+  font-weight: 850;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  box-shadow: 0 8px 22px rgba(109, 40, 217, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+
+  transition: all var(--transition);
+
+  -webkit-tap-highlight-color: transparent;
+
+}
+
+
+
+.ev-btn-search:hover {
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 12px 28px rgba(109, 40, 217, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+
+}
+
+
+
+.ev-btn-search:active {
+
+  transform: translateY(1px);
+
+}
+
+
+
+.ev-btn-reset {
+
+  height: 48px;
+
+  padding: 0 18px;
+
+  background: rgba(254, 242, 242, 0.85);
+
+  backdrop-filter: blur(10px);
+
+  -webkit-backdrop-filter: blur(10px);
+
+  color: #dc2626;
+
+  border: 1.5px solid rgba(239, 68, 68, 0.3);
+
+  border-radius: 14px;
+
+  font-size: 0.88rem;
+
+  font-weight: 800;
+
+  white-space: nowrap;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 5px;
+
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+
+  transition: all var(--transition);
+
+}
+
+
+
+.ev-btn-reset:hover {
+
+  background: rgba(254, 226, 226, 0.95);
+
+  transform: translateY(-1px);
+
+  border-color: rgba(239, 68, 68, 0.45);
+
+}
+
+
+
+.ev-btn-reset:active {
+
+  transform: scale(0.97);
+
+}
+
+
+
+/* ── Content Section ──────────────────────────────────────────── */
+
+.ev-main-section {
+
+  padding: 40px 0 80px;
+
+  position: relative;
+
+  z-index: 2;
+
+}
+
+
+
+.ev-section-header {
+
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-between;
+
+  margin-bottom: 28px;
+
+  gap: 20px;
+
+  flex-wrap: wrap;
+
+}
+
+
+
+.ev-header-title {
+
+  font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+
+  font-weight: 900;
+
+  letter-spacing: -0.04em;
+
+  margin: 0 0 6px;
+
+  color: var(--ink);
+
+}
+
+
+
+.ev-header-sub {
+
+  font-size: 0.95rem;
+
+  color: var(--muted);
+
+  margin: 0;
+
+}
+
+
+
+.ev-header-sub strong {
+
+  color: var(--ink);
+
+}
+
+
+
+.ev-quick-links {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  flex-wrap: wrap;
+
+}
+
+
+
+.ev-link-badge {
+
+  background: var(--glass-base);
+
+  backdrop-filter: blur(12px);
+
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid var(--glass-border);
+
+  border-radius: var(--radius-pill);
+
+  padding: 8px 16px;
+
+  font-size: 0.82rem;
+
+  font-weight: 800;
+
+  color: var(--purple);
+
+  box-shadow: 0 4px 14px rgba(24, 9, 56, 0.04), var(--glass-specular-soft);
+
+  transition: all var(--transition);
+
+}
+
+
+
+.ev-link-badge:hover {
+
+  background: var(--purple);
+
+  color: #ffffff;
+
+  border-color: var(--purple);
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 8px 22px rgba(124, 58, 237, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+
+}
+
+
+
+.ev-link-badge:active {
+
+  transform: scale(0.97);
+
+}
+
+
+
+/* ── Events Grid ──────────────────────────────────────────────── */
+
+.ev-grid {
+
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 26px;
+
+}
+
+
+
+/* ── Liquid Glassmorphic Event Card ───────────────────────────── */
+
+.ev-card {
+
+  background: var(--glass-base);
+
+  backdrop-filter: var(--glass-blur);
+
+  -webkit-backdrop-filter: var(--glass-blur);
+
+  border: 1px solid var(--glass-border);
+
+  border-radius: var(--radius-card);
+
+  overflow: hidden;
+
+  box-shadow: 0 12px 35px rgba(24, 9, 56, 0.07), var(--glass-specular-soft);
+
+  display: flex;
+
+  flex-direction: column;
+
+  transition: transform var(--transition), box-shadow var(--transition), background var(--transition), border-color var(--transition);
+
+  position: relative;
+
+}
+
+
+
+.ev-card:hover {
+
+  background: var(--glass-base-hover);
+
+  transform: translateY(-6px);
+
+  box-shadow: 0 22px 50px rgba(24, 9, 56, 0.14), var(--glass-specular);
+
+  border-color: rgba(255, 255, 255, 0.98);
+
+}
+
+
+
+.ev-card-media {
+
+  position: relative;
+
+  height: 235px;
+
+  overflow: hidden;
+
+  background: linear-gradient(135deg, #2b104c 0%, #5b289c 100%);
+
+  flex-shrink: 0;
+
+}
+
+
+
+.ev-card-media img {
+
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+
+  transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+}
+
+
+
+.ev-card:hover .ev-card-media img {
+
+  transform: scale(1.08);
+
+}
+
+
+
+.ev-media-gradient {
+
+  position: absolute;
+
+  inset: 0;
+
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.12) 0%, transparent 45%, rgba(18, 5, 36, 0.76) 100%);
+
+  pointer-events: none;
+
+}
+
+
+
+/* Badges on image (Glassmorphic Pills) */
+
+.ev-badge-category {
+
+  position: absolute;
+
+  top: 14px;
+
+  left: 14px;
+
+  border-radius: var(--radius-pill);
+
+  padding: 6px 14px;
+
+  font-size: 0.74rem;
+
+  font-weight: 850;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.06em;
+
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+
+  backdrop-filter: blur(10px);
+
+  -webkit-backdrop-filter: blur(10px);
+
+  border: 1px solid rgba(255, 255, 255, 0.35);
+
+  color: #ffffff;
+
+}
+
+
+
+.ev-cat-navratri {
+
+  background: linear-gradient(135deg, rgba(255, 87, 34, 0.9) 0%, rgba(234, 88, 12, 0.92) 100%);
+
+}
+
+.ev-cat-party {
+
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.9) 0%, rgba(192, 38, 211, 0.92) 100%);
+
+}
+
+.ev-cat-live {
+
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.9) 0%, rgba(6, 182, 212, 0.92) 100%);
+
+}
+
+.ev-cat-festival {
+
+  background: linear-gradient(135deg, rgba(5, 150, 105, 0.9) 0%, rgba(16, 185, 129, 0.92) 100%);
+
+}
+
+.ev-cat-default {
+
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.9) 0%, rgba(139, 92, 246, 0.92) 100%);
+
+}
+
+
+
+.ev-badge-stock {
+
+  position: absolute;
+
+  top: 14px;
+
+  right: 14px;
+
+  border-radius: var(--radius-pill);
+
+  padding: 5px 12px;
+
+  font-size: 0.73rem;
+
+  font-weight: 850;
+
+  backdrop-filter: blur(10px);
+
+  -webkit-backdrop-filter: blur(10px);
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+
+}
+
+
+
+.ev-stock-fast {
+
+  background: rgba(239, 68, 68, 0.92);
+
+  color: #ffffff;
+
+  animation: ev-pulse 2s infinite ease-in-out;
+
+}
+
+
+
+.ev-stock-ok {
+
+  background: rgba(255, 255, 255, 0.92);
+
+  color: var(--purple-dark);
+
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+
+}
+
+
+
+@keyframes ev-pulse {
+
+  0%, 100% { opacity: 1; transform: scale(1); }
+
+  50% { opacity: 0.88; transform: scale(0.98); }
+
+}
+
+
+
+.ev-badge-datetime {
+
+  position: absolute;
+
+  bottom: 12px;
+
+  left: 14px;
+
+  right: 14px;
+
+  background: rgba(20, 8, 38, 0.74);
+
+  backdrop-filter: blur(14px);
+
+  -webkit-backdrop-filter: blur(14px);
+
+  border: 1px solid rgba(255, 255, 255, 0.22);
+
+  border-radius: 12px;
+
+  padding: 7px 14px;
+
+  color: #ffdcb5;
+
+  font-size: 0.8rem;
+
+  font-weight: 800;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+
+}
+
+
+
+/* Card Body */
+
+.ev-card-body {
+
+  padding: 20px 22px 16px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  flex: 1;
+
+}
+
+
+
+.ev-card-title {
+
+  font-size: 1.2rem;
+
+  font-weight: 900;
+
+  line-height: 1.28;
+
+  letter-spacing: -0.03em;
+
+  margin: 0 0 8px;
+
+  color: var(--ink);
+
+}
+
+
+
+.ev-card-title a {
+
+  transition: color 0.18s;
+
+}
+
+
+
+.ev-card-title a:hover {
+
+  color: var(--purple);
+
+}
+
+
+
+.ev-card-venue {
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 6px;
+
+  color: var(--muted);
+
+  font-size: 0.88rem;
+
+  font-weight: 600;
+
+  margin-bottom: 12px;
+
+}
+
+
+
+.ev-meta-row {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  flex-wrap: wrap;
+
+  margin-bottom: 12px;
+
+}
+
+
+
+.ev-meta-pill {
+
+  background: rgba(245, 240, 255, 0.7);
+
+  backdrop-filter: blur(6px);
+
+  -webkit-backdrop-filter: blur(6px);
+
+  border: 1px solid rgba(139, 92, 246, 0.18);
+
+  border-radius: 10px;
+
+  padding: 4px 10px;
+
+  font-size: 0.77rem;
+
+  font-weight: 750;
+
+  color: var(--purple);
+
+  box-shadow: var(--glass-specular-soft);
+
+}
+
+
+
+.ev-card-desc {
+
+  color: #5e556b;
+
+  font-size: 0.88rem;
+
+  line-height: 1.55;
+
+  margin: 0 0 16px;
+
+  display: -webkit-box;
+
+  -webkit-line-clamp: 2;
+
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+
+  flex: 1;
+
+}
+
+
+
+/* Card Footer */
+
+.ev-card-footer {
+
+  padding: 16px 22px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.75);
+
+  background: rgba(255, 255, 255, 0.65);
+
+  backdrop-filter: blur(12px);
+
+  -webkit-backdrop-filter: blur(12px);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 12px;
+
+}
+
+
+
+.ev-pricing {
+
+  display: flex;
+
+  flex-direction: column;
+
+}
+
+
+
+.ev-price-val {
+
+  font-size: 1.35rem;
+
+  font-weight: 900;
+
+  color: var(--ink);
+
+  line-height: 1;
+
+  letter-spacing: -0.03em;
+
+}
+
+
+
+.ev-price-sub {
+
+  font-size: 0.74rem;
+
+  font-weight: 700;
+
+  color: var(--muted);
+
+  margin-top: 3px;
+
+}
+
+
+
+.ev-actions {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+}
+
+
+
+.ev-btn-details {
+
+  padding: 9px 15px;
+
+  border-radius: 12px;
+
+  font-size: 0.85rem;
+
+  font-weight: 800;
+
+  color: var(--purple);
+
+  border: 1.5px solid rgba(124, 58, 237, 0.22);
+
+  background: rgba(255, 255, 255, 0.85);
+
+  backdrop-filter: blur(8px);
+
+  -webkit-backdrop-filter: blur(8px);
+
+  box-shadow: 0 4px 12px rgba(24, 9, 56, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+
+  transition: all var(--transition);
+
+  white-space: nowrap;
+
+}
+
+
+
+.ev-btn-details:hover {
+
+  background: rgba(245, 240, 255, 0.95);
+
+  border-color: var(--purple);
+
+  transform: translateY(-1px);
+
+}
+
+
+
+.ev-btn-details:active {
+
+  transform: scale(0.97);
+
+}
+
+
+
+.ev-btn-book {
+
+  padding: 10px 18px;
+
+  border-radius: 12px;
+
+  font-size: 0.86rem;
+
+  font-weight: 850;
+
+  color: #ffffff;
+
+  background: linear-gradient(135deg, var(--purple) 0%, #9333ea 100%);
+
+  border: none;
+
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+
+  transition: all var(--transition);
+
+  white-space: nowrap;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+}
+
+
+
+.ev-btn-book:hover {
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 8px 22px rgba(124, 58, 237, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+
+}
+
+
+
+.ev-btn-book:active {
+
+  transform: scale(0.97);
+
+}
+
+
+
+/* ── Spotlight Navratri Banner (Liquid Amber Glass) ───────────── */
+
+.ev-spotlight {
+
+  margin: 54px 0 32px;
+
+  background: linear-gradient(135deg, rgba(194, 65, 12, 0.9) 0%, rgba(234, 88, 12, 0.85) 50%, rgba(249, 115, 22, 0.82) 100%);
+
+  backdrop-filter: blur(28px) saturate(180%);
+
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+
+  border-radius: 26px;
+
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+
+  padding: 34px 38px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 24px;
+
+  position: relative;
+
+  overflow: hidden;
+
+  box-shadow: 0 24px 64px rgba(34, 12, 48, 0.22), inset 0 1.5px 2px rgba(255, 255, 255, 0.3);
+
+  color: #ffffff;
+
+}
+
+
+
+.ev-spotlight::before {
+
+  content: '';
+
+  position: absolute;
+
+  inset: 0;
+
+  background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0l2.5 17.5L40 20l-17.5 2.5L20 40l-2.5-17.5L0 20l17.5-2.5z' fill='%23ffffff' fill-opacity='0.08'%3E%3C/path%3E%3C/svg%3E");
+
+  pointer-events: none;
+
+}
+
+
+
+.ev-spotlight-content {
+
+  position: relative;
+
+  z-index: 2;
+
+  max-width: 680px;
+
+}
+
+
+
+.ev-spotlight-eyebrow {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  background: rgba(255, 255, 255, 0.2);
+
+  border: 1px solid rgba(255, 255, 255, 0.35);
+
+  border-radius: var(--radius-pill);
+
+  padding: 5px 14px;
+
+  font-size: 0.74rem;
+
+  font-weight: 800;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.12em;
+
+  color: #fef08a;
+
+  margin-bottom: 12px;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+
+}
+
+
+
+.ev-spotlight-title {
+
+  font-size: clamp(1.4rem, 2.8vw, 2.1rem);
+
+  font-weight: 900;
+
+  letter-spacing: -0.03em;
+
+  margin: 0 0 8px;
+
+  line-height: 1.15;
+
+}
+
+
+
+.ev-spotlight-desc {
+
+  font-size: 0.98rem;
+
+  color: rgba(255, 255, 255, 0.92);
+
+  line-height: 1.6;
+
+  margin: 0;
+
+}
+
+
+
+.ev-spotlight-btn {
+
+  position: relative;
+
+  z-index: 2;
+
+  background: rgba(255, 255, 255, 0.95);
+
+  backdrop-filter: blur(12px);
+
+  -webkit-backdrop-filter: blur(12px);
+
+  color: #c2410c;
+
+  padding: 14px 28px;
+
+  border-radius: 14px;
+
+  border: 1px solid rgba(255, 255, 255, 0.9);
+
+  font-size: 0.95rem;
+
+  font-weight: 900;
+
+  white-space: nowrap;
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18), inset 0 1px 1px #ffffff;
+
+  transition: all var(--transition);
+
+  flex-shrink: 0;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+}
+
+
+
+.ev-spotlight-btn:hover {
+
+  transform: translateY(-2px);
+
+  background: #ffffff;
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24), inset 0 1px 1px #ffffff;
+
+}
+
+
+
+.ev-spotlight-btn:active {
+
+  transform: scale(0.97);
+
+}
+
+
+
+/* ── Why Choose Us (Frosted Glass Grid) ───────────────────────── */
+
+.ev-why-grid {
+
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 22px;
+
+  margin: 48px 0;
+
+}
+
+
+
+.ev-why-card {
+
+  background: var(--glass-base);
+
+  backdrop-filter: var(--glass-blur);
+
+  -webkit-backdrop-filter: var(--glass-blur);
+
+  border: 1.5px solid var(--glass-border);
+
+  border-radius: 20px;
+
+  padding: 24px;
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 16px;
+
+  box-shadow: var(--shadow-glass-sm), var(--glass-specular);
+
+  transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+
+}
+
+
+
+.ev-why-card:hover {
+
+  background: var(--glass-base-hover);
+
+  transform: translateY(-4px);
+
+  box-shadow: var(--shadow-glass-md), var(--glass-specular);
+
+}
+
+
+
+.ev-why-icon {
+
+  width: 50px;
+
+  height: 50px;
+
+  border-radius: 16px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 1.55rem;
+
+  flex-shrink: 0;
+
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8), 0 4px 12px rgba(24, 9, 56, 0.05);
+
+  border: 1px solid rgba(255, 255, 255, 0.8);
+
+  backdrop-filter: blur(8px);
+
+}
+
+
+
+.ev-why-icon.purple { background: rgba(243, 232, 255, 0.8); }
+
+.ev-why-icon.orange { background: rgba(255, 237, 213, 0.8); }
+
+.ev-why-icon.green  { background: rgba(220, 252, 231, 0.8); }
+
+
+
+.ev-why-info h4 {
+
+  font-size: 1.05rem;
+
+  font-weight: 850;
+
+  letter-spacing: -0.02em;
+
+  margin: 0 0 5px;
+
+  color: var(--ink);
+
+}
+
+
+
+.ev-why-info p {
+
+  font-size: 0.86rem;
+
+  color: var(--muted);
+
+  line-height: 1.5;
+
+  margin: 0;
+
+}
+
+
+
+/* ── Empty State (Glassmorphic) ───────────────────────────────── */
+
+.ev-empty {
+
+  text-align: center;
+
+  padding: 70px 24px;
+
+  background: var(--glass-base);
+
+  backdrop-filter: var(--glass-blur);
+
+  -webkit-backdrop-filter: var(--glass-blur);
+
+  border: 2px dashed rgba(139, 92, 246, 0.3);
+
+  border-radius: var(--radius-card);
+
+  box-shadow: var(--shadow-glass-md), var(--glass-specular);
+
+  margin: 20px 0;
+
+}
+
+
+
+.ev-empty-icon {
+
+  font-size: 3.5rem;
+
+  margin-bottom: 16px;
+
+}
+
+
+
+.ev-empty h3 {
+
+  font-size: 1.45rem;
+
+  font-weight: 900;
+
+  color: var(--ink);
+
+  margin: 0 0 8px;
+
+}
+
+
+
+.ev-empty p {
+
+  color: var(--muted);
+
+  font-size: 0.95rem;
+
+  max-width: 480px;
+
+  margin: 0 auto 24px;
+
+}
+
+
+
+.ev-empty a {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+
+  color: #ffffff;
+
+  border-radius: 14px;
+
+  padding: 12px 26px;
+
+  font-weight: 850;
+
+  font-size: 0.92rem;
+
+  box-shadow: 0 8px 22px rgba(109, 40, 217, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+
+  transition: all var(--transition);
+
+}
+
+
+
+.ev-empty a:hover {
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 12px 28px rgba(109, 40, 217, 0.45);
+
+}
+
+
+
+/* ── Responsive Polish ────────────────────────────────────────── */
+
+@media (max-width: 1060px) {
+
+  .ev-filter-form {
+
+    grid-template-columns: 1fr 1fr 1fr;
+
+  }
+
+  .ev-filter-form .ev-input-field:nth-child(1) {
+
+    grid-column: span 3;
+
+  }
+
+  .ev-btn-search,
+
+  .ev-btn-reset {
+
+    grid-column: span 1;
+
+  }
+
+  .ev-grid {
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  }
+
+}
+
+
+
+@media (max-width: 860px) {
+
+  .ev-spotlight {
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    padding: 26px 24px;
+
+  }
+
+  .ev-why-grid {
+
+    grid-template-columns: 1fr;
+
+  }
+
+}
+
+
+
+@media (max-width: 640px) {
+
+  .ev-hero {
+
+    padding: 34px 0 70px;
+
+  }
+
+  .ev-hero h1 {
+
+    font-size: 2rem;
+
+  }
+
+  .ev-hero-lead {
+
+    font-size: 0.96rem;
+
+    margin-bottom: 20px;
+
+  }
+
+  .ev-filter-wrapper {
+
+    margin-top: -36px;
+
+  }
+
+  .ev-filter-box {
+
+    padding: 14px 14px;
+
+    border-radius: 20px;
+
+  }
+
+  .ev-filter-form {
+
+    grid-template-columns: 1fr;
+
+    gap: 8px;
+
+  }
+
+  .ev-filter-form .ev-input-field:nth-child(1) {
+
+    grid-column: span 1;
+
+  }
+
+  .ev-btn-search,
+
+  .ev-btn-reset {
+
+    width: 100%;
+
+    height: 46px;
+
+  }
+
+  .ev-grid {
+
+    grid-template-columns: 1fr;
+
+    gap: 18px;
+
+  }
+
+  .ev-card-media {
+
+    height: 210px;
+
+  }
+
+  .ev-section-header {
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+  }
+
+  .ev-header-title {
+
+    font-size: 1.5rem;
+
+  }
+
+}
+
+
+
+@media (max-width: 480px) {
+
+  .events-container {
+
+    padding: 0 12px;
+
+  }
+
+  .ev-card-footer {
+
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 12px;
+
+  }
+
+  .ev-actions {
+
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 8px;
+
+  }
+
+  .ev-btn-details,
+
+  .ev-btn-book {
+
+    width: 100%;
+
+    text-align: center;
+
+    justify-content: center;
+
+    padding: 10px 8px;
+
+  }
+
+}
+
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<!-- Ambient Liquid Glass Refractive Canvas -->
+
+<div class="ev-ambient-canvas" aria-hidden="true">
+
+  <div class="ev-ambient-blob ev-blob-1"></div>
+
+  <div class="ev-ambient-blob ev-blob-2"></div>
+
+  <div class="ev-ambient-blob ev-blob-3"></div>
+
+</div>
+
+
+
+<!-- ══ HERO SECTION ═════════════════════════════════════════════════ -->
+
+<section class="ev-hero">
+
+  <div class="events-container">
+
+    <!-- Breadcrumb -->
+
+    <nav class="ev-crumb" aria-label="Breadcrumb">
+
+      <a href="{% url 'home' %}">Home</a>
+
+      <span>/</span>
+
+      <span>Events Catalogue</span>
+
+      {% if category %}
+
+      <span>/</span>
+
+      <span style="color:#ffffff">{{ category }}</span>
+
+      {% endif %}
+
+    </nav>
+
+
+
+    <div>
+
+      <div class="ev-hero-eyebrow">
+
+        ✦ OFFICIAL PASSES &amp; TICKETS · AHMEDABAD
+
+      </div>
+
+    </div>
+
+
+
+    <h1>Navratri Garba,<br><span>Mega Concerts &amp; Live Shows</span></h1>
+
+
+
+    <p class="ev-hero-lead">
+
+      Explore and book official verified tickets for Ahmedabad's world-famous 9-night Sheri &amp; Club Garba, Bollywood DJ bashes, acoustic terrace sessions, and food festivals.
+
+    </p>
+
+  </div>
+
+</section>
+
+
+
+<!-- ══ FILTER CONSOLE ═══════════════════════════════════════════ -->
+
+<div class="events-container ev-filter-wrapper">
+
+  <div class="ev-filter-box">
+
+    <form method="get" action="{% url 'events' %}" class="ev-filter-form" role="search">
+
+      <!-- Search Input -->
+
+      <div class="ev-input-field">
+
+        <input
+
+          type="text"
+
+          name="q"
+
+          value="{{ query }}"
+
+          placeholder="Search by event, artist, venue..."
+
+          aria-label="Search events"
+
+        />
+
+      </div>
+
+
+
+      <!-- Category Select -->
+
+      <div class="ev-input-field">
+
+        <select name="category" aria-label="Select Category">
+
+          <option value="">All Categories ({{ total_count }})</option>
+
+          <option value="Navratri" {% if category == 'Navratri' %}selected{% endif %}>🪔 Navratri Garba ({{ navratri_count }})</option>
+
+          <option value="Party" {% if category == 'Party' %}selected{% endif %}>🎧 Parties &amp; DJ ({{ party_count }})</option>
+
+          <option value="Live music" {% if category == 'Live music' %}selected{% endif %}>🎸 Live Music ({{ live_music_count }})</option>
+
+          <option value="Festival" {% if category == 'Festival' %}selected{% endif %}>🎪 Festivals ({{ festival_count }})</option>
+
+        </select>
+
+      </div>
+
+
+
+      <!-- Area Select -->
+
+      <div class="ev-input-field">
+
+        <select name="area" aria-label="Select Area">
+
+          <option value="">All Ahmedabad Areas</option>
+
+          {% for pa in popular_areas %}
+
+          <option value="{{ pa.query }}" {% if area == pa.query %}selected{% endif %}>📍 {{ pa.name }}</option>
+
+          {% endfor %}
+
+        </select>
+
+      </div>
+
+
+
+      <!-- Sort Select -->
+
+      <div class="ev-input-field">
+
+        <select name="sort" aria-label="Sort by">
+
+          <option value="" {% if not sort_by %}selected{% endif %}>📅 Date: Soonest First</option>
+
+          <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>💰 Price: Low to High</option>
+
+          <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>💎 Price: High to Low</option>
+
+          <option value="tickets" {% if sort_by == 'tickets' %}selected{% endif %}>⚡ Fast Filling / Tickets</option>
+
+          <option value="name" {% if sort_by == 'name' %}selected{% endif %}>🔤 Name (A–Z)</option>
+
+        </select>
+
+      </div>
+
+
+
+      <!-- Search Submit Button -->
+
+      <button type="submit" class="ev-btn-search">
+
+        <span>🔍</span> Find Events
+
+      </button>
+
+
+
+      <!-- Reset Filters Button if Active -->
+
+      {% if query or category or area or sort_by %}
+
+      <a href="{% url 'events' %}" class="ev-btn-reset" title="Clear all filters">
+
+        ✕ Clear
+
+      </a>
+
+      {% endif %}
+
+    </form>
+
+  </div>
+
+</div>
+
+
+
+<!-- ══ MAIN EVENTS LISTINGS ═════════════════════════════════════════ -->
+
+<main class="events-container ev-main-section">
+
+  <!-- Section Header -->
+
+  <div class="ev-section-header">
+
+    <div>
+
+      <h2 class="ev-header-title">
+
+        {% if category %}
+
+          {{ category }} Events in Ahmedabad
+
+        {% elif query %}
+
+          Results for "{{ query }}"
+
+        {% elif area %}
+
+          Events near {{ area }}
+
+        {% else %}
+
+          All Upcoming Events &amp; Celebrations
+
+        {% endif %}
+
+      </h2>
+
+      <p class="ev-header-sub">
+
+        Showing <strong>{{ filtered_count }}</strong> of <strong>{{ total_count }}</strong> verified events with instant ticket booking.
+
+      </p>
+
+    </div>
+
+
+
+    <div class="ev-quick-links">
+
+      <a href="{% url 'party_plots' %}" class="ev-link-badge">
+
+        🌿 Explore Hourly Party Plots →
+
+      </a>
+
+      <a href="{% url 'wedding_halls' %}" class="ev-link-badge">
+
+        🏛️ Banquet Halls →
+
+      </a>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- Events Grid -->
+
+  {% if events %}
+
+  <div class="ev-grid">
+
+    {% for event in events %}
+
+    <article class="ev-card">
+
+      <div class="ev-card-media">
+
+        <!-- Category Badge -->
+
+        <span class="ev-badge-category {% if event.category == 'Navratri' %}ev-cat-navratri{% elif event.category == 'Party' %}ev-cat-party{% elif event.category == 'Live music' %}ev-cat-live{% elif event.category == 'Festival' %}ev-cat-festival{% else %}ev-cat-default{% endif %}">
+
+          {% if event.category == 'Navratri' %}🪔 {% elif event.category == 'Party' %}🎧 {% elif event.category == 'Live music' %}🎸 {% elif event.category == 'Festival' %}🎪 {% endif %}{{ event.category }}
+
+        </span>
+
+
+
+        <!-- Availability Badge -->
+
+        {% if event.tickets_available <= 100 %}
+
+          <span class="ev-badge-stock ev-stock-fast">🔥 Only {{ event.tickets_available }} left</span>
+
+        {% else %}
+
+          <span class="ev-badge-stock ev-stock-ok">⚡ {{ event.tickets_available }} available</span>
+
+        {% endif %}
+
+
+
+        <!-- Image -->
+
+        {% if event.cover_image_url %}
+
+          <img src="{{ event.cover_image_url }}" alt="{{ event.name }}" loading="lazy" />
+
+        {% else %}
+
+          <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1000&q=82" alt="{{ event.name }}" loading="lazy" />
+
+        {% endif %}
+
+
+
+        <div class="ev-media-gradient"></div>
+
+
+
+        <!-- Date & Time Overlay -->
+
+        <div class="ev-badge-datetime">
+
+          <span>📅</span> {{ event.starts_at|date:"D, j M Y" }} · {{ event.starts_at|date:"g:i A" }}
+
+        </div>
+
+      </div>
+
+
+
+      <div class="ev-card-body">
+
+        <h3 class="ev-card-title">
+
+          <a href="{% url 'event_detail' event.pk %}">{{ event.name }}</a>
+
+        </h3>
+
+
+
+        <div class="ev-card-venue">
+
+          <span>📍</span>
+
+          <span>{{ event.venue }}{% if event.city %}, {{ event.city }}{% endif %}</span>
+
+        </div>
+
+
+
+        <div class="ev-meta-row">
+
+          <span class="ev-meta-pill">👤 {{ event.organizer_name|default:"Official Organiser" }}</span>
+
+          <span class="ev-meta-pill">👥 {{ event.age_limit }}</span>
+
+        </div>
+
+
+
+        <p class="ev-card-desc">
+
+          {{ event.description|default:"Experience the vibrant festive energy of Ahmedabad with live music, dancing, and celebrations." }}
+
+        </p>
+
+      </div>
+
+
+
+      <div class="ev-card-footer">
+
+        <div class="ev-pricing">
+
+          <span class="ev-price-val">₹{{ event.ticket_price }}</span>
+
+          <span class="ev-price-sub">per ticket</span>
+
+        </div>
+
+
+
+        <div class="ev-actions">
+
+          <a href="{% url 'event_detail' event.pk %}" class="ev-btn-details">Details</a>
+
+          <a href="{% url 'book_event' event.pk %}" class="ev-btn-book">Book Now →</a>
+
+        </div>
+
+      </div>
+
+    </article>
+
+    {% endfor %}
+
+  </div>
+
+  {% else %}
+
+  <!-- Empty State -->
+
+  <div class="ev-empty">
+
+    <div class="ev-empty-icon">🎟️</div>
+
+    <h3>No events found matching your criteria</h3>
+
+    <p>
+
+      We couldn't find any events matching your selected filters or search terms. Try clearing your filters to see all available events.
+
+    </p>
+
+    <a href="{% url 'events' %}">
+
+      Show All {{ total_count }} Events
+
+    </a>
+
+  </div>
+
+  {% endif %}
+</main>
+
+{% endblock %}
+

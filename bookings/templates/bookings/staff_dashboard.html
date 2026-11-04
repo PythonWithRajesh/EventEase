@@ -1,0 +1,2946 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a">
+  <title>Executive Admin Console &amp; Dashboard | Amazing Ahmedabad</title>
+
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ══════════════════════════════════════════════════════════════
+       STATE-OF-THE-ART NEUMORPHIC (SOFT UI) EXECUTIVE ADMIN CONSOLE
+       AMAZING AHMEDABAD CELEBRATION & BOOKING PORTAL
+    ══════════════════════════════════════════════════════════════ */
+    :root {
+      /* Neumorphism Core Lighting & Surface Palette (Light Soft UI) */
+      --neo-bg:              #e6ecf5;
+      --neo-surface:         #e6ecf5;
+      --neo-shadow-light:    #ffffff;
+      --neo-shadow-dark:     #c5d0e3;
+      --neo-shadow-dark-rgb: 197, 208, 227;
+
+      /* Dual-direction extruded shadows (Soft 3D Elevation) */
+      --neo-extruded-xs:     3px 3px 7px var(--neo-shadow-dark), -3px -3px 7px var(--neo-shadow-light);
+      --neo-extruded-sm:     5px 5px 12px var(--neo-shadow-dark), -5px -5px 12px var(--neo-shadow-light);
+      --neo-extruded:        8px 8px 18px var(--neo-shadow-dark), -8px -8px 18px var(--neo-shadow-light);
+      --neo-extruded-lg:     12px 12px 28px var(--neo-shadow-dark), -12px -12px 28px var(--neo-shadow-light);
+      --neo-floating:        14px 14px 30px rgba(var(--neo-shadow-dark-rgb), 0.95), -14px -14px 30px var(--neo-shadow-light);
+
+      /* Inset debossed shadows (Pressed / Wells / Inputs / Active Tabs) */
+      --neo-inset-sm:        inset 2px 2px 5px var(--neo-shadow-dark), inset -2px -2px 5px var(--neo-shadow-light);
+      --neo-inset:           inset 4px 4px 8px var(--neo-shadow-dark), inset -4px -4px 8px var(--neo-shadow-light);
+      --neo-inset-deep:      inset 6px 6px 12px var(--neo-shadow-dark), inset -6px -6px 12px var(--neo-shadow-light);
+
+      /* Bevel edge highlight for physical tactile realism */
+      --neo-bevel-light:     1px solid rgba(255, 255, 255, 0.75);
+      --neo-bevel-sub:       1px solid rgba(255, 255, 255, 0.45);
+
+      /* Neumorphic High-Contrast Typography */
+      --dash-ink:            #1e293b;
+      --dash-ink-soft:       #334155;
+      --dash-muted:          #64748b;
+      --dash-border:         rgba(197, 208, 227, 0.45);
+
+      /* Accents */
+      --dash-primary:        #4f46e5;
+      --dash-primary-lit:    #e0e7ff;
+      --dash-primary-drk:    #3730a3;
+      --dash-primary-glow:   rgba(79, 70, 229, 0.35);
+
+      --dash-success:        #10b981;
+      --dash-success-lit:    #d1fae5;
+      --dash-success-drk:    #047857;
+
+      --dash-warning:        #f59e0b;
+      --dash-warning-lit:    #fef3c7;
+      --dash-warning-drk:    #b45309;
+
+      --dash-danger:         #ef4444;
+      --dash-danger-lit:     #fee2e2;
+      --dash-danger-drk:     #b91c1c;
+
+      --dash-blue:           #2563eb;
+      --dash-blue-lit:       #dbeafe;
+      --dash-blue-drk:       #1d4ed8;
+
+      /* Curved Geometry */
+      --dash-radius-sm:      10px;
+      --dash-radius-md:      14px;
+      --dash-radius-lg:      22px;
+      --dash-radius-xl:      28px;
+      --dash-radius-full:    9999px;
+    }
+
+    /* Dark Mode Neumorphism (Obsidian Soft UI) */
+    body[data-theme="dark"] {
+      --neo-bg:              #1c2027;
+      --neo-surface:         #1c2027;
+      --neo-shadow-light:    rgba(255, 255, 255, 0.06);
+      --neo-shadow-dark:     #111419;
+      --neo-shadow-dark-rgb: 17, 20, 25;
+
+      --neo-bevel-light:     1px solid rgba(255, 255, 255, 0.08);
+      --neo-bevel-sub:       1px solid rgba(255, 255, 255, 0.04);
+
+      --dash-ink:            #f8fafc;
+      --dash-ink-soft:       #cbd5e1;
+      --dash-muted:          #94a3b8;
+      --dash-border:         rgba(255, 255, 255, 0.08);
+
+      --dash-primary-lit:    rgba(79, 70, 229, 0.25);
+      --dash-success-lit:    rgba(16, 185, 129, 0.25);
+      --dash-warning-lit:    rgba(245, 158, 11, 0.25);
+      --dash-danger-lit:     rgba(239, 68, 68, 0.25);
+      --dash-blue-lit:       rgba(37, 99, 235, 0.25);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--neo-bg);
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.45) 0%, transparent 35%),
+        radial-gradient(circle at 90% 90%, rgba(var(--neo-shadow-dark-rgb), 0.35) 0%, transparent 45%);
+      background-attachment: fixed;
+      color: var(--dash-ink);
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .dash-app {
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       SIDEBAR (NEUMORPHIC SCULPTED CONSOLE PANEL)
+    ══════════════════════════════════════════════════════════════ */
+    .dash-sidebar {
+      width: 270px;
+      background: var(--neo-bg);
+      color: var(--dash-ink-soft);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 1000;
+      box-shadow: 6px 0 20px rgba(var(--neo-shadow-dark-rgb), 0.55);
+      border-right: var(--neo-bevel-light);
+      transition: transform 0.25s ease, background 0.3s ease;
+    }
+
+    .dash-sidebar-header {
+      padding: 22px 20px;
+      border-bottom: 1px solid var(--dash-border);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .dash-logo-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: var(--neo-bg);
+      box-shadow: var(--neo-extruded-sm);
+      border: var(--neo-bevel-light);
+      color: var(--dash-primary);
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      font-weight: 900;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+    .dash-logo-badge:hover {
+      box-shadow: var(--neo-floating);
+      transform: scale(1.04);
+    }
+
+    .dash-brand-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 850;
+      color: var(--dash-ink);
+      line-height: 1.2;
+    }
+
+    .dash-brand-sub {
+      font-size: 0.74rem;
+      color: var(--dash-primary);
+      font-weight: 750;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 3px;
+    }
+    .dash-live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      animation: pulseDot 2s infinite;
+    }
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.4); opacity: 0.6; }
+    }
+
+    /* Navigation Menu */
+    .dash-nav {
+      padding: 20px 14px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .dash-nav-label {
+      font-size: 0.68rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--dash-muted);
+      padding: 8px 12px 4px;
+    }
+
+    .dash-nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 16px;
+      border-radius: var(--dash-radius-md);
+      color: var(--dash-muted);
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      user-select: none;
+      background: transparent;
+      border: 1px solid transparent;
+      width: 100%;
+      text-align: left;
+    }
+
+    .dash-nav-item:hover {
+      background: var(--neo-bg);
+      color: var(--dash-ink);
+      box-shadow: var(--neo-extruded-xs);
+      border: var(--neo-bevel-light);
+      transform: translateY(-1px);
+    }
+
+    /* Pressed / Inset Debossed Active State */
+    .dash-nav-item.active {
+      background: var(--neo-bg);
+      color: var(--dash-primary);
+      font-weight: 850;
+      box-shadow: var(--neo-inset);
+      border: var(--neo-bevel-sub);
+      transform: translateY(0);
+    }
+
+    .dash-nav-item-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .dash-nav-badge {
+      font-size: 0.72rem;
+      font-weight: 850;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      background: var(--neo-bg);
+      box-shadow: var(--neo-inset-sm);
+      color: var(--dash-muted);
+      border: var(--neo-bevel-sub);
+    }
+    .dash-nav-badge.badge-new {
+      background: linear-gradient(135deg, #f43f5e, #e11d48);
+      color: #ffffff;
+      box-shadow: 2px 2px 8px rgba(244, 63, 94, 0.4);
+      border: none;
+    }
+    .dash-nav-item.active .dash-nav-badge:not(.badge-new) {
+      box-shadow: var(--neo-extruded-xs);
+      color: var(--dash-primary);
+      background: var(--neo-bg);
+    }
+
+    /* Sidebar Footer */
+    .dash-sidebar-footer {
+      padding: 18px 16px;
+      border-top: 1px solid var(--dash-border);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: rgba(var(--neo-shadow-dark-rgb), 0.15);
+    }
+
+    .dash-user-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: var(--dash-radius-md);
+      background: var(--neo-bg);
+      box-shadow: var(--neo-inset-sm);
+      border: var(--neo-bevel-sub);
+    }
+
+    .dash-user-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--neo-bg);
+      box-shadow: var(--neo-extruded-xs);
+      border: 1px solid #10b981;
+      color: #10b981;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .dash-footer-links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .dash-footer-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 9px 12px;
+      border-radius: var(--dash-radius-sm);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-decoration: none;
+      color: var(--dash-ink-soft);
+      background: var(--neo-bg);
+      box-shadow: var(--neo-extruded-xs);
+      border: var(--neo-bevel-light);
+      transition: all 0.18s ease;
+    }
+    .dash-footer-btn:hover {
+      box-shadow: var(--neo-extruded-sm);
+      transform: translateY(-1px);
+      color: var(--dash-ink);
+    }
+    .dash-footer-btn:active {
+      box-shadow: var(--neo-inset-sm);
+      transform: translateY(1px);
+    }
+    .btn-foot-logout:hover {
+      color: #ef4444;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       MAIN VIEWPORT & TOPBAR
+    ══════════════════════════════════════════════════════════════ */
+    .dash-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 100vh;
+    }
+
+    .dash-topbar {
+      height: 72px;
+      background: var(--neo-bg);
+      box-shadow: 0 6px 18px rgba(var(--neo-shadow-dark-rgb), 0.45);
+      border-bottom: var(--neo-bevel-light);
+      padding: 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      transition: background 0.3s ease;
+    }
+
+    .dash-topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .dash-toggle-btn {
+      display: none;
+      background: var(--neo-bg);
+      border: var(--neo-bevel-light);
+      box-shadow: var(--neo-extruded-xs);
+      padding: 8px 10px;
+      border-radius: var(--dash-radius-sm);
+      color: var(--dash-ink);
+      cursor: pointer;
+    }
+    .dash-toggle-btn:active {
+      box-shadow: var(--neo-inset-sm);
+    }
+
+    .dash-breadcrumb-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--dash-ink);
+      letter-spacing: -0.02em;
+    }
+
+    /* Neumorphic Inset Global Search */
+    .dash-topbar-search {
+      position: relative;
+      width: 320px;
+    }
+    .dash-topbar-search input {
+      width: 100%;
+      padding: 10px 16px 10px 38px;
+      background: var(--neo-bg);
+      box-shadow: var(--neo-inset);
+      border: var(--neo-bevel-sub);
+      border-radius: var(--dash-radius-full);
+      font-size: 0.84rem;
+      font-family: inherit;
+      color: var(--dash-ink);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .dash-topbar-search input:focus {
+      box-shadow: var(--neo-inset-deep), 0 0 0 2px var(--dash-primary-glow);
+    }
+    .dash-search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--dash-muted);
+      width: 16px;
+      height: 16px;
+      pointer-events: none;
+    }
+
+    .dash-topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .dash-pill-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 14px;
+      border-radius: var(--dash-radius-full);
+      font-size: 0.78rem;
+      font-weight: 800;
+      background: var(--neo-bg);
+      box-shadow: var(--neo-inset-sm);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: var(--dash-success-drk);
+    }
+
+    /* Neumorphic Tactile Pill Buttons */
+    .dash-btn-top {
+      background: var(--neo-bg);
+      box-shadow: var(--neo-extruded-xs);
+      border: var(--neo-bevel-light);
+      color: var(--dash-ink);
+      padding: 8px 16px;
+      border-radius: var(--dash-radius-full);
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.18s ease;
+    }
+    .dash-btn-top:hover {
+      box-shadow: var(--neo-extruded-sm);
+      transform: translateY(-1px);
+    }
+    .dash-btn-top:active {
+      box-shadow: var(--neo-inset-sm);
+      transform: translateY(1px);
+    }
+
+    /* Dark Mode Toggle Pill */
+    .dash-theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--neo-bg);
+      box-shadow: var(--neo-extruded-xs);
+      border: var(--neo-bevel-light);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .dash-theme-toggle:hover {
+      box-shadow: var(--neo-extruded-sm);
+      transform: scale(1.05);
+    }
+    .dash-theme-toggle:active {
+      box-shadow: var(--neo-inset-sm);
+      transform: scale(0.95);
+    }
+
+    /* Content Area */
+    .dash-content {
+      padding: 28px;
+      flex: 1;
+      max-width: 1600px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Flash Alerts */
+    .dash-alert {
+      padding: 14px 18px;
+      border-radius: var(--dash-radius-md);
+      margin-bottom: 24px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--neo-bg);
+      box-shadow: var(--neo-extruded-sm);
+      border: var(--neo-bevel-light);
+    }
+    .dash-alert-success { border-left: 5px solid #10b981; color: #065f46; }
+    .dash-alert-error   { border-left: 5px solid #ef4444; color: #991b1b; }
+
+    /* ══════════════════════════════════════════════════════════════
+       KPI CARDS (TACTILE NEUMORPHIC 3D TILES)
+    ══════════════════════════════════════════════════════════════ */
+    .dash-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .kpi-card {
+      background: var(--neo-bg);
+      border-radius: var(--dash-radius-lg);
+      padding: 22px;
+      box-shadow: var(--neo-extruded);
+      border: var(--neo-bevel-light);
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      border-left: 5px solid transparent;
+      user-select: none;
+    }
+    .kpi-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--neo-floating);
+    }
+    .kpi-card:active {
+      transform: translateY(0);
+      box-shadow: var(--neo-inset);
+    }
+
+    .kpi-card.kpi-green  { border-left-color: #10b981; }
+    .kpi-card.kpi-blue   { border-left-color: #2563eb; }
+    .kpi-card.kpi-amber  { border-left-color: #f59e0b; }
+    .kpi-card.kpi-indigo { border-left-color: #4f46e5; }
+    .kpi-card.kpi-purple { border-left-color: #8b5cf6; }
+    .kpi-card.kpi-rose   { border-left-color: #f43f5e; }
+
+    .kpi-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .kpi-title {
+      font-size: 0.76rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--dash-muted);
+    }
+
+    .kpi-pill {
+      font-size: 0.72rem;
+      font-weight: 850;
+      padding: 3px 9px;
+      border-radius: var(--dash-radius-full);
+      box-shadow: var(--neo-inset-sm);
+      border: var(--neo-bevel-sub);
+    }
+    .pill-green  { background: rgba(16, 185, 129, 0.15); color: #047857; }
+    .pill-blue   { background: rgba(37, 99, 235, 0.15); color: #1e40af; }
+    .pill-amber  { background: rgba(245, 158, 11, 0.15); color: #92400e; }
+    .pill-indigo { background: rgba(79, 70, 229, 0.15); color: #3730a3; }
+    .pill-purple { background: rgba(139, 92, 246, 0.15); color: #6d28d9; }
+    .pill-rose   { background: rgba(244, 63, 94, 0.15); color: #9f1239; }
+
+    .kpi-val {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 2.1rem;
+      font-weight: 900;
+      color: var(--dash-ink);
+      line-height: 1.1;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .kpi-sub {
+      font-size: 0.8rem;
+      color: var(--dash-muted);
+      font-weight: 650;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       QUICK ACCESS SERVICE MODULE CARDS (NEUMORPHIC OVERVIEW GRID)
+    ══════════════════════════════════════════════════════════════ */
+    .quick-module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .quick-module-card {
+      background: var(--neo-bg);
+      border-radius: var(--dash-radius-lg);
+      padding: 18px 20px;
+      box-shadow: var(--neo-extruded-sm);
+      border: var(--neo-bevel-light);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      color: inherit;
+      user-select: none;
+    }
+    .quick-module-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--neo-floating);
+      border-color: rgba(79, 70, 229, 0.35);
+    }
+    .quick-module-card:active {
+      transform: translateY(0);
+      box-shadow: var(--neo-inset);
+    }
+
+    .quick-module-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .quick-module-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--neo-bg);
+      box-shadow: var(--neo-inset-sm);
+      border: var(--neo-bevel-sub);
+      display: grid;
+      place-items: center;
+      font-size: 1.35rem;
+      flex-shrink: 0;
+    }
+
+    .quick-module-title {
+      font-size: 0.92rem;
+      font-weight: 850;
+      color: var(--dash-ink);
+      line-height: 1.2;
+    }
+
+    .quick-module-sub {
+      font-size: 0.74rem;
+      color: var(--dash-muted);
+      font-weight: 650;
+      margin-top: 3px;
+    }
+
+    .quick-module-badge {
+      font-size: 0.75rem;
+      font-weight: 850;
+      padding: 4px 10px;
+      border-radius: var(--dash-radius-full);
+      background: var(--neo-bg);
+      box-shadow: var(--neo-inset-sm);
+      color: var(--dash-primary);
+      border: var(--neo-bevel-sub);
+      white-space: nowrap;
+    }
+
+    /* Master Payment Ledger Filter Pills */
+    .pay-filter-pills {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .pay-filter-pill {
+      padding: 8px 18px;
+      border-radius: var(--dash-radius-full);
+      background: var(--neo-bg);
+      border: var(--neo-bevel-sub);
+      box-shadow: var(--neo-extruded-xs);
+      color: var(--dash-ink-soft);
+      font-size: 0.82rem;
+      font-weight: 750;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pay-filter-pill:hover {
+      box-shadow: var(--neo-extruded-sm);
+      color: var(--dash-primary);
+    }
+    .pay-filter-pill.active {
+      box-shadow: var(--neo-inset);
+      color: var(--dash-primary);
+      background: var(--neo-bg);
+      font-weight: 850;
+      border-color: var(--dash-primary-glow);
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       PANELS & TABLES (NEUMORPHIC CONTAINERS)
+    ══════════════════════════════════════════════════════════════ */
+    .dash-section {
+      display: none;
+      animation: neoFadeIn 0.25s ease forwards;
+    }
+    .dash-section.active {
+      display: block;
+    }
+    @keyframes neoFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .dash-panel {
+      background: var(--neo-bg);
+      border-radius: var(--dash-radius-xl);
+      box-shadow: var(--neo-extruded);
+      border: var(--neo-bevel-light);
+      overflow: hidden;
+      margin-bottom: 28px;
+      transition: background 0.3s ease;
+    }
+
+    .dash-panel-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--dash-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .dash-panel-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.12rem;
+      font-weight: 850;
+      color: var(--dash-ink);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    /* Inset Table Search */
+    .dash-search-table {
+      padding: 8px 16px;
+      background: var(--neo-bg);
+      box-shadow: var(--neo-inset);
+      border: var(--neo-bevel-sub);
+      border-radius: var(--dash-radius-sm);
+      font-size: 0.84rem;
+      font-family: inherit;
+      color: var(--dash-ink);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .dash-search-table:focus {
+      box-shadow: var(--neo-inset-deep), 0 0 0 2px var(--dash-primary-glow);
+    }
+
+    /* Tables */
+    .dash-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .dash-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .dash-table {
+      width: 100%;
+      min-width: 680px;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.86rem;
+    }
+
+    .dash-sidebar-close {
+      display: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--neo-bg);
+      box-shadow: var(--neo-extruded-xs);
+      border: var(--neo-bevel-light);
+      color: var(--dash-ink);
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    .dash-sidebar-close:active {
+      box-shadow: var(--neo-inset-sm);
+      transform: scale(0.95);
+    }
+
+    .dash-table th {
+      background: rgba(var(--neo-shadow-dark-rgb), 0.28);
+      color: var(--dash-muted);
+      font-weight: 850;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 14px 22px;
+      border-bottom: 1px solid var(--dash-border);
+      white-space: nowrap;
+    }
+
+    .dash-table td {
+      padding: 16px 22px;
+      border-bottom: 1px solid var(--dash-border);
+      color: var(--dash-ink-soft);
+      vertical-align: middle;
+      transition: background 0.15s ease;
+    }
+
+    .dash-table tr:hover td {
+      background: rgba(255, 255, 255, 0.45);
+    }
+    body[data-theme="dark"] .dash-table tr:hover td {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .cell-ref {
+      font-family: monospace;
+      font-size: 0.82rem;
+      font-weight: 850;
+      color: var(--dash-primary);
+      background: var(--neo-bg);
+      box-shadow: var(--neo-inset-sm);
+      border: var(--neo-bevel-sub);
+      padding: 4px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.04em;
+    }
+
+    .cell-title {
+      font-weight: 800;
+      color: var(--dash-ink);
+      font-size: 0.92rem;
+    }
+
+    .cell-sub {
+      font-size: 0.78rem;
+      color: var(--dash-muted);
+      margin-top: 3px;
+    }
+
+    .cell-price {
+      font-weight: 900;
+      font-size: 0.96rem;
+      color: var(--dash-ink);
+    }
+
+    /* Badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 11px;
+      border-radius: var(--dash-radius-full);
+      font-size: 0.74rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      box-shadow: var(--neo-inset-sm);
+      border: var(--neo-bevel-sub);
+    }
+    .status-confirmed { background: rgba(16, 185, 129, 0.18); color: #047857; }
+    .status-pending   { background: rgba(245, 158, 11, 0.18); color: #b45309; }
+    .status-cancelled { background: rgba(239, 68, 68, 0.18); color: #b91c1c; }
+
+    /* Action Buttons */
+    .dash-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: var(--dash-radius-sm);
+      font-size: 0.78rem;
+      font-weight: 850;
+      cursor: pointer;
+      text-decoration: none;
+      font-family: inherit;
+      transition: all 0.18s ease;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(145deg, #5b52f2, #473ed3);
+      color: #ffffff;
+      box-shadow: 4px 4px 10px rgba(79, 70, 229, 0.45), -3px -3px 8px var(--neo-shadow-light);
+      border: none;
+    }
+    .btn-primary:hover {
+      box-shadow: 6px 6px 14px rgba(79, 70, 229, 0.55), -4px -4px 10px var(--neo-shadow-light);
+      transform: translateY(-1px);
+    }
+    .btn-primary:active {
+      box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.35);
+      transform: translateY(1px);
+    }
+
+    .btn-success {
+      background: linear-gradient(145deg, #10c58a, #0fa171);
+      color: #ffffff;
+      box-shadow: 4px 4px 10px rgba(16, 185, 129, 0.45), -3px -3px 8px var(--neo-shadow-light);
+      border: none;
+    }
+    .btn-success:hover {
+      box-shadow: 6px 6px 14px rgba(16, 185, 129, 0.55), -4px -4px 10px var(--neo-shadow-light);
+      transform: translateY(-1px);
+    }
+    .btn-success:active {
+      box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.35);
+      transform: translateY(1px);
+    }
+
+    .btn-danger {
+      background: linear-gradient(145deg, #f74d4d, #dc3838);
+      color: #ffffff;
+      box-shadow: 4px 4px 10px rgba(239, 68, 68, 0.45), -3px -3px 8px var(--neo-shadow-light);
+      border: none;
+    }
+    .btn-danger:hover {
+      box-shadow: 6px 6px 14px rgba(239, 68, 68, 0.55), -4px -4px 10px var(--neo-shadow-light);
+      transform: translateY(-1px);
+    }
+    .btn-danger:active {
+      box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.35);
+      transform: translateY(1px);
+    }
+
+    .btn-outline {
+      background: var(--neo-bg);
+      border: var(--neo-bevel-light);
+      color: var(--dash-ink);
+      box-shadow: var(--neo-extruded-xs);
+    }
+    .btn-outline:hover {
+      box-shadow: var(--neo-extruded-sm);
+      transform: translateY(-1px);
+    }
+    .btn-outline:active {
+      box-shadow: var(--neo-inset-sm);
+      transform: translateY(1px);
+    }
+
+    /* Inquiries Grid */
+    .inquiry-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      padding: 20px 24px;
+    }
+
+    .inquiry-box {
+      border: var(--neo-bevel-light);
+      border-radius: var(--dash-radius-md);
+      padding: 20px;
+      background: var(--neo-bg);
+      box-shadow: var(--neo-extruded-sm);
+    }
+
+    .inquiry-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .inquiry-reply-form {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .inquiry-reply-input {
+      flex: 1;
+      padding: 9px 14px;
+      background: var(--neo-bg);
+      box-shadow: var(--neo-inset);
+      border: var(--neo-bevel-sub);
+      border-radius: var(--dash-radius-sm);
+      font-size: 0.86rem;
+      font-family: inherit;
+      color: var(--dash-ink);
+      outline: none;
+    }
+    .inquiry-reply-input:focus {
+      box-shadow: var(--neo-inset-deep), 0 0 0 2px var(--dash-primary-glow);
+    }
+
+    /* Mobile Drawer */
+    .dash-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       ADVANCED MOBILE & RESPONSIVE UX STYLES (EXECUTIVE SUITE)
+    ══════════════════════════════════════════════════════════════ */
+    .dash-bottom-nav {
+      display: none;
+    }
+
+    .dash-table-scroll-hint {
+      display: none;
+    }
+
+    @media (max-width: 992px) {
+      .dash-sidebar {
+        position: fixed;
+        left: -290px;
+        top: 0;
+        bottom: 0;
+        width: 285px;
+        z-index: 100000;
+        box-shadow: 12px 0 35px rgba(0, 0, 0, 0.45);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .dash-sidebar.open {
+        transform: translateX(290px);
+      }
+      .dash-sidebar-close {
+        display: inline-flex;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--neo-bg);
+        border: var(--neo-bevel-light);
+        box-shadow: var(--neo-extruded-xs);
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        color: var(--dash-muted);
+        cursor: pointer;
+      }
+      .dash-overlay.open {
+        display: block;
+        opacity: 1;
+      }
+      .dash-toggle-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        min-height: 40px;
+        border-radius: 12px;
+        font-size: 1.25rem;
+      }
+      .dash-topbar-search {
+        display: none;
+      }
+      .dash-topbar {
+        padding: 0 14px;
+        height: 60px;
+      }
+      .dash-breadcrumb-title {
+        font-size: 1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 170px;
+      }
+      .dash-content {
+        padding: 12px 10px 84px !important;
+      }
+
+      /* Native-like Mobile Bottom Navigation Bar */
+      .dash-bottom-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 64px;
+        background: var(--neo-bg);
+        border-top: var(--neo-bevel-light);
+        box-shadow: 0 -6px 22px rgba(var(--neo-shadow-dark-rgb), 0.6);
+        z-index: 99999;
+        padding: 0 6px env(safe-area-inset-bottom, 8px);
+        transition: background 0.3s ease;
+      }
+
+      .dash-bnav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        flex: 1;
+        height: 100%;
+        background: transparent;
+        border: none;
+        color: var(--dash-muted);
+        font-size: 0.65rem;
+        font-weight: 750;
+        cursor: pointer;
+        position: relative;
+        border-radius: 12px;
+        padding: 4px 2px;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        user-select: none;
+      }
+
+      .dash-bnav-icon {
+        font-size: 1.25rem;
+        line-height: 1;
+        transition: transform 0.2s ease;
+      }
+
+      .dash-bnav-item.active {
+        color: var(--dash-primary);
+      }
+
+      .dash-bnav-item.active .dash-bnav-icon {
+        transform: scale(1.18) translateY(-2px);
+      }
+
+      .dash-bnav-item:active {
+        transform: scale(0.92);
+      }
+
+      .dash-bnav-badge {
+        position: absolute;
+        top: 6px;
+        right: 18%;
+        background: #ef4444;
+        color: #ffffff;
+        font-size: 0.58rem;
+        font-weight: 900;
+        border-radius: 999px;
+        padding: 1px 5px;
+        min-width: 16px;
+        line-height: 1.2;
+        box-shadow: 0 2px 6px rgba(239, 68, 68, 0.45);
+      }
+
+      /* 2-Column Touch Grid for Stat Cards */
+      .dash-kpi-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+      }
+      .kpi-card {
+        padding: 13px 12px !important;
+        border-radius: 16px !important;
+      }
+      .kpi-head {
+        margin-bottom: 4px !important;
+      }
+      .kpi-title {
+        font-size: 0.72rem !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+      .kpi-pill {
+        font-size: 0.6rem !important;
+        padding: 2px 5px !important;
+      }
+      .kpi-val {
+        font-size: 1.35rem !important;
+        line-height: 1.1 !important;
+        margin: 2px 0 4px !important;
+      }
+      .kpi-sub {
+        font-size: 0.65rem !important;
+        line-height: 1.25 !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+      }
+
+      /* Quick Modules list on mobile */
+      .quick-module-grid {
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+      }
+      .quick-module-card {
+        padding: 11px 14px !important;
+        border-radius: 14px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+      }
+      .quick-module-icon {
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 1.2rem !important;
+        border-radius: 10px !important;
+      }
+      .quick-module-title {
+        font-size: 0.88rem !important;
+      }
+      .quick-module-sub {
+        font-size: 0.72rem !important;
+      }
+      .quick-module-badge {
+        font-size: 0.72rem !important;
+        padding: 4px 8px !important;
+      }
+
+      /* Panels & Tables */
+      .dash-panel {
+        border-radius: 18px !important;
+        margin-bottom: 16px !important;
+        padding: 14px 12px !important;
+      }
+      .dash-panel-header {
+        padding: 12px 14px !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+      }
+      .dash-search-table {
+        width: 100% !important;
+        font-size: 15px !important;
+        height: 40px !important;
+        border-radius: 10px !important;
+      }
+
+      .dash-table-wrap {
+        width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        border-radius: 12px !important;
+      }
+      .dash-table-scroll-hint {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        padding: 6px 10px !important;
+        background: rgba(var(--neo-shadow-dark-rgb), 0.25) !important;
+        font-size: 0.68rem !important;
+        font-weight: 750 !important;
+        color: var(--dash-muted) !important;
+        border-radius: 8px !important;
+        margin-bottom: 8px !important;
+        user-select: none !important;
+      }
+      .dash-table th, .dash-table td {
+        padding: 10px 12px !important;
+        font-size: 0.82rem !important;
+      }
+      .dash-table .dash-btn {
+        padding: 6px 10px !important;
+        font-size: 0.75rem !important;
+        min-height: 34px !important;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .dash-topbar {
+        height: 56px !important;
+        padding: 0 10px !important;
+      }
+      .dash-topbar-left {
+        gap: 8px !important;
+      }
+      .dash-toggle-btn {
+        width: 38px !important;
+        height: 38px !important;
+        min-width: 38px !important;
+        min-height: 38px !important;
+        font-size: 1.15rem !important;
+        border-radius: 10px !important;
+      }
+      .dash-breadcrumb-title {
+        font-size: 0.92rem !important;
+        max-width: 135px !important;
+      }
+      .dash-topbar-right {
+        gap: 6px !important;
+      }
+      .dash-pill-live {
+        display: none !important;
+      }
+      .dash-theme-toggle {
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        font-size: 0.95rem !important;
+        border-radius: 10px !important;
+      }
+      .dash-btn-top {
+        padding: 0 9px !important;
+        height: 36px !important;
+        font-size: 0.75rem !important;
+        border-radius: 10px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 4px !important;
+      }
+      .dash-btn-top .btn-text-full {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .dash-kpi-grid {
+        grid-template-columns: 1fr !important;
+      }
+      .dash-breadcrumb-title {
+        max-width: 110px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="dash-app">
+
+  <!-- Mobile Drawer Backdrop -->
+  <div class="dash-overlay" id="dashOverlay"></div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       SIDEBAR
+  ══════════════════════════════════════════════════════════════ -->
+  <aside class="dash-sidebar" id="dashSidebar">
+    
+    <div class="dash-sidebar-header">
+      <div class="dash-logo-badge">🛡️</div>
+      <div style="flex:1;min-width:0;">
+        <div class="dash-brand-title">Admin Console</div>
+        <div class="dash-brand-sub">
+          <span class="dash-live-dot"></span> Amazing Ahmedabad
+        </div>
+      </div>
+      <button type="button" class="dash-sidebar-close" id="dashSidebarCloseBtn" onclick="closeMobileDrawer();" aria-label="Close Navigation">✕</button>
+    </div>
+
+    <!-- Navigation Menu (9 Dedicated Modules Requested by User) -->
+    <nav class="dash-nav">
+      <div class="dash-nav-label">Main Console</div>
+
+      <!-- 1. Overview -->
+      <button type="button" class="dash-nav-item active" data-nav="overview">
+        <div class="dash-nav-item-left">
+          <span>📊</span>
+          <span>Overview</span>
+        </div>
+      </button>
+
+      <div class="dash-nav-label" style="margin-top:14px;">Booking Details</div>
+
+      <!-- 2. Event / Garba Bookings Details -->
+      <button type="button" class="dash-nav-item" data-nav="events">
+        <div class="dash-nav-item-left">
+          <span>🎟️</span>
+          <span>Event &amp; Garba Passes</span>
+        </div>
+        <span class="dash-nav-badge">{{ event_bookings_count }}</span>
+      </button>
+
+      <!-- 3. Food Orders Details -->
+      <button type="button" class="dash-nav-item" data-nav="food">
+        <div class="dash-nav-item-left">
+          <span>🍔</span>
+          <span>Food &amp; Snacks Orders</span>
+        </div>
+        <span class="dash-nav-badge">{{ total_food_orders }}</span>
+      </button>
+
+      <!-- 4. Wedding Halls Details -->
+      <button type="button" class="dash-nav-item" data-nav="halls">
+        <div class="dash-nav-item-left">
+          <span>🏰</span>
+          <span>Wedding Halls</span>
+        </div>
+        <span class="dash-nav-badge">{{ hall_bookings_count }}</span>
+      </button>
+
+      <!-- 5. Party Plots Details -->
+      <button type="button" class="dash-nav-item" data-nav="plots">
+        <div class="dash-nav-item-left">
+          <span>🎪</span>
+          <span>Party Plots</span>
+        </div>
+        <span class="dash-nav-badge">{{ plot_bookings_count }}</span>
+      </button>
+
+      <!-- 6. Luxury Rooms Details -->
+      <button type="button" class="dash-nav-item" data-nav="rooms">
+        <div class="dash-nav-item-left">
+          <span>🛏️</span>
+          <span>Luxury Rooms</span>
+        </div>
+        <span class="dash-nav-badge">{{ room_bookings_count }}</span>
+      </button>
+
+      <div class="dash-nav-label" style="margin-top:14px;">Administration</div>
+
+      <!-- 7. Support & Inquiries -->
+      <button type="button" class="dash-nav-item" data-nav="inquiries">
+        <div class="dash-nav-item-left">
+          <span>💬</span>
+          <span>Support &amp; Inquiries</span>
+        </div>
+        {% if new_inquiries_count > 0 %}
+          <span class="dash-nav-badge badge-new">{{ new_inquiries_count }} New</span>
+        {% else %}
+          <span class="dash-nav-badge">{{ total_inquiries }}</span>
+        {% endif %}
+      </button>
+
+      <!-- 8. Users & Logins -->
+      <button type="button" class="dash-nav-item" data-nav="users">
+        <div class="dash-nav-item-left">
+          <span>👥</span>
+          <span>Users &amp; Logins</span>
+        </div>
+        <span class="dash-nav-badge">{{ total_users }}</span>
+      </button>
+
+      <!-- 9. Master Payments Ledger (Online vs Offline Cash Details) -->
+      <button type="button" class="dash-nav-item" data-nav="payments">
+        <div class="dash-nav-item-left">
+          <span>💳</span>
+          <span>Payments Ledger</span>
+        </div>
+        <span class="dash-nav-badge">{{ total_bookings }}</span>
+      </button>
+    </nav>
+
+    <!-- Footer -->
+    <div class="dash-sidebar-footer">
+      <div class="dash-user-card">
+        <div class="dash-user-avatar">AD</div>
+        <div style="flex:1;min-width:0;">
+          <div style="color:var(--dash-ink);font-size:0.86rem;font-weight:850;">Admin</div>
+          <div style="color:var(--dash-muted);font-size:0.72rem;font-weight:650;">Executive Superuser</div>
+        </div>
+      </div>
+
+      <div class="dash-footer-links">
+        <a href="{% url 'home' %}" target="_blank" class="dash-footer-btn" title="View Public Website">
+          <span>🌐 Public Site</span>
+        </a>
+        <a href="{% url 'admin_logout' %}" class="dash-footer-btn btn-foot-logout" title="Logout Admin">
+          <span>🚪 Logout</span>
+        </a>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       MAIN CONTENT
+  ══════════════════════════════════════════════════════════════ -->
+  <main class="dash-main">
+
+    <!-- Topbar -->
+    <header class="dash-topbar">
+      <div class="dash-topbar-left">
+        <button type="button" class="dash-toggle-btn" id="dashToggleBtn" aria-label="Toggle Navigation">
+          ☰
+        </button>
+        <div class="dash-breadcrumb-title" id="pageSectionTitle">
+          Executive Dashboard Overview
+        </div>
+      </div>
+
+      <div class="dash-topbar-search">
+        <span class="dash-search-icon">🔍</span>
+        <input type="text" id="dashGlobalSearch" placeholder="Quick search any booking, customer, phone...">
+      </div>
+
+      <div class="dash-topbar-right">
+        <div class="dash-pill-live">
+          <span class="dash-live-dot"></span>
+          <span>System Online</span>
+        </div>
+        <button type="button" class="dash-theme-toggle" id="dashThemeToggle" onclick="toggleNeumorphicTheme();" title="Toggle Soft Light / Dark Neumorphic UI">
+          <span id="themeToggleIcon">🌙</span>
+        </button>
+        <button type="button" class="dash-btn-top" onclick="location.reload();" title="Refresh">
+          <span>↻</span> <span class="btn-text-full">Refresh</span>
+        </button>
+        <a href="{% url 'admin_logout' %}" class="dash-btn-top" style="color:#dc2626;" title="Sign out Admin">
+          <span>🚪</span> <span class="btn-text-full">Logout</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Viewport Body -->
+    <div class="dash-content">
+
+      <!-- Django Messages -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="dash-alert {% if message.tags == 'error' %}dash-alert-error{% else %}dash-alert-success{% endif %}">
+            <span>{{ message }}</span>
+            <button type="button" onclick="this.parentElement.remove();" style="background:none;border:none;cursor:pointer;font-weight:900;">&times;</button>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <div class="dash-section active" id="sec-overview">
+
+        <!-- ══════════════════════════════════════════════════════════
+             KPI STAT CARDS (CLICKABLE TO OPEN SECTION)
+        ══════════════════════════════════════════════════════════ -->
+        <div class="dash-kpi-grid">
+          
+          <!-- Total Paid Revenue -->
+          <div class="kpi-card kpi-green" onclick="switchTab('payments');" title="Click to view online payments">
+            <div class="kpi-head">
+              <span class="kpi-title">Collected Revenue</span>
+              <span class="kpi-pill pill-green">Verified</span>
+            </div>
+            <div class="kpi-val">₹{{ combined_collected_revenue|floatformat:"0" }}</div>
+            <div class="kpi-sub">
+              ₹{{ total_revenue_paid|floatformat:"0" }} Bookings · ₹{{ food_revenue_paid|floatformat:"0" }} Food
+            </div>
+          </div>
+
+          <!-- Online Razorpay -->
+          <div class="kpi-card kpi-blue" onclick="switchTab('payments');" title="Click to view Razorpay transactions">
+            <div class="kpi-head">
+              <span class="kpi-title">Online Payments</span>
+              <span class="kpi-pill pill-blue">Razorpay UPI</span>
+            </div>
+            <div class="kpi-val">₹{{ online_paid_revenue|floatformat:"0" }}</div>
+            <div class="kpi-sub">
+              {{ online_paid_count }} successful / {{ online_total_count }} attempted
+            </div>
+          </div>
+
+          <!-- Offline Venue Cash -->
+          <div class="kpi-card kpi-amber" onclick="switchTab('offline');" title="Click to view offline cash collections">
+            <div class="kpi-head">
+              <span class="kpi-title">Offline Venue Cash</span>
+              <span class="kpi-pill pill-amber">At Venue</span>
+            </div>
+            <div class="kpi-val">₹{{ offline_paid_revenue|floatformat:"0" }}</div>
+            <div class="kpi-sub">
+              {{ offline_unpaid_count }} pending (₹{{ offline_unpaid_revenue|floatformat:"0" }})
+            </div>
+          </div>
+
+          <!-- Total Bookings -->
+          <div class="kpi-card kpi-indigo" onclick="switchTab('bookings');" title="Click to view all bookings">
+            <div class="kpi-head">
+              <span class="kpi-title">Total Bookings</span>
+              <span class="kpi-pill pill-indigo">{{ confirmed_bookings }} Confirmed</span>
+            </div>
+            <div class="kpi-val">{{ total_bookings }}</div>
+            <div class="kpi-sub">
+              {{ event_bookings_count }} Garba · {{ plot_bookings_count }} Plots · {{ hall_bookings_count }} Halls
+            </div>
+          </div>
+
+          <!-- Food Orders -->
+          <div class="kpi-card kpi-purple" onclick="switchTab('food');" title="Click to view food orders">
+            <div class="kpi-head">
+              <span class="kpi-title">Food Hub Orders</span>
+              <span class="kpi-pill pill-purple">Amdawad Food</span>
+            </div>
+            <div class="kpi-val">{{ total_food_orders }}</div>
+            <div class="kpi-sub">
+              ₹{{ food_revenue_paid|floatformat:"0" }} collected revenue
+            </div>
+          </div>
+
+          <!-- Inquiries -->
+          <div class="kpi-card kpi-rose" onclick="switchTab('inquiries');" title="Click to view customer inquiries">
+            <div class="kpi-head">
+              <span class="kpi-title">Customer Inquiries</span>
+              <span class="kpi-pill {% if new_inquiries_count > 0 %}pill-rose{% else %}pill-green{% endif %}">
+                {% if new_inquiries_count > 0 %}{{ new_inquiries_count }} New{% else %}Resolved{% endif %}
+              </span>
+            </div>
+            <div class="kpi-val">{{ total_inquiries }}</div>
+            <div class="kpi-sub">
+              {{ in_progress_count }} In Progress · {{ resolved_count }} Resolved
+            </div>
+          </div>
+
+        </div>
+
+
+
+        <!-- ══════════════════════════════════════════════════════════
+             TAB 1: OVERVIEW SUMMARY & RECENT ACTIVITY
+        ══════════════════════════════════════════════════════════ -->
+
+        
+        <!-- ══════════════════════════════════════════════════════════
+             DIRECT SERVICE MODULES & DETAILS (REQUESTED ACTION CARDS)
+        ══════════════════════════════════════════════════════════ -->
+        <div class="dash-panel" style="margin-bottom:24px;padding:22px;">
+          <div style="font-size:1.02rem;font-weight:850;color:var(--dash-ink);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+            <span>⚡ Service Modules &amp; Booking Details</span>
+            <span style="font-size:0.78rem;font-weight:700;color:var(--dash-muted);">Click any card to open full details &amp; tables</span>
+          </div>
+
+          <div class="quick-module-grid">
+            <!-- 1. Event Passes -->
+            <div class="quick-module-card" onclick="switchTab('events');" title="View Event &amp; Garba booking details">
+              <div class="quick-module-left">
+                <div class="quick-module-icon">🎟️</div>
+                <div>
+                  <div class="quick-module-title">Event &amp; Garba Passes</div>
+                  <div class="quick-module-sub">Festival Passes &amp; Entries</div>
+                </div>
+              </div>
+              <div class="quick-module-badge">{{ event_bookings_count }} Bookings &rarr;</div>
+            </div>
+
+            <!-- 2. Food Orders -->
+            <div class="quick-module-card" onclick="switchTab('food');" title="View Food &amp; Snacks orders">
+              <div class="quick-module-left">
+                <div class="quick-module-icon">🍔</div>
+                <div>
+                  <div class="quick-module-title">Food &amp; Snacks Orders</div>
+                  <div class="quick-module-sub">Amdavad Bites &amp; Stalls</div>
+                </div>
+              </div>
+              <div class="quick-module-badge">{{ total_food_orders }} Orders &rarr;</div>
+            </div>
+
+            <!-- 3. Wedding Halls -->
+            <div class="quick-module-card" onclick="switchTab('halls');" title="View Wedding Banquet Hall bookings">
+              <div class="quick-module-left">
+                <div class="quick-module-icon">🏰</div>
+                <div>
+                  <div class="quick-module-title">Wedding Banquet Halls</div>
+                  <div class="quick-module-sub">Grand Banquets &amp; Mandaps</div>
+                </div>
+              </div>
+              <div class="quick-module-badge">{{ hall_bookings_count }} Bookings &rarr;</div>
+            </div>
+
+            <!-- 4. Party Plots -->
+            <div class="quick-module-card" onclick="switchTab('plots');" title="View Party Plot bookings">
+              <div class="quick-module-left">
+                <div class="quick-module-icon">🎪</div>
+                <div>
+                  <div class="quick-module-title">Open Lawn Party Plots</div>
+                  <div class="quick-module-sub">Lawn Gatherings &amp; Sangeet</div>
+                </div>
+              </div>
+              <div class="quick-module-badge">{{ plot_bookings_count }} Bookings &rarr;</div>
+            </div>
+
+            <!-- 5. Luxury Rooms -->
+            <div class="quick-module-card" onclick="switchTab('rooms');" title="View Luxury Room bookings">
+              <div class="quick-module-left">
+                <div class="quick-module-icon">🛏️</div>
+                <div>
+                  <div class="quick-module-title">Luxury Rooms &amp; Stays</div>
+                  <div class="quick-module-sub">Heritage Stays &amp; Suites</div>
+                </div>
+              </div>
+              <div class="quick-module-badge">{{ room_bookings_count }} Bookings &rarr;</div>
+            </div>
+
+            <!-- 6. Support & Inquiries -->
+            <div class="quick-module-card" onclick="switchTab('inquiries');" title="View Customer Inquiries">
+              <div class="quick-module-left">
+                <div class="quick-module-icon">💬</div>
+                <div>
+                  <div class="quick-module-title">Support &amp; Inquiries</div>
+                  <div class="quick-module-sub">Tickets, Messages &amp; Replies</div>
+                </div>
+              </div>
+              <div class="quick-module-badge">{{ total_inquiries }} Tickets &rarr;</div>
+            </div>
+
+            <!-- 7. Users & Logins -->
+            <div class="quick-module-card" onclick="switchTab('users');" title="View Users and Logins">
+              <div class="quick-module-left">
+                <div class="quick-module-icon">👥</div>
+                <div>
+                  <div class="quick-module-title">Users &amp; Logins</div>
+                  <div class="quick-module-sub">Customer Accounts &amp; Staff</div>
+                </div>
+              </div>
+              <div class="quick-module-badge">{{ total_users }} Users &rarr;</div>
+            </div>
+
+            <!-- 8. Master Payments Ledger -->
+            <div class="quick-module-card" onclick="switchTab('payments');" title="View complete Payments Ledger" style="border-left:4px solid var(--dash-primary);">
+              <div class="quick-module-left">
+                <div class="quick-module-icon" style="color:var(--dash-primary);">💳</div>
+                <div>
+                  <div class="quick-module-title">Master Payments Ledger</div>
+                  <div class="quick-module-sub">Online Razorpay vs Offline Cash</div>
+                </div>
+              </div>
+              <div class="quick-module-badge" style="background:var(--dash-primary-lit);color:var(--dash-primary-drk);">{{ total_bookings }} Records &rarr;</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Summary split cards -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:20px;">
+          <div class="dash-panel" style="padding:20px;margin-bottom:0;">
+            <div style="font-size:0.95rem;font-weight:800;color:var(--dash-ink);margin-bottom:12px;">
+              ⚡ Payment Method Breakdown
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div style="display:flex;justify-content:space-between;font-size:0.85rem;">
+                <span>Razorpay Online (UPI/Cards)</span>
+                <strong>₹{{ online_paid_revenue|floatformat:"0" }} ({{ online_paid_count }} paid)</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:0.85rem;">
+                <span>Cash at Venue Desk</span>
+                <strong>₹{{ offline_paid_revenue|floatformat:"0" }} collected</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:0.85rem;">
+                <span>Food Hub Orders</span>
+                <strong>₹{{ food_revenue_paid|floatformat:"0" }} ({{ total_food_orders }} orders)</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="dash-panel" style="padding:20px;margin-bottom:0;">
+            <div style="font-size:0.95rem;font-weight:800;color:var(--dash-ink);margin-bottom:12px;">
+              🎟️ Bookings Distribution
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div style="display:flex;justify-content:space-between;font-size:0.85rem;">
+                <span>Garba Festival Passes</span>
+                <strong>{{ event_bookings_count }} bookings</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:0.85rem;">
+                <span>Hourly Party Plots</span>
+                <strong>{{ plot_bookings_count }} plots</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:0.85rem;">
+                <span>Grand Wedding Halls</span>
+                <strong>{{ hall_bookings_count }} halls</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:0.85rem;">
+                <span>Heritage Stays &amp; Rooms</span>
+                <strong>{{ room_bookings_count }} rooms</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Bookings Table in Overview -->
+        <div class="dash-panel">
+          <div class="dash-panel-header">
+            <div class="dash-panel-title">
+              <span>🎟️ Recent Bookings Activity</span>
+            </div>
+            <button type="button" class="dash-btn btn-primary" onclick="switchTab('bookings');">
+              View All Bookings &rarr;
+            </button>
+          </div>
+          <div class="dash-table-wrap">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Ref</th>
+                  <th>Customer</th>
+                  <th>Item / Venue</th>
+                  <th>Amount</th>
+                  <th>Payment</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for b in bookings_list|slice:":8" %}
+                <tr>
+                  <td><span class="cell-ref">#AA-{{ b.public_token|slice:":8"|upper }}</span></td>
+                  <td>
+                    <div class="cell-title">{{ b.customer_name }}</div>
+                    <div class="cell-sub">{{ b.contact_phone }}</div>
+                  </td>
+                  <td>
+                    <div class="cell-title">
+                      {% if b.event %}{{ b.event.name }}{% elif b.venue_space %}{{ b.venue_space.name }}{% else %}{{ b.room.name }}{% endif %}
+                    </div>
+                  </td>
+                  <td><div class="cell-price">₹{{ b.total_amount|floatformat:"0" }}</div></td>
+                  <td>
+                    {% if b.payment_method == 'razorpay' %}
+                      <span class="status-badge status-confirmed">Online</span>
+                    {% else %}
+                      <span class="status-badge status-pending">Cash</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <span class="status-badge {% if b.status == 'confirmed' %}status-confirmed{% elif b.status == 'cancelled' %}status-cancelled{% else %}status-pending{% endif %}">
+                      {{ b.status|title }}
+                    </span>
+                  </td>
+                  <td>
+                    <div style="display:flex;gap:6px;">
+                      {% if b.payment_status != 'paid' and b.payment_method == 'cash' %}
+                      <form method="POST" action="{% url 'staff_dashboard' %}" style="margin:0;">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="mark_booking_paid">
+                        <input type="hidden" name="booking_id" value="{{ b.id }}">
+                        <button type="submit" class="dash-btn btn-success">✓ Paid</button>
+                      </form>
+                      {% endif %}
+                      <a href="{% url 'booking_done' b.public_token %}" target="_blank" class="dash-btn btn-outline">QR</a>
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7" style="text-align:center;padding:24px;color:var(--dash-muted);">No bookings yet.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           MODULE 2: EVENT & GARBA PASSES DETAILS
+      ══════════════════════════════════════════════════════════ -->
+      <div class="dash-section" id="sec-events">
+        <div class="dash-panel">
+          <div class="dash-panel-header">
+            <div class="dash-panel-title">
+              <span>🎟️ Event &amp; Garba Passes Bookings</span>
+              <span class="status-badge status-confirmed">{{ event_bookings_count }} Bookings</span>
+            </div>
+            <input type="text" class="dash-search-table" data-filter="table-event-bookings" placeholder="Search event, customer, ref...">
+          </div>
+
+          <div class="dash-table-wrap">
+            <table class="dash-table" id="table-event-bookings">
+              <thead>
+                <tr>
+                  <th>Ref Token</th>
+                  <th>Customer Name &amp; Contact</th>
+                  <th>Event Name &amp; Passes</th>
+                  <th>Schedule Date &amp; Time</th>
+                  <th>Total Amount</th>
+                  <th>Payment Mode</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for b in event_bookings_list %}
+                <tr class="search-row">
+                  <td><span class="cell-ref">#AA-{{ b.public_token|slice:":8"|upper }}</span></td>
+                  <td>
+                    <div class="cell-title">{{ b.customer_name }}</div>
+                    <div class="cell-sub"><a href="tel:{{ b.contact_phone }}" style="color:var(--dash-primary);text-decoration:none;">{{ b.contact_phone }}</a> · {{ b.email }}</div>
+                  </td>
+                  <td>
+                    <div class="cell-title">{{ b.event.name }}</div>
+                    <div class="cell-sub" style="font-weight:700;color:var(--dash-primary);">🎟️ {{ b.quantity }} Pass(es)</div>
+                  </td>
+                  <td>
+                    <div class="cell-sub" style="font-weight:750;color:var(--dash-ink);">
+                      {{ b.event.starts_at|date:"d M Y · h:i A" }}
+                    </div>
+                  </td>
+                  <td><div class="cell-price">₹{{ b.total_amount|floatformat:"0" }}</div></td>
+                  <td>
+                    {% if b.payment_method == 'razorpay' %}
+                      <span class="status-badge status-confirmed">⚡ Online (Razorpay)</span>
+                      <div class="cell-sub" style="color:#059669;font-weight:800;">✓ Paid</div>
+                    {% else %}
+                      <span class="status-badge status-pending">💵 Cash at Venue</span>
+                      {% if b.payment_status == 'paid' %}
+                        <div class="cell-sub" style="color:#059669;font-weight:800;">✓ Collected</div>
+                      {% else %}
+                        <div class="cell-sub" style="color:#b45309;font-weight:800;">⏳ Due at Gate</div>
+                      {% endif %}
+                    {% endif %}
+                  </td>
+                  <td>
+                    <span class="status-badge {% if b.status == 'confirmed' %}status-confirmed{% elif b.status == 'cancelled' %}status-cancelled{% else %}status-pending{% endif %}">
+                      {{ b.status|title }}
+                    </span>
+                  </td>
+                  <td>
+                    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                      {% if b.payment_status != 'paid' and b.payment_method == 'cash' %}
+                      <form method="POST" action="{% url 'staff_dashboard' %}" style="margin:0;">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="mark_booking_paid">
+                        <input type="hidden" name="booking_id" value="{{ b.id }}">
+                        <button type="submit" class="dash-btn btn-success" title="Mark cash collected">✓ Mark Paid</button>
+                      </form>
+                      {% endif %}
+
+                      {% if b.status != 'confirmed' %}
+                      <form method="POST" action="{% url 'staff_dashboard' %}" style="margin:0;">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="update_booking_status">
+                        <input type="hidden" name="booking_id" value="{{ b.id }}">
+                        <input type="hidden" name="new_status" value="confirmed">
+                        <button type="submit" class="dash-btn btn-primary" title="Confirm booking">Confirm</button>
+                      </form>
+                      {% endif %}
+
+                      {% if b.status != 'cancelled' %}
+                      <form method="POST" action="{% url 'staff_dashboard' %}" onsubmit="return confirm('Cancel Event Booking #{{ b.id }}?');" style="margin:0;">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="update_booking_status">
+                        <input type="hidden" name="booking_id" value="{{ b.id }}">
+                        <input type="hidden" name="new_status" value="cancelled">
+                        <button type="submit" class="dash-btn btn-danger" title="Cancel booking">Cancel</button>
+                      </form>
+                      {% endif %}
+
+                      <a href="{% url 'booking_done' b.public_token %}" target="_blank" class="dash-btn btn-outline" title="Pass QR">Pass QR</a>
+                      {% if b.payment_status == 'paid' or b.payment_method == 'razorpay' %}
+                      <a href="{% url 'booking_receipt_pdf' b.public_token %}" target="_blank" class="dash-btn btn-outline" style="color:#2563eb;" title="PDF Receipt">PDF</a>
+                      {% endif %}
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="8" style="text-align:center;padding:32px;color:var(--dash-muted);">No event passes booked yet.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           MODULE 3: WEDDING BANQUET HALLS DETAILS
+      ══════════════════════════════════════════════════════════ -->
+      <div class="dash-section" id="sec-halls">
+        <div class="dash-panel">
+          <div class="dash-panel-header">
+            <div class="dash-panel-title">
+              <span>🏰 Wedding &amp; Banquet Halls Bookings</span>
+              <span class="status-badge status-confirmed">{{ hall_bookings_count }} Bookings</span>
+            </div>
+            <input type="text" class="dash-search-table" data-filter="table-hall-bookings" placeholder="Search hall, customer, ref...">
+          </div>
+
+          <div class="dash-table-wrap">
+            <table class="dash-table" id="table-hall-bookings">
+              <thead>
+                <tr>
+                  <th>Ref Token</th>
+                  <th>Customer Name &amp; Contact</th>
+                  <th>Banquet Hall Name</th>
+                  <th>Event Date &amp; Timing</th>
+                  <th>Capacity &amp; Occasion</th>
+                  <th>Total Amount</th>
+                  <th>Payment Mode</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for b in hall_bookings_list %}
+                <tr class="search-row">
+                  <td><span class="cell-ref">#AA-{{ b.public_token|slice:":8"|upper }}</span></td>
+                  <td>
+                    <div class="cell-title">{{ b.customer_name }}</div>
+                    <div class="cell-sub"><a href="tel:{{ b.contact_phone }}" style="color:var(--dash-primary);text-decoration:none;">{{ b.contact_phone }}</a> · {{ b.email }}</div>
+                  </td>
+                  <td>
+                    <div class="cell-title">{{ b.venue_space.name }}</div>
+                    <div class="cell-sub">Banquet &amp; Mandap Hall</div>
+                  </td>
+                  <td>
+                    <div class="cell-sub" style="font-weight:750;color:var(--dash-ink);">
+                      {{ b.venue_start_at|date:"d M Y · h:i A"|default:"Scheduled Date" }}
+                    </div>
+                  </td>
+                  <td>
+                    <div class="cell-sub" style="font-weight:700;">{{ b.venue_space.capacity|default:"500+" }} Guests</div>
+                    <div class="cell-sub">{{ b.occasion|default:"Wedding Ceremony" }}</div>
+                  </td>
+                  <td><div class="cell-price">₹{{ b.total_amount|floatformat:"0" }}</div></td>
+                  <td>
+                    {% if b.payment_method == 'razorpay' %}
+                      <span class="status-badge status-confirmed">⚡ Online (Razorpay)</span>
+                      <div class="cell-sub" style="color:#059669;font-weight:800;">✓ Paid</div>
+                    {% else %}
+                      <span class="status-badge status-pending">💵 Cash at Venue</span>
+                      {% if b.payment_status == 'paid' %}
+                        <div class="cell-sub" style="color:#059669;font-weight:800;">✓ Collected</div>
+                      {% else %}
+                        <div class="cell-sub" style="color:#b45309;font-weight:800;">⏳ Due at Venue</div>
+                      {% endif %}
+                    {% endif %}
+                  </td>
+                  <td>
+                    <span class="status-badge {% if b.status == 'confirmed' %}status-confirmed{% elif b.status == 'cancelled' %}status-cancelled{% else %}status-pending{% endif %}">
+                      {{ b.status|title }}
+                    </span>
+                  </td>
+                  <td>
+                    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                      {% if b.payment_status != 'paid' and b.payment_method == 'cash' %}
+                      <form method="POST" action="{% url 'staff_dashboard' %}" style="margin:0;">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="mark_booking_paid">
+                        <input type="hidden" name="booking_id" value="{{ b.id }}">
+                        <button type="submit" class="dash-btn btn-success" title="Mark cash collected">✓ Mark Paid</button>
+                      </form>
+                      {% endif %}
+
+                      {% if b.status != 'confirmed' %}
+                      <form method="POST" action="{% url 'staff_dashboard' %}" style="margin:0;">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="update_booking_status">
+                        <input type="hidden" name="booking_id" value="{{ b.id }}">
+                        <input type="hidden" name="new_status" value="confirmed">
+                        <button type="submit" class="dash-btn btn-primary" title="Confirm hall">Confirm</button>
+                      </form>
+                      {% endif %}
+
+                      <a href="{% url 'booking_done' b.public_token %}" target="_blank" class="dash-btn btn-outline" title="Booking Pass">Pass</a>
+                      {% if b.payment_status == 'paid' or b.payment_method == 'razorpay' %}
+                      <a href="{% url 'booking_receipt_pdf' b.public_token %}" target="_blank" class="dash-btn btn-outline" style="color:#2563eb;" title="PDF Receipt">PDF</a>
+                      {% endif %}
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="9" style="text-align:center;padding:32px;color:var(--dash-muted);">No wedding hall bookings recorded yet.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           MODULE 4: OPEN LAWN PARTY PLOTS DETAILS
+      ══════════════════════════════════════════════════════════ -->
+      <div class="dash-section" id="sec-plots">
+        <div class="dash-panel">
+          <div class="dash-panel-header">
+            <div class="dash-panel-title">
+              <span>🎪 Open Lawn Party Plots Bookings</span>
+              <span class="status-badge status-confirmed">{{ plot_bookings_count }} Bookings</span>
+            </div>
+            <input type="text" class="dash-search-table" data-filter="table-plot-bookings" placeholder="Search plot, customer, ref...">
+          </div>
+
+          <div class="dash-table-wrap">
+            <table class="dash-table" id="table-plot-bookings">
+              <thead>
+                <tr>
+                  <th>Ref Token</th>
+                  <th>Customer Name &amp; Contact</th>
+                  <th>Party Plot Name</th>
+                  <th>Booking Schedule</th>
+                  <th>Capacity &amp; Occasion</th>
+                  <th>Total Amount</th>
+                  <th>Payment Mode</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for b in plot_bookings_list %}
+                <tr class="search-row">
+                  <td><span class="cell-ref">#AA-{{ b.public_token|slice:":8"|upper }}</span></td>
+                  <td>
+                    <div class="cell-title">{{ b.customer_name }}</div>
+                    <div class="cell-sub"><a href="tel:{{ b.contact_phone }}" style="color:var(--dash-primary);text-decoration:none;">{{ b.contact_phone }}</a> · {{ b.email }}</div>
+                  </td>
+                  <td>
+                    <div class="cell-title">{{ b.venue_space.name }}</div>
+                    <div class="cell-sub">Open Green Lawn</div>
+                  </td>
+                  <td>
+                    <div class="cell-sub" style="font-weight:750;color:var(--dash-ink);">
+                      {{ b.venue_start_at|date:"d M Y · h:i A"|default:"Scheduled Date" }}
+                    </div>
+                  </td>
+                  <td>
+                    <div class="cell-sub" style="font-weight:700;">{{ b.venue_space.capacity|default:"1000+" }} Guests</div>
+                    <div class="cell-sub">{{ b.occasion|default:"Party / Celebration" }}</div>
+                  </td>
+                  <td><div class="cell-price">₹{{ b.total_amount|floatformat:"0" }}</div></td>
+                  <td>
+                    {% if b.payment_method == 'razorpay' %}
+                      <span class="status-badge status-confirmed">⚡ Online (Razorpay)</span>
+                      <div class="cell-sub" style="color:#059669;font-weight:800;">✓ Paid</div>
+                    {% else %}
+                      <span class="status-badge status-pending">💵 Cash at Venue</span>
+                      {% if b.payment_status == 'paid' %}
+                        <div class="cell-sub" style="color:#059669;font-weight:800;">✓ Collected</div>
+                      {% else %}
+                        <div class="cell-sub" style="color:#b45309;font-weight:800;">⏳ Due at Venue</div>
+                      {% endif %}
+                    {% endif %}
+                  </td>
+                  <td>
+                    <span class="status-badge {% if b.status == 'confirmed' %}status-confirmed{% elif b.status == 'cancelled' %}status-cancelled{% else %}status-pending{% endif %}">
+                      {{ b.status|title }}
+                    </span>
+                  </td>
+                  <td>
+                    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                      {% if b.payment_status != 'paid' and b.payment_method == 'cash' %}
+                      <form method="POST" action="{% url 'staff_dashboard' %}" style="margin:0;">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="mark_booking_paid">
+                        <input type="hidden" name="booking_id" value="{{ b.id }}">
+                        <button type="submit" class="dash-btn btn-success" title="Mark cash collected">✓ Mark Paid</button>
+                      </form>
+                      {% endif %}
+
+                      {% if b.status != 'confirmed' %}
+                      <form method="POST" action="{% url 'staff_dashboard' %}" style="margin:0;">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="update_booking_status">
+                        <input type="hidden" name="booking_id" value="{{ b.id }}">
+                        <input type="hidden" name="new_status" value="confirmed">
+                        <button type="submit" class="dash-btn btn-primary" title="Confirm plot">Confirm</button>
+                      </form>
+                      {% endif %}
+
+                      <a href="{% url 'booking_done' b.public_token %}" target="_blank" class="dash-btn btn-outline" title="Booking Pass">Pass</a>
+                      {% if b.payment_status == 'paid' or b.payment_method == 'razorpay' %}
+                      <a href="{% url 'booking_receipt_pdf' b.public_token %}" target="_blank" class="dash-btn btn-outline" style="color:#2563eb;" title="PDF Receipt">PDF</a>
+                      {% endif %}
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="9" style="text-align:center;padding:32px;color:var(--dash-muted);">No party plot bookings recorded yet.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           MODULE 5: LUXURY STAYS & ROOMS DETAILS
+      ══════════════════════════════════════════════════════════ -->
+      <div class="dash-section" id="sec-rooms">
+        <div class="dash-panel">
+          <div class="dash-panel-header">
+            <div class="dash-panel-title">
+              <span>🛏️ Luxury Stays &amp; Rooms Bookings</span>
+              <span class="status-badge status-confirmed">{{ room_bookings_count }} Bookings</span>
+            </div>
+            <input type="text" class="dash-search-table" data-filter="table-room-bookings" placeholder="Search room, guest, ref...">
+          </div>
+
+          <div class="dash-table-wrap">
+            <table class="dash-table" id="table-room-bookings">
+              <thead>
+                <tr>
+                  <th>Ref Token</th>
+                  <th>Customer Name &amp; Contact</th>
+                  <th>Room / Suite Name</th>
+                  <th>Stay Dates (Check-In &rarr; Out)</th>
+                  <th>Guests &amp; Duration</th>
+                  <th>Total Amount</th>
+                  <th>Payment Mode</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for b in room_bookings_list %}
+                <tr class="search-row">
+                  <td><span class="cell-ref">#AA-{{ b.public_token|slice:":8"|upper }}</span></td>
+                  <td>
+                    <div class="cell-title">{{ b.customer_name }}</div>
+                    <div class="cell-sub"><a href="tel:{{ b.contact_phone }}" style="color:var(--dash-primary);text-decoration:none;">{{ b.contact_phone }}</a> · {{ b.email }}</div>
+                  </td>
+                  <td>
+                    <div class="cell-title">{{ b.room.name }}</div>
+                    <div class="cell-sub">Heritage Hotel Suite</div>
+                  </td>
+                  <td>
+                    <div class="cell-sub" style="font-weight:750;color:var(--dash-ink);">
+                      {{ b.check_in|date:"d M Y" }} &rarr; {{ b.check_out|date:"d M Y" }}
+                    </div>
+                  </td>
+                  <td>
+                    <div class="cell-sub" style="font-weight:700;">{{ b.quantity }} Room(s) / Guest(s)</div>
+                  </td>
+                  <td><div class="cell-price">₹{{ b.total_amount|floatformat:"0" }}</div></td>
+                  <td>
+                    {% if b.payment_method == 'razorpay' %}
+                      <span class="status-badge status-confirmed">⚡ Online (Razorpay)</span>
+                      <div class="cell-sub" style="color:#059669;font-weight:800;">✓ Paid</div>
+                    {% else %}
+                      <span class="status-badge status-pending">💵 Cash at Venue</span>
+                      {% if b.payment_status == 'paid' %}
+                        <div class="cell-sub" style="color:#059669;font-weight:800;">✓ Collected</div>
+                      {% else %}
+                        <div class="cell-sub" style="color:#b45309;font-weight:800;">⏳ Due at Check-In</div>
+                      {% endif %}
+                    {% endif %}
+                  </td>
+                  <td>
+                    <span class="status-badge {% if b.status == 'confirmed' %}status-confirmed{% elif b.status == 'cancelled' %}status-cancelled{% else %}status-pending{% endif %}">
+                      {{ b.status|title }}
+                    </span>
+                  </td>
+                  <td>
+                    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                      {% if b.payment_status != 'paid' and b.payment_method == 'cash' %}
+                      <form method="POST" action="{% url 'staff_dashboard' %}" style="margin:0;">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="mark_booking_paid">
+                        <input type="hidden" name="booking_id" value="{{ b.id }}">
+                        <button type="submit" class="dash-btn btn-success" title="Mark cash collected">✓ Mark Paid</button>
+                      </form>
+                      {% endif %}
+
+                      {% if b.status != 'confirmed' %}
+                      <form method="POST" action="{% url 'staff_dashboard' %}" style="margin:0;">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="update_booking_status">
+                        <input type="hidden" name="booking_id" value="{{ b.id }}">
+                        <input type="hidden" name="new_status" value="confirmed">
+                        <button type="submit" class="dash-btn btn-primary" title="Confirm stay">Confirm</button>
+                      </form>
+                      {% endif %}
+
+                      <a href="{% url 'booking_done' b.public_token %}" target="_blank" class="dash-btn btn-outline" title="Stay Pass">Pass</a>
+                      {% if b.payment_status == 'paid' or b.payment_method == 'razorpay' %}
+                      <a href="{% url 'booking_receipt_pdf' b.public_token %}" target="_blank" class="dash-btn btn-outline" style="color:#2563eb;" title="PDF Receipt">PDF</a>
+                      {% endif %}
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="9" style="text-align:center;padding:32px;color:var(--dash-muted);">No hotel room bookings recorded yet.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           MODULE 9: MASTER PAYMENTS LEDGER (ONLINE VS OFFLINE DETAILS)
+      ══════════════════════════════════════════════════════════ -->
+      <div class="dash-section" id="sec-payments">
+        <div class="dash-panel">
+          <div class="dash-panel-header">
+            <div>
+              <div class="dash-panel-title">
+                <span>💳 Master Payments Ledger (Online vs Offline Cash)</span>
+              </div>
+              <div style="font-size:0.82rem;color:var(--dash-muted);margin-top:4px;">
+                Total Volume: <strong>₹{{ total_booking_volume|floatformat:"0" }}</strong> · Collected: <strong>₹{{ total_revenue_paid|floatformat:"0" }}</strong> · Pending: <strong>₹{{ offline_unpaid_revenue|floatformat:"0" }}</strong>
+              </div>
+            </div>
+            <input type="text" class="dash-search-table" data-filter="table-master-payments" placeholder="Search payment ID, customer, ref...">
+          </div>
+
+          <!-- Real-Time Payment Filter Pills -->
+          <div class="pay-filter-pills">
+            <button type="button" class="pay-filter-pill active" data-filter-pill="all" onclick="filterPayments('all', this);">
+              <span>📋 All Payments ({{ total_bookings }})</span>
+            </button>
+            <button type="button" class="pay-filter-pill" data-filter-pill="online" onclick="filterPayments('online', this);">
+              <span>⚡ Online Razorpay ({{ online_total_count }}) · ₹{{ online_paid_revenue|floatformat:"0" }}</span>
+            </button>
+            <button type="button" class="pay-filter-pill" data-filter-pill="offline" onclick="filterPayments('offline', this);">
+              <span>💵 Offline Venue Cash ({{ offline_total_count }}) · ₹{{ offline_paid_revenue|floatformat:"0" }}</span>
+            </button>
+            <button type="button" class="pay-filter-pill" data-filter-pill="paid" onclick="filterPayments('paid', this);">
+              <span>✓ Paid &amp; Verified ({{ confirmed_bookings }})</span>
+            </button>
+            <button type="button" class="pay-filter-pill" data-filter-pill="unpaid" onclick="filterPayments('unpaid', this);">
+              <span>⏳ Unpaid / Due ({{ offline_unpaid_count }})</span>
+            </button>
+          </div>
+
+          <div class="dash-table-wrap">
+            <table class="dash-table" id="table-master-payments">
+              <thead>
+                <tr>
+                  <th>Order Ref</th>
+                  <th>Service Category</th>
+                  <th>Customer &amp; Mobile</th>
+                  <th>Total Amount</th>
+                  <th>Payment Method &amp; Gateway ID</th>
+                  <th>Payment Status</th>
+                  <th>Booking Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for b in payments_list %}
+                <tr class="search-row" data-payment-type="{% if b.payment_method == 'razorpay' %}online{% else %}offline{% endif %}" data-payment-status="{{ b.payment_status }}">
+                  <td><span class="cell-ref">#AA-{{ b.public_token|slice:":8"|upper }}</span></td>
+                  <td>
+                    {% if b.kind == 'event' %}
+                      <span class="status-badge status-confirmed">🎟️ Garba Event</span>
+                      <div class="cell-sub">{{ b.event.name }}</div>
+                    {% elif b.kind == 'room' %}
+                      <span class="status-badge status-pending">🛏️ Luxury Room</span>
+                      <div class="cell-sub">{{ b.room.name }}</div>
+                    {% elif b.venue_space.space_type == 'banquet_hall' %}
+                      <span class="status-badge status-confirmed" style="background:#e0e7ff;color:#3730a3;">🏰 Wedding Hall</span>
+                      <div class="cell-sub">{{ b.venue_space.name }}</div>
+                    {% else %}
+                      <span class="status-badge status-confirmed" style="background:#fef3c7;color:#92400e;">🎪 Party Plot</span>
+                      <div class="cell-sub">{{ b.venue_space.name }}</div>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <div class="cell-title">{{ b.customer_name }}</div>
+                    <div class="cell-sub"><a href="tel:{{ b.contact_phone }}" style="color:var(--dash-primary);text-decoration:none;">{{ b.contact_phone }}</a></div>
+                  </td>
+                  <td><div class="cell-price">₹{{ b.total_amount|floatformat:"0" }}</div></td>
+                  <td>
+                    {% if b.payment_method == 'razorpay' %}
+                      <span class="status-badge status-confirmed" style="background:rgba(37,99,235,0.15);color:#1e40af;">
+                        ⚡ Online Razorpay (UPI/Cards)
+                      </span>
+                      <div style="margin-top:4px;">
+                        <code style="font-size:0.75rem;padding:2px 7px;border-radius:6px;background:var(--neo-bg);box-shadow:var(--neo-inset-sm);color:var(--dash-ink);font-weight:750;">
+                          {{ b.razorpay_payment_id|default:"UPI/Card Verified" }}
+                        </code>
+                      </div>
+                    {% else %}
+                      <span class="status-badge status-pending" style="background:rgba(245,158,11,0.15);color:#92400e;">
+                        💵 Offline Cash (Pay at Venue)
+                      </span>
+                      <div class="cell-sub" style="margin-top:2px;">Gate / Desk Payment</div>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if b.payment_status == 'paid' %}
+                      <span class="status-badge status-confirmed">✓ Paid</span>
+                      <div class="cell-sub" style="color:#059669;font-weight:700;">{{ b.paid_at|date:"d M Y · h:i A"|default:"Verified" }}</div>
+                    {% else %}
+                      <span class="status-badge status-pending">⏳ Due at Gate</span>
+                      <div class="cell-sub" style="color:#b45309;font-weight:700;">Pending Collection</div>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <span class="status-badge {% if b.status == 'confirmed' %}status-confirmed{% elif b.status == 'cancelled' %}status-cancelled{% else %}status-pending{% endif %}">
+                      {{ b.status|title }}
+                    </span>
+                  </td>
+                  <td>
+                    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                      {% if b.payment_status != 'paid' and b.payment_method == 'cash' %}
+                      <form method="POST" action="{% url 'staff_dashboard' %}" style="margin:0;">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="mark_booking_paid">
+                        <input type="hidden" name="booking_id" value="{{ b.id }}">
+                        <button type="submit" class="dash-btn btn-success" title="Mark cash collected">✓ Mark Paid</button>
+                      </form>
+                      {% endif %}
+
+                      <a href="{% url 'booking_done' b.public_token %}" target="_blank" class="dash-btn btn-outline" title="Pass QR">Pass QR</a>
+                      {% if b.payment_status == 'paid' or b.payment_method == 'razorpay' %}
+                      <a href="{% url 'booking_receipt_pdf' b.public_token %}" target="_blank" class="dash-btn btn-outline" style="color:#2563eb;" title="PDF Receipt">PDF</a>
+                      {% endif %}
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="8" style="text-align:center;padding:32px;color:var(--dash-muted);">No payment records found.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           TAB 5: FOOD ORDERS
+      ══════════════════════════════════════════════════════════ -->
+      <div class="dash-section" id="sec-food">
+        <div class="dash-panel">
+          <div class="dash-panel-header">
+            <div class="dash-panel-title">
+              <span>🍔 Food Hub Orders Management</span>
+              <span class="status-badge status-confirmed">{{ total_food_orders }} Orders</span>
+            </div>
+            <input type="text" class="dash-search-table" data-filter="table-food" placeholder="Search dish, customer, address...">
+          </div>
+
+          <div class="dash-table-wrap">
+            <table class="dash-table" id="table-food">
+              <thead>
+                <tr>
+                  <th>Order Ref</th>
+                  <th>Food Item &amp; Kitchen</th>
+                  <th>Customer &amp; Phone</th>
+                  <th>Delivery Address</th>
+                  <th>Amount</th>
+                  <th>Payment</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for fo in food_orders_list %}
+                <tr class="search-row">
+                  <td><span class="cell-ref">#FD-{{ fo.public_token|slice:":8"|upper }}</span></td>
+                  <td>
+                    <div class="cell-title">{{ fo.quantity }}x {{ fo.food_item.name }}</div>
+                    <div class="cell-sub">☕ {{ fo.food_item.restaurant_name }} ({{ fo.food_item.area }})</div>
+                  </td>
+                  <td>
+                    <div class="cell-title">{{ fo.customer_name }}</div>
+                    <div class="cell-sub"><a href="tel:{{ fo.contact_phone }}" style="color:var(--dash-primary);text-decoration:none;">{{ fo.contact_phone }}</a></div>
+                  </td>
+                  <td>
+                    <div class="cell-sub" style="font-weight:700;color:var(--dash-ink);">
+                      📍 {{ fo.delivery_address|default:"Pickup at Stall" }}
+                    </div>
+                  </td>
+                  <td><div class="cell-price">₹{{ fo.total_amount|floatformat:"0" }}</div></td>
+                  <td>
+                    {% if fo.payment_method == 'razorpay' %}
+                      <span class="status-badge status-confirmed">Online (Paid)</span>
+                    {% else %}
+                      <span class="status-badge status-pending">COD / Cash</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <span class="status-badge {% if fo.status == 'delivered' %}status-confirmed{% elif fo.status == 'cancelled' %}status-cancelled{% else %}status-pending{% endif %}">
+                      {{ fo.status|title }}
+                    </span>
+                  </td>
+                  <td>
+                    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                      {% if fo.status != 'delivered' %}
+                      <form method="POST" action="{% url 'staff_dashboard' %}" style="margin:0;">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="update_food_order">
+                        <input type="hidden" name="order_id" value="{{ fo.id }}">
+                        <input type="hidden" name="new_status" value="delivered">
+                        <button type="submit" class="dash-btn btn-success" title="Mark Delivered">✓ Delivered</button>
+                      </form>
+                      {% endif %}
+
+                      {% if fo.status != 'cancelled' and fo.status != 'delivered' %}
+                      <form method="POST" action="{% url 'staff_dashboard' %}" onsubmit="return confirm('Cancel food order?');" style="margin:0;">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="update_food_order">
+                        <input type="hidden" name="order_id" value="{{ fo.id }}">
+                        <input type="hidden" name="new_status" value="cancelled">
+                        <button type="submit" class="dash-btn btn-danger" title="Cancel Order">Cancel</button>
+                      </form>
+                      {% endif %}
+
+                      {% if fo.payment_status == 'paid' or fo.payment_method == 'razorpay' %}
+                      <a href="{% url 'food_order_receipt_pdf' fo.public_token %}" target="_blank" class="dash-btn btn-outline" style="color:#2563eb;" title="PDF Receipt">PDF</a>
+                      {% endif %}
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="8" style="text-align:center;padding:32px;color:var(--dash-muted);">No food orders yet.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           TAB 6: INQUIRIES & MESSAGES
+      ══════════════════════════════════════════════════════════ -->
+      <div class="dash-section" id="sec-inquiries">
+        <div class="dash-panel">
+          <div class="dash-panel-header">
+            <div class="dash-panel-title">
+              <span>💬 Customer Support Inquiries</span>
+              {% if new_inquiries_count > 0 %}
+                <span class="status-badge status-cancelled">{{ new_inquiries_count }} Pending Reply</span>
+              {% else %}
+                <span class="status-badge status-confirmed">All Inquiries Handled</span>
+              {% endif %}
+            </div>
+            <input type="text" class="dash-search-table" data-filter="inquiry-cards-list" placeholder="Search inquiry text, customer...">
+          </div>
+
+          <div class="inquiry-grid" id="inquiry-cards-list">
+            {% for inq in inquiries_list %}
+            <div class="inquiry-box search-row">
+              <div class="inquiry-header">
+                <div>
+                  <strong style="font-size:1rem;color:var(--dash-ink);">{{ inq.name }}</strong>
+                  <div class="cell-sub">
+                    <a href="tel:{{ inq.phone }}" style="color:var(--dash-primary);font-weight:700;">{{ inq.phone }}</a> · 
+                    <span>{{ inq.email }}</span> · 
+                    <span>{{ inq.created_at|date:"d M Y · h:i A" }}</span>
+                  </div>
+                </div>
+
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <span class="status-badge {% if inq.status == 'resolved' %}status-confirmed{% elif inq.status == 'in_progress' %}status-pending{% else %}status-cancelled{% endif %}">
+                    {{ inq.status|title }}
+                  </span>
+
+                  <form method="POST" action="{% url 'staff_dashboard' %}" style="margin:0;">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="update_inquiry_status">
+                    <input type="hidden" name="inquiry_id" value="{{ inq.id }}">
+                    {% if inq.status != 'resolved' %}
+                      <input type="hidden" name="new_status" value="resolved">
+                      <button type="submit" class="dash-btn btn-success">✓ Resolve</button>
+                    {% else %}
+                      <input type="hidden" name="new_status" value="in_progress">
+                      <button type="submit" class="dash-btn btn-outline">Reopen</button>
+                    {% endif %}
+                  </form>
+                </div>
+              </div>
+
+              {% if inq.subject %}
+                <div style="font-weight:800;color:var(--dash-primary);font-size:0.9rem;margin-bottom:4px;">
+                  {{ inq.subject }}
+                </div>
+              {% endif %}
+
+              <div style="background:var(--neo-bg);box-shadow:var(--neo-inset-sm);border:var(--neo-bevel-sub);border-left:4px solid var(--dash-primary);padding:12px 16px;border-radius:12px;margin:10px 0;font-size:0.88rem;line-height:1.5;color:var(--dash-ink-soft);">
+                {{ inq.message }}
+              </div>
+
+              <!-- Previous replies -->
+              {% for msg in inq.messages.all %}
+                <div style="margin-left:16px;padding:10px 14px;background:var(--neo-bg);box-shadow:var(--neo-inset-sm);border:var(--neo-bevel-sub);border-left:4px solid #8b5cf6;border-radius:10px;margin-bottom:8px;font-size:0.84rem;color:var(--dash-ink);">
+                  <strong style="color:#5b21b6;">{{ msg.author_name }}:</strong> {{ msg.body }}
+                  <span style="font-size:0.7rem;color:#7c3aed;margin-left:6px;">{{ msg.created_at|date:"d M, h:i A" }}</span>
+                </div>
+              {% endfor %}
+
+              <!-- Send inline reply -->
+              <form method="POST" action="{% url 'staff_dashboard' %}" class="inquiry-reply-form">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_inquiry_reply">
+                <input type="hidden" name="inquiry_id" value="{{ inq.id }}">
+                <input type="text" name="reply_text" class="inquiry-reply-input" placeholder="Type reply to {{ inq.name }}..." required>
+                <button type="submit" class="dash-btn btn-primary">Send Reply</button>
+              </form>
+            </div>
+            {% empty %}
+            <div style="text-align:center;padding:32px;color:var(--dash-muted);">No inquiries found.</div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           TAB 7: USERS & LOGINS
+      ══════════════════════════════════════════════════════════ -->
+      <div class="dash-section" id="sec-users">
+        <div class="dash-panel">
+          <div class="dash-panel-header">
+            <div class="dash-panel-title">
+              <span>👥 Registered Customer Accounts</span>
+              <span class="status-badge status-confirmed">{{ total_users }} Users</span>
+            </div>
+            <input type="text" class="dash-search-table" data-filter="table-users" placeholder="Search username, phone, email...">
+          </div>
+
+          <div class="dash-table-wrap">
+            <table class="dash-table" id="table-users">
+              <thead>
+                <tr>
+                  <th>User ID</th>
+                  <th>Username &amp; Role</th>
+                  <th>Full Name</th>
+                  <th>Email &amp; Mobile</th>
+                  <th>Joined Date</th>
+                  <th>Last Login Activity</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for u in users_list %}
+                <tr class="search-row">
+                  <td><span class="cell-ref">#USR-{{ u.id }}</span></td>
+                  <td>
+                    <div class="cell-title">{{ u.username }}</div>
+                    {% if u.is_superuser %}
+                      <span class="status-badge status-cancelled">Executive Admin</span>
+                    {% elif u.is_staff %}
+                      <span class="status-badge status-pending">Staff</span>
+                    {% else %}
+                      <span class="status-badge status-confirmed">Customer</span>
+                    {% endif %}
+                  </td>
+                  <td><div class="cell-title">{{ u.get_full_name|default:"—" }}</div></td>
+                  <td>
+                    <div class="cell-sub" style="font-weight:700;color:var(--dash-ink);">{{ u.email|default:"No email registered" }}</div>
+                    <div class="cell-sub">{{ u.profile.mobile_number|default:"—" }}</div>
+                  </td>
+                  <td><div class="cell-sub" style="font-weight:700;">{{ u.date_joined|date:"d M Y · h:i A" }}</div></td>
+                  <td>
+                    {% if u.last_login %}
+                      <div class="cell-sub" style="font-weight:700;color:#047857;">{{ u.last_login|date:"d M Y · h:i A" }}</div>
+                    {% else %}
+                      <span style="font-size:0.75rem;color:var(--dash-muted);">Never</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if u.is_active %}
+                      <span class="status-badge status-confirmed">Active</span>
+                    {% else %}
+                      <span class="status-badge status-cancelled">Disabled</span>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7" style="text-align:center;padding:32px;color:var(--dash-muted);">No users found.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Mobile Fixed Bottom Navigation Bar (Dock) -->
+    <nav class="dash-bottom-nav" id="dashBottomNav" aria-label="Mobile Navigation">
+      <button type="button" class="dash-bnav-item active" data-nav="overview" onclick="switchTab('overview')">
+        <span class="dash-bnav-icon">📊</span>
+        <span class="dash-bnav-text">Overview</span>
+      </button>
+      <button type="button" class="dash-bnav-item" data-nav="events" onclick="switchTab('events')">
+        <span class="dash-bnav-icon">🎟️</span>
+        <span class="dash-bnav-text">Passes</span>
+      </button>
+      <button type="button" class="dash-bnav-item" data-nav="food" onclick="switchTab('food')">
+        <span class="dash-bnav-icon">🍔</span>
+        <span class="dash-bnav-text">Food</span>
+      </button>
+      <button type="button" class="dash-bnav-item" data-nav="inquiries" onclick="switchTab('inquiries')">
+        <span class="dash-bnav-icon">💬</span>
+        <span class="dash-bnav-text">Inquiries</span>
+        {% if new_inquiries_count > 0 %}<span class="dash-bnav-badge">{{ new_inquiries_count }}</span>{% endif %}
+      </button>
+      <button type="button" class="dash-bnav-item" data-nav="payments" onclick="switchTab('payments')">
+        <span class="dash-bnav-icon">💳</span>
+        <span class="dash-bnav-text">Ledger</span>
+      </button>
+      <button type="button" class="dash-bnav-item" onclick="openMobileDrawer()">
+        <span class="dash-bnav-icon">☰</span>
+        <span class="dash-bnav-text">More</span>
+      </button>
+    </nav>
+  </main>
+
+</div>
+
+<script>
+// ── Global Tab Switcher (All 9 Requested Modules) ──
+window.switchTab = function(tabName) {
+  if (!tabName) tabName = 'overview';
+  tabName = tabName.replace('sec-', '').replace('#', '').trim();
+
+  // Aliases for seamless backwards compatibility
+  if (tabName === 'offline') tabName = 'payments';
+  if (tabName === 'bookings') tabName = 'events';
+
+  var validTabs = ['overview', 'events', 'food', 'halls', 'plots', 'rooms', 'inquiries', 'users', 'payments'];
+  if (validTabs.indexOf(tabName) === -1) {
+    tabName = 'overview';
+  }
+
+  var SECTION_TITLES = {
+    'overview': 'Executive Dashboard Overview',
+    'events': 'Event & Garba Passes Bookings',
+    'food': 'Food & Snacks Hub Orders',
+    'halls': 'Wedding Banquet Halls Bookings',
+    'plots': 'Open Lawn Party Plots Bookings',
+    'rooms': 'Luxury Stays & Rooms Bookings',
+    'inquiries': 'Customer Support & Inquiries',
+    'users': 'Registered Customer Accounts & Logins',
+    'payments': 'Master Payments Ledger (Online vs Offline Cash)'
+  };
+
+  // 1. Hide all sections, show active
+  document.querySelectorAll('.dash-section').forEach(function(sec) {
+    sec.classList.remove('active');
+  });
+  var activeSec = document.getElementById('sec-' + tabName);
+  if (activeSec) {
+    activeSec.classList.add('active');
+  }
+
+  // 2. Update Sidebar Nav Items
+  document.querySelectorAll('.dash-nav-item').forEach(function(item) {
+    if (item.getAttribute('data-nav') === tabName) {
+      item.classList.add('active');
+    } else {
+      item.classList.remove('active');
+    }
+  });
+
+  // 3. Update Mobile Bottom Nav Active Item
+  document.querySelectorAll('.dash-bnav-item').forEach(function(item) {
+    if (item.getAttribute('data-nav') === tabName) {
+      item.classList.add('active');
+    } else {
+      item.classList.remove('active');
+    }
+  });
+
+  // 4. Update Header Title
+  var headerTitle = document.getElementById('pageSectionTitle');
+  if (headerTitle && SECTION_TITLES[tabName]) {
+    headerTitle.textContent = SECTION_TITLES[tabName];
+  }
+
+  // 4. Update URL Hash
+  if (history.replaceState) {
+    history.replaceState(null, null, '#' + tabName);
+  }
+
+  // Close mobile drawer if open & scroll to top
+  closeMobileDrawer();
+  try {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch(e) {
+    window.scrollTo(0, 0);
+  }
+};
+
+// ── Master Payments Filter (All / Online Razorpay / Offline Cash / Paid / Unpaid) ──
+window.filterPayments = function(filterType, btn) {
+  document.querySelectorAll('.pay-filter-pill').forEach(function(b) {
+    b.classList.remove('active');
+  });
+  if (btn) btn.classList.add('active');
+
+  var rows = document.querySelectorAll('#table-master-payments .search-row');
+  rows.forEach(function(r) {
+    var ptype = r.getAttribute('data-payment-type');
+    var pstatus = r.getAttribute('data-payment-status');
+    if (filterType === 'all') {
+      r.style.display = '';
+    } else if (filterType === 'online') {
+      r.style.display = (ptype === 'online') ? '' : 'none';
+    } else if (filterType === 'offline') {
+      r.style.display = (ptype === 'offline') ? '' : 'none';
+    } else if (filterType === 'paid') {
+      r.style.display = (pstatus === 'paid') ? '' : 'none';
+    } else if (filterType === 'unpaid') {
+      r.style.display = (pstatus !== 'paid') ? '' : 'none';
+    }
+  });
+};
+// ── Mobile Drawer Open/Close ──
+var sidebar = document.getElementById('dashSidebar');
+var overlay = document.getElementById('dashOverlay');
+var toggleBtn = document.getElementById('dashToggleBtn');
+
+function openMobileDrawer() {
+  if (sidebar) sidebar.classList.add('open');
+  if (overlay) overlay.classList.add('open');
+}
+
+function closeMobileDrawer() {
+  if (sidebar) sidebar.classList.remove('open');
+  if (overlay) overlay.classList.remove('open');
+}
+
+if (toggleBtn) toggleBtn.addEventListener('click', openMobileDrawer);
+if (overlay) overlay.addEventListener('click', closeMobileDrawer);
+
+// ── Sidebar Nav Click Handlers ──
+document.querySelectorAll('.dash-nav-item[data-nav]').forEach(function(btn) {
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    var navTarget = this.getAttribute('data-nav');
+    window.switchTab(navTarget);
+  });
+});
+
+// ── Live Search Filter on Tables ──
+document.querySelectorAll('.dash-search-table').forEach(function(input) {
+  input.addEventListener('input', function() {
+    var q = (this.value || '').toLowerCase().trim();
+    var targetId = this.getAttribute('data-filter');
+    var container = document.getElementById(targetId);
+    if (!container) return;
+
+    var rows = container.querySelectorAll('.search-row');
+    rows.forEach(function(r) {
+      var text = r.textContent.toLowerCase();
+      if (!q || text.indexOf(q) !== -1) {
+        r.style.display = '';
+      } else {
+        r.style.display = 'none';
+      }
+    });
+  });
+});
+
+// ── Global Search in Topbar ──
+var globalSearch = document.getElementById('dashGlobalSearch');
+if (globalSearch) {
+  globalSearch.addEventListener('input', function() {
+    var q = (this.value || '').toLowerCase().trim();
+    var activeSec = document.querySelector('.dash-section.active');
+    if (!activeSec) return;
+
+    var rows = activeSec.querySelectorAll('.search-row');
+    rows.forEach(function(r) {
+      var text = r.textContent.toLowerCase();
+      if (!q || text.indexOf(q) !== -1) {
+        r.style.display = '';
+      } else {
+        r.style.display = 'none';
+      }
+    });
+  });
+}
+
+// ── Neumorphic Theme Toggle (Light / Dark Soft UI) ──
+function applyTheme(theme) {
+  if (theme === 'dark') {
+    document.body.setAttribute('data-theme', 'dark');
+    var icon = document.getElementById('themeToggleIcon');
+    if (icon) icon.textContent = '☀️';
+  } else {
+    document.body.removeAttribute('data-theme');
+    var icon = document.getElementById('themeToggleIcon');
+    if (icon) icon.textContent = '🌙';
+  }
+}
+
+function toggleNeumorphicTheme() {
+  var current = document.body.getAttribute('data-theme');
+  var next = (current === 'dark') ? 'light' : 'dark';
+  localStorage.setItem('admin_neo_theme', next);
+  applyTheme(next);
+}
+
+// Initialize theme from storage
+(function() {
+  var saved = localStorage.getItem('admin_neo_theme') || 'light';
+  applyTheme(saved);
+})();
+
+// ── Insert Responsive Scroll Hints on All Tables ──
+function initTableScrollHints() {
+  document.querySelectorAll('.dash-table-wrap').forEach(function(wrap) {
+    if (!wrap.previousElementSibling || !wrap.previousElementSibling.classList.contains('dash-table-scroll-hint')) {
+      var hint = document.createElement('div');
+      hint.className = 'dash-table-scroll-hint';
+      hint.innerHTML = '<span>👉 Swipe table horizontally to view customer details &amp; actions 👈</span>';
+      wrap.parentNode.insertBefore(hint, wrap);
+    }
+  });
+}
+document.addEventListener('DOMContentLoaded', initTableScrollHints);
+
+// ── On Page Load: Check URL Hash ──
+document.addEventListener('DOMContentLoaded', function() {
+  var hash = window.location.hash.replace('#', '').trim();
+  if (hash) {
+    window.switchTab(hash);
+  }
+});
+
+window.addEventListener('hashchange', function() {
+  var hash = window.location.hash.replace('#', '').trim();
+  if (hash) {
+    window.switchTab(hash);
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Payment receipt · {{ booking.public_token|slice:":8"|upper }}</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #f7f5f9;
+        color: #251b32;
+        font:
+          15px/1.55 system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+      }
+      .receipt {
+        max-width: 760px;
+        margin: 34px auto;
+        background: #fff;
+        border: 1px solid #ece7f0;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 16px 55px #28183c12;
+      }
+      .hero {
+        padding: 28px 34px;
+        color: white;
+        background: linear-gradient(120deg, #271344, #7042ae);
+      }
+      .hero h1 {
+        margin: 7px 0;
+        font-size: 2rem;
+      }
+      .hero p {
+        margin: 0;
+        color: #eee4f7;
+      }
+      .pill {
+        display: inline-block;
+        margin-top: 12px;
+        padding: 5px 11px;
+        border-radius: 99px;
+        background: #ffffff25;
+        font-weight: 800;
+      }
+      .content {
+        padding: 28px 34px;
+      }
+      .ref {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        background: #f6f2fb;
+        padding: 14px;
+        border-radius: 12px;
+      }
+      .section {
+        padding: 20px 0;
+        border-bottom: 1px solid #eeeaf1;
+      }
+      .section h2 {
+        font-size: 0.82rem;
+        letter-spacing: 0.1em;
+        color: #673ab7;
+        margin: 0 0 12px;
+      }
+      .row {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 6px 0;
+      }
+      .row span:first-child {
+        color: #777181;
+      }
+      .row span:last-child {
+        text-align: right;
+        font-weight: 650;
+        overflow-wrap: anywhere;
+      }
+      .amount {
+        font-size: 1.2rem;
+        font-weight: 900;
+      }
+      .actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 22px;
+        flex-wrap: wrap;
+      }
+      .button {
+        border: 0;
+        border-radius: 9px;
+        padding: 11px 16px;
+        background: #673ab7;
+        color: white;
+        font: inherit;
+        font-weight: 800;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .secondary {
+        background: #f0edf4;
+        color: #251b32;
+      }
+      .note {
+        margin-top: 17px;
+        color: #777181;
+        font-size: 0.82rem;
+      }
+      @media (max-width: 560px) {
+        .receipt {
+          margin: 0;
+          border-radius: 0;
+        }
+        .hero,
+        .content {
+          padding: 23px 19px;
+        }
+        .row {
+          gap: 10px;
+        }
+        .actions {
+          flex-direction: column;
+        }
+        .button {
+          text-align: center;
+        }
+      }
+      @media print {
+        body {
+          background: white;
+        }
+        .receipt {
+          margin: 0;
+          max-width: none;
+          box-shadow: none;
+          border: 0;
+        }
+        .actions {
+          display: none;
+        }
+        .hero {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    {% include "bookings/_intro.html" %}
+    <main class="receipt">
+      <header class="hero">
+        <div>AMAZING AHMEDABAD &nbsp; · &nbsp; PAYMENT RECEIPT</div>
+        <h1>Payment received</h1>
+        {% if booking.payment_method == "razorpay" %}
+        <p>Razorpay verified the captured payment for this booking.</p>
+        {% else %}
+        <p>Cash payment recorded by the venue team.</p>
+        {% endif %}<span class="pill"
+          >{{ booking.get_payment_status_display }}</span
+        >
+      </header>
+      <div class="content">
+        <div class="ref">
+          <span>Booking reference</span
+          ><b>{{ booking.public_token|slice:":8"|upper }}</b>
+        </div>
+        <section class="section">
+          <h2>PAYMENT DETAILS</h2>
+          <div class="row">
+            <span>Payment method</span
+            ><span>{{ booking.get_payment_method_display }}</span>
+          </div>
+          <div class="row">
+            <span>Payment status</span
+            ><span>{{ booking.get_payment_status_display }}</span>
+          </div>
+          <div class="row">
+            <span>Paid at</span
+            ><span
+              >{% if booking.paid_at %}{{ booking.paid_at|date:"M j, Y, g:i A"
+              }}{% else %}Recorded{% endif %}</span
+            >
+          </div>
+          {% if booking.payment_method == "razorpay" %}
+          <div class="row">
+            <span>Payment ID</span
+            ><span>{{ booking.razorpay_payment_id }}</span>
+          </div>
+          <div class="row">
+            <span>Razorpay order ID</span
+            ><span>{{ booking.razorpay_order_id|default:"—" }}</span>
+          </div>
+          {% endif %}
+          <div class="row">
+            <span>Amount received</span
+            ><span class="amount"
+              >₹{{ booking.total_amount|floatformat:2 }}</span
+            >
+          </div>
+        </section>
+        <section class="section">
+          <h2>BOOKING &amp; CUSTOMER</h2>
+          <div class="row">
+            <span>Reservation</span
+            ><span
+              >{% if booking.event %}{{ booking.event.name }}{% elif
+              booking.room %}{{ booking.room.name }}{% elif booking.venue_space
+              %}{{ booking.venue_space.name }}{% endif %}</span
+            >
+          </div>
+          <div class="row">
+            <span>Booking type</span><span>{{ booking.get_kind_display }}</span>
+          </div>
+          <div class="row">
+            <span>Customer</span><span>{{ booking.customer_name }}</span>
+          </div>
+          <div class="row">
+            <span>Email</span><span>{{ booking.email }}</span>
+          </div>
+          <div class="row">
+            <span>Phone</span
+            ><span>{{ booking.contact_phone|default:"—" }}</span>
+          </div>
+          <div class="row">
+            <span>Booking status</span
+            ><span>{{ booking.get_status_display }}</span>
+          </div>
+          <div class="row">
+            <span>Booked on</span
+            ><span>{{ booking.created_at|date:"M j, Y, g:i A" }}</span>
+          </div>
+        </section>
+        <p class="note">
+          This receipt is available for payment records marked paid. Keep the
+          booking reference for your records.
+        </p>
+        <div class="actions">
+          <a
+            class="button"
+            href="{% url 'booking_receipt_pdf' booking.public_token %}"
+            >Download PDF receipt</a
+          ><button
+            class="button secondary"
+            type="button"
+            onclick="window.print()"
+          >
+            Print / Save PDF</button
+          ><a
+            class="button secondary"
+            href="{% url 'dashboard_booking_detail' booking.pk %}"
+            >Back to booking</a
+          ><a class="button secondary" href="{% url 'dashboard_payments' %}"
+            >Payment ledger</a
+          >
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

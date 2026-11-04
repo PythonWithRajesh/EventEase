@@ -1,0 +1,34 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Inquiry #{{ inquiry.pk }}{% endblock %}
+{% block crumb %}<a href="{% url 'dashboard_contact_inbox' %}">Contact inbox</a> / #{{ inquiry.pk }}{% endblock %}
+{% block content %}
+<div class="heading">
+  <div><div class="eyebrow">Inquiry #{{ inquiry.pk }} · {{ inquiry.get_topic_display }}</div><h1>{{ inquiry.subject }}</h1><p>Received {{ inquiry.created_at|date:"M j, Y, g:i A" }}</p></div>
+  <div class="contact-heading-actions"><span class="badge {{ inquiry.status }}">{{ inquiry.get_status_display }}</span><a class="button secondary" href="{% url 'dashboard_contact_inbox' %}">← Inbox</a></div>
+</div>
+<div class="contact-admin-grid">
+  <section class="panel conversation-panel">
+    <div class="panel-head"><div><h2>Conversation</h2><span class="muted">Original message and staff replies, in order.</span></div><span class="badge">{{ conversation|length }} messages</span></div>
+    <div class="conversation-list">
+      {% for entry in conversation %}
+      <article class="conversation-message{% if entry.is_staff_reply %} staff-reply{% endif %}">
+        <header><div><strong>{{ entry.author_name }}</strong><span>{% if entry.is_staff_reply %}Staff reply{% else %}Customer message{% endif %}</span></div><time>{{ entry.created_at|date:"M j, Y · g:i A" }}</time></header>
+        <div class="conversation-body">{{ entry.body|linebreaksbr }}</div>
+      </article>
+      {% empty %}<article class="conversation-message"><header><div><strong>{{ inquiry.name }}</strong><span>Customer message</span></div><time>{{ inquiry.created_at|date:"M j, Y · g:i A" }}</time></header><div class="conversation-body">{{ inquiry.message|linebreaksbr }}</div></article>{% endfor %}
+    </div>
+    <form method="post" class="reply-form">{% csrf_token %}<input type="hidden" name="action" value="add_message">
+      <label for="{{ reply_form.body.id_for_label }}">Add a reply or staff note</label>{{ reply_form.body }}{% if reply_form.body.errors %}<div class="field-errors">{{ reply_form.body.errors }}</div>{% endif %}
+      <div class="reply-actions"><span class="muted">Saved to this conversation; this local site does not email it.</span><button type="submit" class="button">Add message</button></div>
+    </form>
+  </section>
+  <section class="panel inquiry-edit-panel">
+    <div class="panel-head"><div><h2>Inquiry details</h2><span class="muted">Edit the customer record and workflow status.</span></div></div>
+    <form method="post">{% csrf_token %}<input type="hidden" name="action" value="save_details">
+      <div class="admin-contact-fields">{% for field in form %}<div class="admin-contact-field{% if field.name == 'subject' %} field-wide{% endif %}"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.help_text %}<small class="muted">{{ field.help_text }}</small>{% endif %}{% if field.errors %}<div class="field-errors">{{ field.errors }}</div>{% endif %}</div>{% endfor %}</div>
+      <div class="form-actions"><button type="submit" class="button">Save inquiry</button></div>
+    </form>
+    <div class="contact-shortcuts"><a href="mailto:{{ inquiry.email }}?subject=Re%3A%20{{ inquiry.subject|urlencode }}">Email {{ inquiry.name }} ↗</a>{% if inquiry.phone %}<a href="tel:{{ inquiry.phone }}">Call {{ inquiry.name }} ↗</a>{% endif %}</div>
+  </section>
+</div>
+{% endblock %}

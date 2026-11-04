@@ -1,0 +1,12 @@
+{% extends "dashboard/base.html" %}
+{% block title %}New inquiry{% endblock %}
+{% block crumb %}<a href="{% url 'dashboard_contact_inbox' %}">Contact inbox</a> / New inquiry{% endblock %}
+{% block content %}
+<div class="heading"><div><div class="eyebrow">Customer support</div><h1>New inquiry</h1><p>Add a customer request to the same inbox used by the public Contact page.</p></div><a class="button secondary" href="{% url 'dashboard_contact_inbox' %}">← Inbox</a></div>
+<section class="panel admin-contact-create">
+  <form method="post">{% csrf_token %}{{ form.non_field_errors }}
+    <div class="admin-contact-fields">{% for field in form %}<div class="admin-contact-field{% if field.name == 'subject' or field.name == 'message' %} field-wide{% endif %}"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.help_text %}<small class="muted">{{ field.help_text }}</small>{% endif %}{% if field.errors %}<div class="field-errors">{{ field.errors }}</div>{% endif %}</div>{% endfor %}</div>
+    <div class="form-actions"><button type="submit" class="button">Create inquiry</button><a class="button secondary" href="{% url 'dashboard_contact_inbox' %}">Cancel</a></div>
+  </form>
+</section>
+{% endblock %}

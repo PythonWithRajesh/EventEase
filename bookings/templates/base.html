@@ -1,0 +1,543 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="theme-color" content="#673ab7">
+  <meta name="description" content="{% block meta_description %}Amazing Ahmedabad — Ahmedabad's premier celebration platform for Navratri festival passes, hourly open celebration lawns, grand wedding banquet halls, and hotel stays.{% endblock %}">
+  <title>{% block title %}Amazing Ahmedabad | Navratri Garba, Hourly Party Plots, Wedding Halls &amp; Stays{% endblock %}</title>
+
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'bookings/site.css' %}">
+
+  <style>
+    /* ── Base layout & Toast messages ──────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+    html {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: clip;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      scroll-padding-top: 86px;
+      -webkit-text-size-adjust: 100%;
+    }
+    body {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      overflow-x: clip;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #faf8f5;
+      color: #1e1a2d;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .base-content-body {
+      flex: 1 0 auto;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      overflow-x: clip;
+    }
+
+    /* ── Django Alert Messages Toasts ──────────────────────────── */
+    .messages-container {
+      position: fixed;
+      top: 82px;
+      right: 20px;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 420px;
+      width: calc(100vw - 40px);
+      pointer-events: none;
+    }
+    .message-toast {
+      background: #ffffff;
+      color: #1e1a2d;
+      border: 1px solid #ece6f4;
+      border-radius: 12px;
+      padding: 12px 16px;
+      box-shadow: 0 10px 30px rgba(18, 9, 32, 0.15);
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      pointer-events: auto;
+      animation: toast-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .message-toast.success { border-left: 4px solid #16a34a; }
+    .message-toast.error   { border-left: 4px solid #dc2626; }
+    .message-toast.warning { border-left: 4px solid #f59e0b; }
+    .message-toast.info    { border-left: 4px solid #673ab7; }
+    .toast-close {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      line-height: 1;
+      color: #6b6280;
+      cursor: pointer;
+      padding: 0 4px;
+    }
+    @keyframes toast-in {
+      from { opacity: 0; transform: translateY(-10px) scale(0.96); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ── Original Site Footer CSS (Exact UI) ───────────────────── */
+    .site-footer {
+      background: #170d24;
+      color: #e5daf0;
+      padding-top: 64px;
+      margin-top: auto;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      overflow-x: clip;
+    }
+    .footer-grid-container {
+      max-width: 1240px;
+      width: 100%;
+      margin: 0 auto;
+      padding-left: 20px;
+      padding-right: 20px;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 40px;
+      padding-bottom: 48px;
+      width: 100%;
+      min-width: 0;
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.35rem;
+      font-weight: 950;
+      color: #ffffff;
+      letter-spacing: -0.04em;
+      margin-bottom: 14px;
+      text-decoration: none;
+    }
+    .footer-brand span b {
+      color: #ffa45b;
+    }
+    .footer-desc {
+      font-size: 0.92rem;
+      color: #b7a8c7;
+      line-height: 1.6;
+      max-width: 320px;
+      margin: 0 0 20px;
+    }
+    .footer-heading {
+      font-size: 0.8rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #ffdcb5;
+      margin: 0 0 16px;
+    }
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 0.92rem;
+    }
+    .footer-links a {
+      color: #cfc2df;
+      text-decoration: none;
+      transition: color 0.18s, transform 0.18s;
+    }
+    .footer-links a:hover {
+      color: #ffa45b;
+      transform: translateX(3px);
+    }
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 20px 0;
+      font-size: 0.84rem;
+      color: #a092b0;
+    }
+    .footer-bottom-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    @media (max-width: 1024px) {
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+    }
+    @media (max-width: 480px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+      .footer-bottom-inner {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+      }
+    }
+
+    /* ── Original Floating WhatsApp Button CSS (Exact UI) ──────── */
+    .wa-float {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+    }
+    .wa-float-tooltip {
+      background: #1a1229;
+      color: #fff;
+      font-size: .75rem;
+      font-weight: 800;
+      font-family: Inter, system-ui, sans-serif;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateX(10px);
+      transition: opacity .22s ease, transform .22s ease;
+      pointer-events: none;
+      box-shadow: 0 4px 14px rgba(0,0,0,.18);
+    }
+    .wa-float:hover .wa-float-tooltip {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .wa-float-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #25d366 0%, #1ab757 55%, #128c7e 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 22px rgba(37,211,102,.52), 0 2px 8px rgba(37,211,102,.25);
+      text-decoration: none;
+      animation: wa-bob 3s ease-in-out infinite;
+      transition: transform .22s ease, box-shadow .22s ease;
+      position: relative;
+    }
+    .wa-float-btn::before {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 2.5px solid rgba(37,211,102,.45);
+      animation: wa-ring 2.5s ease-out infinite;
+    }
+    .wa-float-btn:hover {
+      transform: scale(1.1) translateY(-2px);
+      box-shadow: 0 12px 32px rgba(37,211,102,.65);
+      animation-play-state: paused;
+    }
+    @keyframes wa-bob {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-6px); }
+    }
+    @keyframes wa-ring {
+      0%   { opacity: .8; transform: scale(1); }
+      70%  { opacity: 0;  transform: scale(1.35); }
+      100% { opacity: 0;  transform: scale(1.35); }
+    }
+    /* ── Instagram-Style Mobile Bottom Navigation Bar (App Experience) ── */
+    .insta-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: calc(58px + env(safe-area-inset-bottom, 0px));
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-top: 1px solid rgba(103, 58, 183, 0.12);
+      box-shadow: 0 -4px 22px rgba(22, 10, 42, 0.08);
+      z-index: 9995;
+      justify-content: space-around;
+      align-items: center;
+    }
+    .insta-nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      color: #7b718d;
+      text-decoration: none;
+      font-size: 0.68rem;
+      font-weight: 650;
+      padding: 6px 0;
+      transition: all 0.15s ease;
+      position: relative;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .insta-nav-item:active {
+      transform: scale(0.9);
+    }
+    .insta-nav-item.active {
+      color: #673ab7;
+      font-weight: 850;
+    }
+    .insta-nav-icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .insta-nav-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      transition: transform 0.18s, stroke 0.18s;
+    }
+    .insta-nav-item.active .insta-nav-icon svg {
+      stroke: #673ab7;
+      transform: scale(1.08);
+    }
+    .insta-nav-badge-dot {
+      position: absolute;
+      top: -1px;
+      right: -2px;
+      width: 7px;
+      height: 7px;
+      background: #ff6d00;
+      border-radius: 50%;
+      box-shadow: 0 0 0 2px #ffffff;
+      animation: sn-blink 1.2s ease-in-out infinite;
+    }
+    .insta-nav-label {
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+
+    @media (max-width: 768px) {
+      .insta-bottom-nav {
+        display: flex;
+      }
+      body {
+        padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px)) !important;
+      }
+      .wa-float {
+        bottom: calc(74px + env(safe-area-inset-bottom, 0px)) !important;
+        right: 16px !important;
+      }
+      .wa-float-btn { width: 50px; height: 50px; }
+      .wa-float-tooltip { display: none; }
+    }
+
+    /* ── Hide bottom nav bar & WhatsApp when mobile hamburger menu is open ── */
+    html.sn-menu-locked,
+    body.sn-menu-locked {
+      overflow: hidden !important;
+      height: 100% !important;
+      max-height: 100% !important;
+      overscroll-behavior: none !important;
+    }
+    body.sn-menu-locked .insta-bottom-nav,
+    body.sn-menu-locked .wa-float,
+    body.sn-menu-locked .gtranslate_wrapper,
+    body.sn-menu-locked #google_translate_element,
+    body.sn-menu-locked .skiptranslate {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+  </style>
+
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  {# ── Header: Original _site_nav.html (Exact UI) ── #}
+  {% block site_header %}
+    {% include "bookings/_site_nav.html" %}
+  {% endblock %}
+
+  {# ── Messages ── #}
+  {% if messages %}
+  <div class="messages-container" id="djangoMessagesContainer">
+    {% for message in messages %}
+      <div class="message-toast {{ message.tags }}">
+        <span>{{ message }}</span>
+        <button type="button" class="toast-close" onclick="this.parentElement.remove()" aria-label="Close notification">&times;</button>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {# ── Main Page Content ── #}
+  <div class="base-content-body">
+    {% block content %}{% endblock %}
+  </div>
+
+  {# ── Footer: Original Exact UI from home.html ── #}
+  {% block site_footer %}
+  <footer class="site-footer">
+    <div class="footer-grid-container">
+      <div class="footer-grid">
+        <div>
+          <a class="footer-brand" href="{% url 'home' %}">
+            {% include "bookings/_brand_mark.html" %}
+            <span>Amazing <b>Ahmedabad</b></span>
+          </a>
+          <p class="footer-desc">
+            Ahmedabad's dedicated celebration platform for Navratri festival passes, hourly open celebration lawns, grand wedding banquet halls, and hotel stays.
+          </p>
+        </div>
+
+        <div>
+          <div class="footer-heading">Celebrations</div>
+          <nav class="footer-links" aria-label="Celebration links">
+            <a href="{% url 'home' %}#events">Upcoming Navratri Garba</a>
+            <a href="{% url 'party_plots' %}">Hourly Party Plots</a>
+            <a href="{% url 'wedding_halls' %}">Wedding &amp; Banquet Halls</a>
+            <a href="{% url 'home' %}#rooms">Hotel Rooms &amp; Suites</a>
+          </nav>
+        </div>
+
+        <div>
+          <div class="footer-heading">Hotspots</div>
+          <nav class="footer-links" aria-label="Locality links">
+            <a href="{% url 'home' %}?area=SG+Highway#listings">SG Highway</a>
+            <a href="{% url 'home' %}?area=Bopal#listings">Bopal &amp; South Bopal</a>
+            <a href="{% url 'home' %}?area=Satellite#listings">Satellite &amp; Vastrapur</a>
+            <a href="{% url 'home' %}?area=Riverfront#listings">Sabarmati Riverfront</a>
+          </nav>
+        </div>
+
+        <div>
+          <div class="footer-heading">Account &amp; Support</div>
+          <nav class="footer-links" aria-label="Support links">
+            <a href="{% url 'account' %}">My Bookings</a>
+            <a href="{% url 'login' %}">Sign In</a>
+            <a href="{% url 'register' %}">Create Account</a>
+            <a href="{% url 'contact' %}">Contact Us</a>
+            <a href="{% url 'about' %}">About Us</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-grid-container">
+        <div class="footer-bottom-inner">
+          <span>© {% now "Y" %} Amazing Ahmedabad. All rights reserved.</span>
+          <span>Crafted for memorable celebrations in Ahmedabad, Gujarat 🪔</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating WhatsApp Button (Original Exact UI) -->
+  <div class="wa-float">
+    <span class="wa-float-tooltip">Chat on WhatsApp 💬</span>
+    <a class="wa-float-btn"
+       href="https://wa.me/917203928160?text=Hi%2C+I+want+to+know+more+about+Amazing+Ahmedabad+bookings!"
+       target="_blank"
+       rel="noopener noreferrer"
+       aria-label="Chat with Amazing Ahmedabad on WhatsApp">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="#ffffff" aria-hidden="true">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+    </a>
+  </div>
+  <!-- ══════════════════════════════════════════════════════════════
+       INSTAGRAM-STYLE MOBILE BOTTOM NAVIGATION BAR
+  ══════════════════════════════════════════════════════════════ -->
+  <nav class="insta-bottom-nav" aria-label="Mobile Navigation">
+    <a href="{% url 'home' %}" class="insta-nav-item {% if request.resolver_match.url_name == 'home' and not request.GET.type %}active{% endif %}">
+      <div class="insta-nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 10.5L12 3l9 7.5V20a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <span class="insta-nav-label">Home</span>
+    </a>
+
+    <a href="{% url 'home' %}#events" class="insta-nav-item {% if request.GET.type == 'events' or request.resolver_match.url_name == 'event_detail' %}active{% endif %}">
+      <div class="insta-nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/>
+          <line x1="9" y1="12" x2="15" y2="12"/>
+        </svg>
+        <span class="insta-nav-badge-dot"></span>
+      </div>
+      <span class="insta-nav-label">Garba</span>
+    </a>
+
+    <a href="{% url 'party_plots' %}" class="insta-nav-item {% if request.resolver_match.url_name == 'party_plots' or request.GET.type == 'party_plots' %}active{% endif %}">
+      <div class="insta-nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+      </div>
+      <span class="insta-nav-label">Party Plots</span>
+    </a>
+
+    <a href="{% url 'wedding_halls' %}" class="insta-nav-item {% if request.resolver_match.url_name == 'wedding_halls' or request.GET.type == 'wedding_halls' %}active{% endif %}">
+      <div class="insta-nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 21h18"/>
+          <path d="M5 21V7l7-4 7 4v14"/>
+          <path d="M10 21v-4h4v4"/>
+          <line x1="9" y1="10" x2="10" y2="10"/>
+          <line x1="14" y1="10" x2="15" y2="10"/>
+        </svg>
+      </div>
+      <span class="insta-nav-label">Halls</span>
+    </a>
+
+    <a href="{% if request.user.is_authenticated %}{% url 'account' %}{% else %}{% url 'login' %}{% endif %}" class="insta-nav-item {% if request.resolver_match.url_name == 'account' or request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' %}active{% endif %}">
+      <div class="insta-nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </div>
+      <span class="insta-nav-label">{% if request.user.is_authenticated %}Account{% else %}Log in{% endif %}</span>
+    </a>
+  </nav>
+  {% endblock %}
+
+  {% block extra_js %}{% endblock %}
+
+</body>
+</html>

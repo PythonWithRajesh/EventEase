@@ -1,0 +1,1308 @@
+{% extends "bookings/base.html" %}
+
+{% block title %}Wedding &amp; Banquet Halls in Ahmedabad – Luxury AC Ballrooms by the Hour | Amazing Ahmedabad{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ── Reset & Theme Tokens (Wedding Halls Liquid Glassmorphism Edition) */
+:root {
+  --wh-ink: #1e0917;
+  --wh-ink-soft: #38122c;
+  --wh-muted: #6b5866;
+  --wh-faint: rgba(253, 250, 252, 0.7);
+  --wh-line: rgba(237, 221, 231, 0.85);
+  --wh-line-soft: rgba(246, 237, 243, 0.7);
+  --wh-white: #ffffff;
+  --wh-burgundy: #4a1230;
+  --wh-burgundy-dark: #260517;
+  --wh-burgundy-light: #70214c;
+  --wh-plum: #882255;
+  --wh-gold: #c9943a;
+  --wh-gold-light: #f5c46b;
+  --wh-gold-pale: rgba(253, 246, 231, 0.88);
+  --wh-gold-border: rgba(201, 148, 58, 0.35);
+  --wh-radius-card: 24px;
+  --wh-glass-base: rgba(255, 255, 255, 0.86);
+  --wh-glass-card: rgba(255, 255, 255, 0.78);
+  --wh-glass-border: rgba(255, 255, 255, 0.92);
+  --wh-glass-blur: blur(20px);
+  --wh-shadow-card: 0 14px 36px rgba(45, 10, 32, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.95);
+  --wh-shadow-card-hover: 0 28px 64px rgba(45, 10, 32, 0.16);
+  --wh-transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body {
+  background-color: #fbf8fa;
+  background-image:
+    radial-gradient(circle at 12% 16%, rgba(201, 148, 58, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 88% 22%, rgba(136, 34, 85, 0.09) 0%, transparent 50%),
+    radial-gradient(circle at 50% 55%, rgba(112, 33, 76, 0.06) 0%, transparent 45%),
+    radial-gradient(circle at 15% 82%, rgba(16, 185, 129, 0.06) 0%, transparent 48%),
+    radial-gradient(circle at 85% 90%, rgba(245, 158, 11, 0.07) 0%, transparent 45%);
+  background-attachment: fixed;
+  color: var(--wh-ink);
+  overflow-x: clip !important;
+  position: relative;
+}
+
+/* ── Liquid Ambient Canvas (Refractive Floating Glowing Blobs) ──── */
+.wh-ambient-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.wh-ambient-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.42;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.wh-blob-1 {
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, rgba(245, 196, 107, 0.45) 0%, rgba(201, 148, 58, 0.12) 70%, transparent 100%);
+  top: -80px;
+  left: -80px;
+  animation: whFloat1 24s ease-in-out infinite alternate;
+}
+
+.wh-blob-2 {
+  width: 580px;
+  height: 580px;
+  background: radial-gradient(circle, rgba(136, 34, 85, 0.38) 0%, rgba(74, 18, 48, 0.15) 70%, transparent 100%);
+  top: 35%;
+  right: -120px;
+  animation: whFloat2 28s ease-in-out infinite alternate;
+}
+
+.wh-blob-3 {
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(225, 29, 72, 0.30) 0%, rgba(159, 18, 57, 0.12) 70%, transparent 100%);
+  bottom: 8%;
+  left: 10%;
+  animation: whFloat3 26s ease-in-out infinite alternate;
+}
+
+.wh-blob-4 {
+  width: 440px;
+  height: 440px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.28) 0%, rgba(5, 150, 105, 0.10) 70%, transparent 100%);
+  top: 60%;
+  left: 45%;
+  animation: whFloat4 30s ease-in-out infinite alternate;
+}
+
+@keyframes whFloat1 {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(80px, 60px) scale(1.12); }
+  100% { transform: translate(-40px, 90px) scale(0.95); }
+}
+
+@keyframes whFloat2 {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(-90px, -70px) scale(1.15); }
+  100% { transform: translate(-50px, 80px) scale(0.92); }
+}
+
+@keyframes whFloat3 {
+  0%   { transform: translate(0, 0) scale(0.96); }
+  50%  { transform: translate(70px, -80px) scale(1.1); }
+  100% { transform: translate(110px, 40px) scale(1.03); }
+}
+
+@keyframes whFloat4 {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(-60px, 50px) scale(1.14); }
+  100% { transform: translate(50px, -60px) scale(0.9); }
+}
+
+/* ── Hero Section (with Grand Royal Wedding Celebration Photo) ───── */
+.halls-hero {
+  position: relative;
+  background-color: #1a0513;
+  background-image:
+    linear-gradient(180deg, rgba(16, 4, 14, 0.62) 0%, rgba(26, 6, 22, 0.40) 35%, rgba(34, 8, 28, 0.58) 72%, rgba(251, 248, 250, 0.98) 100%),
+    url('/static/bookings/images/wedding_halls_hero.jpg');
+  background-size: cover;
+  background-position: center 32%;
+  background-repeat: no-repeat;
+  color: #ffffff;
+  padding: 68px 0 62px;
+  min-height: 520px;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.halls-hero-badge-wrap {
+  margin-bottom: 18px;
+}
+
+.halls-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(255, 255, 255, 0.38);
+  border-radius: 9999px;
+  padding: 8px 22px;
+  font-size: 0.82rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.32), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+}
+
+.halls-hero-sub {
+  font-size: 1.08rem;
+  line-height: 1.6;
+  max-width: 780px;
+  margin: 0 auto 20px;
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 500;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.75);
+}
+
+.halls-hero-features {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 26px;
+}
+
+.halls-feat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(24, 6, 20, 0.65);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(245, 196, 107, 0.45);
+  border-radius: 9999px;
+  padding: 6px 16px;
+  font-size: 0.85rem;
+  font-weight: 750;
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.30);
+}
+
+.halls-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 75% 60% at 88% 15%, rgba(245, 196, 107, 0.30) 0, transparent 65%),
+              radial-gradient(ellipse 60% 65% at 10% 85%, rgba(136, 34, 85, 0.28) 0, transparent 60%);
+  pointer-events: none;
+}
+
+.halls-hero-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+  position: relative;
+  z-index: 3;
+  text-align: center;
+}
+
+.halls-hero h1 {
+  font-size: clamp(2.25rem, 5.4vw, 3.85rem);
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  font-weight: 900;
+  margin: 0 auto 24px;
+  max-width: 980px;
+  text-align: center;
+  color: #ffffff;
+  filter: drop-shadow(0 4px 22px rgba(0, 0, 0, 0.85)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.95));
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+.halls-hero h1 span {
+  display: inline-block;
+  background: linear-gradient(135deg, #ffffff 0%, #fef08a 38%, #f59e0b 82%, #d97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 2px 16px rgba(245, 158, 11, 0.60));
+}
+
+/* ── Floating Search & Filter Console (Liquid Glassmorphism) ──────── */
+.halls-outer {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.halls-filter-wrap {
+  margin-top: 32px;
+  position: relative;
+  z-index: 20;
+}
+
+.halls-filter-card {
+  background: var(--wh-glass-base);
+  backdrop-filter: var(--wh-glass-blur);
+  -webkit-backdrop-filter: var(--wh-glass-blur);
+  border: 1.5px solid var(--wh-glass-border);
+  border-radius: 24px;
+  padding: 20px 24px;
+  box-shadow: 0 16px 44px rgba(45, 10, 32, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.95);
+  display: flex;
+  flex-direction: column;
+}
+
+.halls-filter-row {
+  display: grid;
+  grid-template-columns: 2fr 1.3fr 1.1fr 1.2fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.filter-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.filter-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--wh-muted);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+}
+
+.filter-input {
+  width: 100%;
+  padding: 12px 14px 12px 42px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid var(--wh-line);
+  border-radius: 14px;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--wh-ink);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.filter-input:focus {
+  border-color: var(--wh-plum);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(136, 34, 85, 0.16);
+}
+
+.filter-select {
+  width: 100%;
+  padding: 12px 34px 12px 14px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid var(--wh-line);
+  border-radius: 14px;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 650;
+  color: var(--wh-ink);
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b5866' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 15px;
+  transition: all 0.2s ease;
+}
+
+.filter-select:focus {
+  border-color: var(--wh-plum);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(136, 34, 85, 0.16);
+}
+
+.btn-search-halls {
+  min-height: 48px;
+  padding: 0 26px;
+  background: linear-gradient(135deg, #882255 0%, #4a1230 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 14px;
+  font: inherit;
+  font-size: 0.94rem;
+  font-weight: 850;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 8px 24px rgba(136, 34, 85, 0.34);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-search-halls:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(136, 34, 85, 0.48);
+  filter: brightness(1.08);
+}
+
+/* ── Section Header ───────────────────────────────────────────────── */
+.halls-main {
+  padding: 38px 0 76px;
+  position: relative;
+  z-index: 2;
+}
+
+.halls-section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 26px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.halls-header-left h2 {
+  font-size: 1.7rem;
+  font-weight: 900;
+  color: var(--wh-ink);
+  letter-spacing: -0.035em;
+  margin: 0 0 4px;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+.halls-header-left p {
+  color: var(--wh-muted);
+  font-size: 0.94rem;
+  margin: 0;
+}
+
+.halls-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-switch-lawn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1.5px solid var(--wh-line);
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #059669;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(42, 10, 30, 0.05);
+  transition: all 0.2s;
+}
+
+.btn-switch-lawn:hover {
+  color: #047857;
+  background: #ffffff;
+  border-color: #059669;
+  transform: translateY(-1px);
+}
+
+/* ── Cards Grid (Liquid Glassmorphism) ────────────────────────────── */
+.venue-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.venue-card {
+  background: var(--wh-glass-card);
+  backdrop-filter: var(--wh-glass-blur);
+  -webkit-backdrop-filter: var(--wh-glass-blur);
+  border: 1.5px solid var(--wh-glass-border);
+  border-radius: var(--wh-radius-card);
+  overflow: hidden;
+  box-shadow: var(--wh-shadow-card);
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--wh-transition), box-shadow var(--wh-transition), border-color var(--wh-transition);
+  position: relative;
+}
+
+.venue-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--wh-shadow-card-hover);
+  border-color: rgba(245, 196, 107, 0.65);
+}
+
+/* Image Container */
+.card-img-wrap {
+  position: relative;
+  height: 245px;
+  width: 100%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #38122c, #c9943a);
+}
+
+.card-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  display: block;
+}
+
+.venue-card:hover .card-img-wrap img {
+  transform: scale(1.06);
+}
+
+.card-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(26, 5, 19, 0.72) 0%, rgba(26, 5, 19, 0.15) 50%, rgba(0, 0, 0, 0.05) 100%);
+  pointer-events: none;
+}
+
+/* Overlaid Glass Badges */
+.badge-top-left {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 9999px;
+  padding: 5px 12px;
+  font-size: 0.74rem;
+  font-weight: 850;
+  color: var(--wh-burgundy);
+  border: 1px solid rgba(74, 18, 48, 0.14);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.badge-top-right {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(16, 185, 129, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #ffffff;
+  border-radius: 9999px;
+  padding: 5px 11px;
+  font-size: 0.73rem;
+  font-weight: 850;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.badge-bottom-left {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+.badge-bottom-left strong {
+  font-size: 1.35rem;
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.badge-bottom-left span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fce7f3;
+  margin-top: 2px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+}
+
+.badge-bottom-right {
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(10px);
+  border-radius: 9999px;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 850;
+  color: #92400e;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Card Body */
+.card-content {
+  padding: 20px 22px 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  line-height: 1.25;
+  margin: 0 0 6px;
+  color: var(--wh-ink);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+.card-title a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.18s;
+}
+
+.card-title a:hover {
+  color: var(--wh-plum);
+}
+
+.card-loc {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--wh-muted);
+  font-size: 0.85rem;
+  font-weight: 650;
+  margin-bottom: 12px;
+}
+
+.card-desc {
+  color: #554452;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  margin: 0 0 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+/* Fact Tags */
+.card-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.card-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--wh-line);
+  color: var(--wh-ink-soft);
+  font-size: 0.74rem;
+  font-weight: 750;
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+.card-tag.gold {
+  background: var(--wh-gold-pale);
+  border-color: rgba(201, 148, 58, 0.4);
+  color: #78350f;
+}
+
+.card-amenities-row {
+  font-size: 0.81rem;
+  color: #6d5b68;
+  line-height: 1.45;
+  border-top: 1px solid var(--wh-line-soft);
+  padding-top: 12px;
+  margin-bottom: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-amenities-row strong {
+  color: var(--wh-burgundy);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.71rem;
+  letter-spacing: 0.05em;
+  margin-right: 4px;
+}
+
+/* Card Footer */
+.card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid var(--wh-line-soft);
+  margin-top: 16px;
+  padding: 16px 22px 20px;
+  background: rgba(255, 255, 255, 0.52);
+  backdrop-filter: blur(12px);
+  border-bottom-left-radius: var(--wh-radius-card);
+  border-bottom-right-radius: var(--wh-radius-card);
+}
+
+.card-price-col .rate-val {
+  font-size: 1.45rem;
+  font-weight: 900;
+  color: var(--wh-burgundy);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.card-price-col .rate-sub {
+  font-size: 0.74rem;
+  color: var(--wh-muted);
+  font-weight: 650;
+  margin-top: 3px;
+}
+
+.card-action-btns {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-hall-details {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1.5px solid var(--wh-line);
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-size: 0.88rem;
+  font-weight: 750;
+  color: var(--wh-ink);
+  text-decoration: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-hall-details:hover {
+  background: #ffffff;
+  border-color: var(--wh-plum);
+  color: var(--wh-plum);
+  transform: translateY(-1px);
+}
+
+.btn-hall-book {
+  background: linear-gradient(135deg, #882255 0%, #4a1230 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(136, 34, 85, 0.32);
+  transition: all 0.2s;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-hall-book:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(136, 34, 85, 0.45);
+  filter: brightness(1.08);
+}
+
+/* ── Empty State ──────────────────────────────────────────────────── */
+.halls-empty-state {
+  grid-column: 1 / -1;
+  background: var(--wh-glass-card);
+  backdrop-filter: var(--wh-glass-blur);
+  border: 2px dashed rgba(201, 148, 58, 0.4);
+  border-radius: 24px;
+  padding: 64px 28px;
+  text-align: center;
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+
+.halls-empty-state h3 {
+  font-size: 1.45rem;
+  font-weight: 900;
+  color: var(--wh-ink);
+  margin: 0 0 8px;
+}
+
+.halls-empty-state p {
+  color: var(--wh-muted);
+  font-size: 0.95rem;
+  max-width: 480px;
+  margin: 0 auto 20px;
+}
+
+.btn-reset-filters {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 22px;
+  background: var(--wh-burgundy);
+  color: #ffffff;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(74, 18, 48, 0.3);
+}
+
+/* ── Festive & Wedding Season Special Banner (Liquid Glass) ──────── */
+.halls-festival-banner {
+  margin: 52px 0;
+  background: linear-gradient(130deg, rgba(28, 6, 20, 0.92) 0%, rgba(58, 13, 40, 0.90) 30%, rgba(93, 23, 64, 0.88) 65%, rgba(135, 33, 84, 0.85) 85%, rgba(201, 148, 58, 0.9) 100%);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 28px;
+  padding: 36px 42px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 54px rgba(74, 18, 48, 0.25);
+  color: #ffffff;
+  border: 1.5px solid rgba(245, 196, 107, 0.45);
+}
+
+.festival-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  position: relative;
+  z-index: 2;
+}
+
+.festival-banner-icon {
+  font-size: 3.2rem;
+  flex-shrink: 0;
+}
+
+.festival-banner-text h3 {
+  font-size: 1.6rem;
+  font-weight: 900;
+  margin: 0 0 6px;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+}
+
+.festival-banner-text p {
+  margin: 0 0 12px;
+  color: #fae8f3;
+  font-size: 0.95rem;
+  max-width: 620px;
+  line-height: 1.55;
+}
+
+.festival-perks {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.festival-perks span {
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 9999px;
+  padding: 5px 12px;
+  font-size: 0.78rem;
+  font-weight: 750;
+  color: #ffffff;
+}
+
+.festival-banner-btn {
+  background: linear-gradient(135deg, #f5c46b 0%, #c9943a 100%);
+  color: #1a0513;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 14px;
+  padding: 14px 26px;
+  font-size: 0.95rem;
+  font-weight: 900;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s ease;
+  position: relative;
+  z-index: 2;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.festival-banner-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  filter: brightness(1.08);
+}
+
+/* ── Why Book Section (Liquid Glassmorphism) ──────────────────────── */
+.halls-why-section {
+  background: var(--wh-glass-base);
+  backdrop-filter: var(--wh-glass-blur);
+  -webkit-backdrop-filter: var(--wh-glass-blur);
+  border: 1.5px solid var(--wh-glass-border);
+  border-radius: 28px;
+  padding: 44px 38px;
+  margin-top: 54px;
+  box-shadow: 0 16px 44px rgba(42, 10, 30, 0.08);
+}
+
+.why-heading-wrap {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.why-heading-wrap h3 {
+  font-size: 1.75rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--wh-ink);
+  margin: 0 0 8px;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+.why-heading-wrap p {
+  color: var(--wh-muted);
+  font-size: 0.96rem;
+  margin: 0;
+}
+
+.why-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+}
+
+.why-pillar {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid var(--wh-line);
+  border-radius: 20px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 8px 24px rgba(45, 10, 32, 0.04);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.why-pillar:hover {
+  transform: translateY(-4px);
+  border-color: var(--wh-gold);
+  box-shadow: 0 14px 32px rgba(45, 10, 32, 0.10);
+}
+
+.pillar-icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+}
+.pillar-plum   { background: #faedf5; color: var(--wh-burgundy); }
+.pillar-gold   { background: #fdf6e7; color: #a8731f; }
+.pillar-green  { background: #ecfdf5; color: #059669; }
+.pillar-blue   { background: #eff6ff; color: #2563eb; }
+
+.why-pillar h4 {
+  font-size: 1.05rem;
+  font-weight: 850;
+  color: var(--wh-ink);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.why-pillar p {
+  color: var(--wh-muted);
+  font-size: 0.86rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ── Testimonial (Liquid Glassmorphism) ───────────────────────────── */
+.halls-testimonial {
+  margin-top: 52px;
+  background: linear-gradient(135deg, rgba(24, 3, 18, 0.95) 0%, rgba(51, 11, 36, 0.92) 50%, rgba(74, 18, 48, 0.94) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 28px;
+  padding: 52px 42px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(30, 5, 20, 0.25);
+  border: 1.5px solid rgba(245, 196, 107, 0.35);
+}
+
+.halls-testimonial-stars {
+  color: var(--wh-gold-light);
+  letter-spacing: 5px;
+  font-size: 1.15rem;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.halls-testimonial blockquote {
+  position: relative;
+  z-index: 1;
+  font-size: 1.25rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  max-width: 820px;
+  margin: 0 auto 26px;
+  font-style: italic;
+}
+
+.halls-testimonial-author {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.halls-testimonial-avatar {
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(135deg, var(--wh-gold), #f5c46b);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(201, 148, 58, 0.45);
+}
+
+.halls-testimonial-info strong {
+  display: block;
+  color: #ffffff;
+  font-size: 0.98rem;
+  font-weight: 850;
+}
+
+.halls-testimonial-info span {
+  color: rgba(255, 255, 255, 0.70);
+  font-size: 0.84rem;
+}
+
+/* ── Responsive Breakpoints ───────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .venue-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .why-pillars-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .halls-filter-row {
+    grid-template-columns: 1.8fr 1.2fr 1fr 1fr auto;
+  }
+}
+
+@media (max-width: 860px) {
+  .halls-filter-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  .halls-filter-row .filter-input-wrap {
+    grid-column: 1 / -1;
+  }
+  .halls-filter-row .btn-search-halls {
+    grid-column: 1 / -1;
+  }
+  .halls-festival-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: 30px 24px;
+  }
+  .festival-banner-content {
+    flex-direction: column;
+  }
+  .festival-perks {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .halls-hero {
+    padding: 46px 0 52px;
+    min-height: auto;
+  }
+  .halls-hero h1 {
+    font-size: 1.85rem;
+  }
+  .halls-filter-wrap {
+    margin-top: 20px;
+  }
+  .halls-filter-card {
+    padding: 14px;
+    border-radius: 18px;
+  }
+  .halls-filter-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .venue-grid {
+    grid-template-columns: 1fr;
+  }
+  .why-pillars-grid {
+    grid-template-columns: 1fr;
+  }
+  .halls-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .halls-testimonial {
+    padding: 36px 20px;
+  }
+  .halls-testimonial blockquote {
+    font-size: 1.05rem;
+  }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ── Liquid Ambient Canvas (Refractive Floating Glowing Blobs) ──── -->
+<div class="wh-ambient-canvas" aria-hidden="true">
+  <div class="wh-ambient-blob wh-blob-1"></div>
+  <div class="wh-ambient-blob wh-blob-2"></div>
+  <div class="wh-ambient-blob wh-blob-3"></div>
+  <div class="wh-ambient-blob wh-blob-4"></div>
+</div>
+
+<!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
+<header class="halls-hero">
+  <div class="halls-hero-inner">
+    <div class="halls-hero-badge-wrap">
+      <span class="halls-hero-badge">
+        ✨ LUXURY CENTRAL AC BALLROOMS · ROYAL WEDDINGS · SAGAI &amp; RECEPTIONS
+      </span>
+    </div>
+
+    <h1>Ahmedabad's Most Prestigious<br><span>Wedding &amp; Banquet Halls</span></h1>
+
+    <p class="halls-hero-sub">
+      Discover 20+ grand 5-star AC banquet halls with majestic crystal chandeliers, royal wedding stages, 300 to 2,500+ guest capacities, and transparent hourly rates.
+    </p>
+
+    <div class="halls-hero-features">
+      <span class="halls-feat-pill">🏰 20+ Royal Ballrooms</span>
+      <span class="halls-feat-pill">❄️ 100% Central AC</span>
+      <span class="halls-feat-pill">🌸 Grand Stage &amp; Mandap Setup</span>
+      <span class="halls-feat-pill">⚡ Direct Booking &amp; Zero Brokerage</span>
+    </div>
+
+    <!-- ═══════════════════════════════ FILTER CONSOLE ═══════════════════════════════ -->
+    <div class="halls-filter-wrap">
+      <div class="halls-filter-card">
+        <form method="GET" action="" class="halls-filter-row">
+          <!-- Search Keyword -->
+          <div class="filter-input-wrap">
+            <span class="filter-icon" aria-hidden="true">🔍</span>
+            <input
+              type="text"
+              name="q"
+              value="{{ query }}"
+              class="filter-input"
+              placeholder="Search by hall name, hotel, or landmark..."
+              aria-label="Search wedding halls"
+            />
+          </div>
+
+          <!-- Locality Area -->
+          <select name="area" class="filter-select" aria-label="Select Area">
+            <option value="">📍 All Ahmedabad Localities</option>
+            <option value="Sindhu Bhavan" {% if selected_area == 'Sindhu Bhavan' %}selected{% endif %}>Sindhu Bhavan Road (SBR)</option>
+            <option value="SG Highway" {% if selected_area == 'SG Highway' %}selected{% endif %}>SG Highway / Bodakdev</option>
+            <option value="Satellite" {% if selected_area == 'Satellite' %}selected{% endif %}>Satellite &amp; Ramdevnagar</option>
+            <option value="Bodakdev" {% if selected_area == 'Bodakdev' %}selected{% endif %}>Bodakdev &amp; Judges Bung.</option>
+            <option value="Sola" {% if selected_area == 'Sola' %}selected{% endif %}>Sola &amp; Science City</option>
+            <option value="Science City" {% if selected_area == 'Science City' %}selected{% endif %}>Science City Road</option>
+            <option value="Vastrapur" {% if selected_area == 'Vastrapur' %}selected{% endif %}>Vastrapur &amp; IIM Road</option>
+            <option value="Ashram Road" {% if selected_area == 'Ashram Road' %}selected{% endif %}>Ashram Road &amp; Riverfront</option>
+            <option value="Bopal" {% if selected_area == 'Bopal' %}selected{% endif %}>Bopal &amp; South Bopal</option>
+            <option value="Riverfront" {% if selected_area == 'Riverfront' %}selected{% endif %}>Sabarmati Riverfront</option>
+            <option value="Chandkheda" {% if selected_area == 'Chandkheda' %}selected{% endif %}>Chandkheda</option>
+          </select>
+
+          <!-- Capacity -->
+          <select name="capacity" class="filter-select" aria-label="Select Capacity">
+            <option value="">👥 Any Capacity</option>
+            <option value="300" {% if selected_capacity == '300' %}selected{% endif %}>300+ Guests</option>
+            <option value="500" {% if selected_capacity == '500' %}selected{% endif %}>500+ Guests</option>
+            <option value="800" {% if selected_capacity == '800' %}selected{% endif %}>800+ Guests</option>
+            <option value="1200" {% if selected_capacity == '1200' %}selected{% endif %}>1,200+ Guests</option>
+            <option value="1500" {% if selected_capacity == '1500' %}selected{% endif %}>1,500+ Guests</option>
+          </select>
+
+          <!-- Price Range -->
+          <select name="price" class="filter-select" aria-label="Select Hourly Price">
+            <option value="">💰 Any Rate</option>
+            <option value="low" {% if selected_price == 'low' %}selected{% endif %}>Under ₹8,000 / hr</option>
+            <option value="mid" {% if selected_price == 'mid' %}selected{% endif %}>₹8,000 – ₹12,000 / hr</option>
+            <option value="high" {% if selected_price == 'high' %}selected{% endif %}>Above ₹12,000 / hr</option>
+          </select>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn-search-halls">
+            <span>Search Halls</span>
+            <span>→</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════ MAIN CONTENT ═══════════════════════════════ -->
+<div class="halls-outer">
+  <main class="halls-main">
+
+    <!-- Section Header Bar -->
+    <div class="halls-section-header">
+      <div class="halls-header-left">
+        <h2>Available Wedding &amp; Banquet Halls in Ahmedabad ({{ result_count }})</h2>
+        <p>Curated 5-star AC banquet halls with authentic photos, guest capacity, and hourly rate breakdown.</p>
+      </div>
+      <div class="halls-header-right">
+        {% if query or selected_area or selected_capacity or selected_price %}
+          <a href="{% url 'wedding_halls' %}" class="btn-switch-lawn" style="color:#ef4444;border-color:#fca5a5;background:#fef2f2;">✕ Clear Filters</a>
+        {% endif %}
+        <a href="{% url 'party_plots' %}" class="btn-switch-lawn">
+          <span>🌿 Prefer Open Lawns? Party Plots</span>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Wedding Halls Grid -->
+    <div class="venue-grid">
+      {% for venue in venues %}
+      <article class="venue-card">
+
+        <!-- Card Image -->
+        <div class="card-img-wrap">
+          {% if venue.cover_image_url %}
+            <img src="{{ venue.cover_image_url }}" alt="{{ venue.name }} banquet ballroom in Ahmedabad" loading="lazy" onerror="this.onerror=null;this.src='/static/bookings/images/wedding_halls_hero.jpg';">
+          {% else %}
+            <img src="/static/bookings/images/wedding_halls_hero.jpg" alt="Wedding banquet hall" loading="lazy">
+          {% endif %}
+          <div class="card-gradient-overlay"></div>
+          <span class="badge-top-left">👑 {% if venue.category %}{{ venue.category }}{% else %}Royal Ballroom{% endif %}</span>
+          <span class="badge-top-right">❄️ 100% Central AC</span>
+          <div class="badge-bottom-left">
+            <strong>{{ venue.capacity }}</strong>
+            <span>Max Guests</span>
+          </div>
+          <span class="badge-bottom-right">⭐ 4.95 · Verified Hall</span>
+        </div>
+
+        <!-- Card Content Body -->
+        <div class="card-content">
+          <h3 class="card-title">
+            <a href="{% url 'venue_detail' venue.pk %}">{{ venue.name }}</a>
+          </h3>
+
+          <div class="card-loc">
+            <span>📍</span>
+            <span>{{ venue.address }}{% if venue.city and venue.city not in venue.address %}, {{ venue.city }}{% endif %}</span>
+          </div>
+
+          <p class="card-desc">
+            {{ venue.description|default:"A grand royal ballroom featuring high acoustic ceilings, crystal chandeliers, central air conditioning, and complete banquet amenities for lavish wedding receptions and ceremonies." }}
+          </p>
+
+          <!-- Fact Tags -->
+          <div class="card-tags">
+            <span class="card-tag gold">❄️ Central AC</span>
+            <span class="card-tag">👥 {{ venue.capacity }} Capacity</span>
+            <span class="card-tag">👰 Bridal Suite</span>
+            <span class="card-tag">🅿️ Valet Parking</span>
+            <span class="card-tag">🛡️ Collision Safe</span>
+          </div>
+
+          <!-- Amenities Summary -->
+          <p class="card-amenities-row">
+            <strong>Key Features:</strong>
+            {{ venue.amenities|default:"Crystal chandeliers, central air conditioning, bridal suite, banquet round tables, Bose audio system, commercial catering kitchen, valet parking." }}
+          </p>
+        </div>
+
+        <!-- Card Footer -->
+        <div class="card-foot">
+          <div class="card-price-col">
+            <div class="rate-val">₹{{ venue.hourly_rate }}</div>
+            <div class="rate-sub">per hour · total by slot</div>
+          </div>
+          <div class="card-action-btns">
+            <a href="{% url 'venue_detail' venue.pk %}" class="btn-hall-details">View Details</a>
+            <a href="{% url 'book_venue' venue.pk %}" class="btn-hall-book">Book Slot →</a>
+          </div>
+        </div>
+
+      </article>
+      {% empty %}
+      <div class="halls-empty-state">
+        <div class="empty-state-icon">🏛️</div>
+        <h3>No wedding halls matched your criteria</h3>
+        <p>Try searching for a different Ahmedabad locality, adjusting your guest capacity, or clearing your search filters to explore all 20 banquet venues.</p>
+        <a href="{% url 'wedding_halls' %}" class="btn-reset-filters">✨ Reset All Filters</a>
+      </div>
+      {% endfor %}
+    </div>
+
+  </main>
+</div>
+
+{% endblock %}

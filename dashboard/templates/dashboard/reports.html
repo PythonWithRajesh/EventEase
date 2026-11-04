@@ -1,0 +1,172 @@
+{% extends "dashboard/base.html" %} 
+
+{% block title %}Reports{% endblock %} 
+
+{%block crumb %}Reports{% endblock %} 
+
+{% block content %}
+<div class="heading">
+  <div>
+    <div class="eyebrow">Business performance</div>
+    <h1>Reports</h1>
+    <p>Booking volume and collected revenue for the selected period.</p>
+  </div>
+  <div class="report-downloads">
+    <a
+      class="primary"
+      href="{% url 'dashboard_reports_pdf' %}?start={{ filters.start }}&amp;end={{ filters.end }}&amp;kind={{ filters.kind }}"
+      >⇩ Download PDF</a
+    ><a
+      class="button secondary"
+      href="?start={{ filters.start }}&amp;end={{ filters.end }}&amp;kind={{ filters.kind }}&amp;format=csv"
+      >⇩ Export CSV</a
+    >
+  </div>
+</div>
+<form class="panel filters" method="get">
+  <input
+    aria-label="From date"
+    type="date"
+    name="start"
+    value="{{ filters.start }}"
+  /><input
+    aria-label="To date"
+    type="date"
+    name="end"
+    value="{{ filters.end }}"
+  /><select name="kind">
+    <option value="">All booking types</option>
+    {% for value,label in kinds %}
+    <option
+      value="{{ value }}"
+      {%
+      if
+      filters.kind=""
+      ="value"
+      %}selected{%
+      endif
+      %}
+    >
+      {{ label }}
+    </option>
+    {% endfor %}</select
+  ><button type="submit">Update report</button
+  ><a class="button secondary" href="{% url 'dashboard_reports' %}">Reset</a>
+</form>
+<section class="stat-grid report-stats">
+  <div class="card stat">
+    <label>Bookings</label><strong>{{ metrics.total }}</strong
+    ><small>Created in this period</small>
+  </div>
+  <div class="card stat">
+    <label>Confirmed</label><strong>{{ metrics.confirmed }}</strong
+    ><small>Reservations confirmed</small>
+  </div>
+  <div class="card stat">
+    <label>Cancelled</label><strong>{{ metrics.cancelled }}</strong
+    ><small>Reservations cancelled</small>
+  </div>
+  <div class="card stat">
+    <label>Collected revenue</label
+    ><strong>₹{{ metrics.paid|floatformat:2 }}</strong
+    ><small>Payments recorded as paid</small>
+  </div>
+</section>
+<div class="grid-2">
+  <section class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>Revenue over time</h2>
+        <span class="muted">Payments recorded as paid in this period</span>
+      </div>
+    </div>
+    <div
+      class="chart"
+      style="grid-template-columns:repeat({{ revenue_chart|length }},minmax(24px,1fr));overflow-x:auto"
+    >
+      {% for item in revenue_chart %}
+      <div class="chart-day">
+        <div class="bar-area">
+          <div class="bar" style="height:{{ item.height }}%">
+            <span class="bar-count">₹{{ item.amount|floatformat:0 }}</span>
+          </div>
+        </div>
+        <span>{{ item.label }}</span>
+      </div>
+      {% empty %}
+      <p class="empty">No revenue in this period.</p>
+      {% endfor %}
+    </div>
+  </section>
+  <section class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>Bookings by category</h2>
+        <span class="muted">Events, room stays and venue bookings</span>
+      </div>
+    </div>
+    {% for item in by_kind %}
+    <div class="report-line">
+      <div class="quick-row">
+        <span>{{ item.label }}</span><b>{{ item.count }}</b>
+      </div>
+      <div class="track"><span style="width:{{ item.width }}%"></span></div>
+    </div>
+    {% endfor %}
+  </section>
+</div>
+<section class="panel report-note">
+  <h2>Need individual payment records?</h2>
+  <p class="muted">
+    Open Payments to review Razorpay transactions, cash collection, unpaid
+    balances and receipts.
+  </p>
+  <a class="button secondary" href="{% url 'dashboard_payments' %}"
+    >Go to payments →</a
+  >
+</section>
+<style>
+  .report-line {
+    margin: 9px 0;
+  }
+  .track {
+    height: 9px;
+    border-radius: 99px;
+    background: #f0edf4;
+    overflow: hidden;
+  }
+  .track span {
+    display: block;
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, #a98ada, #673ab7);
+  }
+  .report-note {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .report-note p {
+    margin: 4px 0 0;
+  }
+  .report-note h2 {
+    width: 100%;
+  }
+  @media (max-width: 650px) {
+    .grid-2[style] {
+      grid-template-columns: 1fr !important;
+    }
+    .chart {
+      min-width: 440px;
+    }
+    .report-downloads {
+      width: 100%;
+    }
+    .report-downloads > * {
+      flex: 1;
+    }
+  }
+</style>
+{% endblock %}

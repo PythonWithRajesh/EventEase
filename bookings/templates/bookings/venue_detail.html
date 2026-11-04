@@ -1,0 +1,1162 @@
+{% extends "bookings/base.html" %}
+
+{% block title %}{{ venue.name }} | Amazing Ahmedabad
+  <!-- MOBILE STICKY VENUE DOCK -->
+  <div class="mobile-venue-sticky-dock" aria-label="Mobile booking dock">
+    <div class="m-dock-price-info">
+      <span class="m-dock-tag">Hourly Booking</span>
+      <span class="m-dock-rate">₹{{ venue.hourly_rate }} <small>/ hr</small></span>
+    </div>
+    {% if venue.is_available %}
+      <a href="{% url 'book_venue' venue.pk %}" class="m-dock-cta-btn">
+        <span>Book Venue</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    {% else %}
+      <button class="m-dock-cta-btn soldout" disabled>Booked Out</button>
+    {% endif %}
+  </div>
+
+{% endblock %}
+
+{% block extra_css %}
+  <style>
+    /* ─── Design Tokens ─────────────────────────────────── */
+    :root {
+      --ink:           #1a1226;
+      --ink-soft:      #352848;
+      --muted:         #7a6f8a;
+      --purple:        #6c3fc5;
+      --purple-dark:   #2e1260;
+      --purple-mid:    #8b5cf6;
+      --purple-light:  #f3ecfb;
+      --plum:          #7c3075;
+      --plum-dark:     #4a1847;
+      --plum-light:    #fdf0fc;
+      --orange:        #e8620a;
+      --orange-dark:   #b84900;
+      --orange-light:  #fff4eb;
+      --green:         #14803c;
+      --green-light:   #edfbf2;
+      --paper:         #f9f7f4;
+      --surface:       #ffffff;
+      --line:          #ece6f4;
+      --shadow-sm:     0 4px 16px rgba(30,12,52,0.07);
+      --shadow-md:     0 12px 36px rgba(30,12,52,0.1);
+      --shadow-lg:     0 24px 64px rgba(30,12,52,0.16);
+      --r-sm:          10px;
+      --r-md:          16px;
+      --r-lg:          24px;
+      --r-xl:          32px;
+      --r-full:        9999px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font: 15.5px/1.65 'Inter', system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; }
+    h1,h2,h3 { line-height: 1.2; }
+
+    /* ─── Layout ─────────────────────────────────────────── */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 20px 80px;
+    }
+
+    /* ─── Breadcrumb ─────────────────────────────────────── */
+    .crumb {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 24px;
+      letter-spacing: 0.01em;
+    }
+    .crumb a {
+      color: var(--muted);
+      transition: color 0.15s;
+    }
+    .crumb a:hover { color: var(--purple); }
+    .crumb .sep {
+      font-size: 0.75rem;
+      color: #c4b8d4;
+    }
+    .crumb .current {
+      color: var(--ink-soft);
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 260px;
+    }
+    .crumb-home-icon { font-size: 0.95rem; }
+
+    /* ─── Main 2-col grid ────────────────────────────────── */
+    .detail-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) 360px;
+      gap: 26px;
+      align-items: start;
+    }
+
+    /* ─── Main Card ──────────────────────────────────────── */
+    .main-card {
+      background: var(--surface);
+      border-radius: var(--r-xl);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+
+    /* ─── Hero Section ───────────────────────────────────── */
+    .hero {
+      position: relative;
+      height: 420px;
+      background: #1b0a30;
+      overflow: hidden;
+    }
+    .hero-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      opacity: 0.82;
+      transition: transform 6s ease;
+    }
+    .hero:hover .hero-img { transform: scale(1.04); }
+    /* Gradient overlay */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        170deg,
+        rgba(20,8,42,0.18) 0%,
+        rgba(20,8,42,0.05) 40%,
+        rgba(20,8,42,0.72) 100%
+      );
+      pointer-events: none;
+    }
+
+    /* Type badge – top-left */
+    .badge-type {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 16px;
+      border-radius: var(--r-full);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.28);
+    }
+    .badge-type.party {
+      background: rgba(232, 98, 10, 0.92);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+    .badge-type.wedding {
+      background: rgba(124, 48, 117, 0.92);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* Capacity badge – top-right */
+    .badge-capacity {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 10;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 14px;
+      border-radius: var(--r-full);
+      background: rgba(15, 5, 30, 0.78);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: #fce8b2;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    /* Bottom hero text overlay */
+    .hero-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      padding: 18px 28px 22px;
+    }
+    .hero-footer-name {
+      color: #fff;
+      font-size: clamp(1.5rem, 3.2vw, 2.2rem);
+      font-weight: 900;
+      letter-spacing: -0.035em;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.55);
+      line-height: 1.15;
+    }
+    .hero-footer-loc {
+      color: rgba(255,255,255,0.82);
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* ─── Content Body ───────────────────────────────────── */
+    .content-body { padding: 30px 36px 36px; }
+
+    /* Venue name + loc (desktop shows in content, hidden from hero-footer on mobile) */
+    .title-block {
+      margin-bottom: 22px;
+    }
+    .title-block h1 {
+      font-size: clamp(1.85rem, 3.4vw, 2.6rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .venue-loc {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+    .venue-loc-pin { font-size: 1rem; }
+
+    /* ─── Quick Facts Grid ───────────────────────────────── */
+    .facts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+    .fact-cell {
+      background: #faf8fd;
+      padding: 16px 18px;
+    }
+    .fact-cell:nth-child(1),
+    .fact-cell:nth-child(2) {
+      border-bottom: 1px solid var(--line);
+    }
+    .fact-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+    .fact-value {
+      font-size: 0.94rem;
+      font-weight: 800;
+      color: var(--ink);
+      line-height: 1.4;
+    }
+    .fact-value em {
+      font-style: normal;
+      font-size: 0.82rem;
+      font-weight: 650;
+      color: var(--muted);
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* ─── Section blocks ─────────────────────────────────── */
+    .section-block {
+      border-top: 1px solid var(--line);
+      padding: 26px 0;
+    }
+    .section-block:last-child { border-bottom: 1px solid var(--line); }
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 14px;
+    }
+    .section-head h2 {
+      font-size: 1.18rem;
+      font-weight: 850;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+    }
+    .section-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .section-icon.purple { background: var(--purple-light); }
+    .section-icon.orange { background: var(--orange-light); }
+    .section-icon.plum   { background: var(--plum-light); }
+    .section-body {
+      color: #4b3f5c;
+      line-height: 1.75;
+      font-size: 0.96rem;
+    }
+
+    /* ─── Amenity Chips ──────────────────────────────────── */
+    .chips-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: var(--r-sm);
+      background: #faf8fd;
+      border: 1px solid #e0d5f0;
+      font-size: 0.84rem;
+      font-weight: 750;
+      color: var(--ink-soft);
+      transition: background 0.14s, border-color 0.14s, transform 0.12s;
+      cursor: default;
+    }
+    .chip:hover {
+      background: var(--purple-light);
+      border-color: #cdb8ef;
+      transform: translateY(-1px);
+    }
+    .chip-emoji { font-size: 1rem; line-height: 1; }
+    .amenity-text-fallback {
+      color: #4b3f5c;
+      line-height: 1.75;
+      font-size: 0.96rem;
+      margin-top: 10px;
+    }
+
+    /* ─── Booking Guidelines ─────────────────────────────── */
+    .rules-text {
+      color: #4b3f5c;
+      font-size: 0.95rem;
+      line-height: 1.8;
+      white-space: pre-line;
+    }
+
+    /* ─── Location block ─────────────────────────────────── */
+    .location-address {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 14px 16px;
+      background: #faf8fd;
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      margin-bottom: 14px;
+    }
+    .location-address-icon { font-size: 1.2rem; margin-top: 1px; }
+    .location-address-text {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--ink-soft);
+      line-height: 1.5;
+    }
+    .btn-maps {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 18px;
+      background: #fff;
+      border: 1.5px solid #d5c7ec;
+      border-radius: var(--r-sm);
+      color: var(--purple);
+      font-size: 0.87rem;
+      font-weight: 800;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .btn-maps:hover {
+      background: var(--purple-light);
+      border-color: var(--purple-mid);
+    }
+
+    /* ─── Navratri Banner ────────────────────────────────── */
+    .navratri-banner {
+      margin: 28px 0 0;
+      padding: 20px 22px;
+      border-radius: var(--r-md);
+      background: linear-gradient(120deg, #ff8a00 0%, #c2185b 45%, #7b1fa2 100%);
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .navratri-banner::before {
+      content: '🪔';
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 3.5rem;
+      opacity: 0.22;
+      pointer-events: none;
+    }
+    .navratri-banner-title {
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+    }
+    .navratri-banner-body {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      opacity: 0.92;
+    }
+    .navratri-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      background: rgba(255,255,255,0.22);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: var(--r-full);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 8px;
+    }
+
+    /* ─── Custom Inquiry Box ─────────────────────────────── */
+    .inquire-box {
+      margin-top: 24px;
+      padding: 22px 22px;
+      background: linear-gradient(135deg, #fdf7f0 0%, #f5eefb 100%);
+      border: 1px solid #e8d8f5;
+      border-radius: var(--r-md);
+    }
+    .inquire-box-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    .inquire-box-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--orange-light), var(--purple-light));
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .inquire-box h3 {
+      font-size: 1rem;
+      font-weight: 850;
+      color: var(--ink);
+    }
+    .inquire-box p {
+      font-size: 0.86rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+      line-height: 1.6;
+    }
+    .btn-inquire {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      width: 100%;
+      padding: 11px 18px;
+      background: #fff;
+      border: 1.5px solid #d5c7ec;
+      border-radius: var(--r-sm);
+      color: var(--purple);
+      font-size: 0.9rem;
+      font-weight: 800;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .btn-inquire:hover {
+      background: var(--purple-light);
+      border-color: var(--purple-mid);
+    }
+
+    /* ─── Sticky Sidebar ─────────────────────────────────── */
+    .sidebar-wrap {
+      position: sticky;
+      top: 94px;
+    }
+    .sidebar-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-xl);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+    /* Sidebar accent top bar */
+    .sidebar-accent {
+      height: 5px;
+    }
+    .sidebar-accent.party  { background: linear-gradient(90deg, #f2720c, #ff9a44); }
+    .sidebar-accent.wedding { background: linear-gradient(90deg, #7c3075, #b06ab3); }
+
+    .sidebar-body { padding: 24px 24px 28px; }
+
+    /* Price row */
+    .price-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 16px;
+      margin-bottom: 18px;
+    }
+    .price-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+    .price-amount {
+      font-size: 2.4rem;
+      font-weight: 950;
+      color: var(--ink);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+    .price-unit {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 650;
+      margin-bottom: 4px;
+    }
+
+    /* Availability pill */
+    .avail-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 13px;
+      border-radius: var(--r-full);
+      background: var(--green-light);
+      border: 1px solid #a7f3c2;
+      color: var(--green);
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      margin-bottom: 18px;
+    }
+    .avail-dot {
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulse-dot 1.8s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    @keyframes pulse-dot {
+      0%,100% { transform: scale(1);   opacity: 1; }
+      50%      { transform: scale(1.5); opacity: 0.6; }
+    }
+
+    /* Price calculator */
+    .calc-box {
+      background: #faf8fd;
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      padding: 16px 16px 14px;
+      margin-bottom: 18px;
+    }
+    .calc-title {
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .calc-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .calc-input-wrap label {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--ink-soft);
+      white-space: nowrap;
+      min-width: 80px;
+    }
+    .calc-input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1.5px solid #ddd0f0;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .calc-input:focus { border-color: var(--purple-mid); }
+    .calc-result {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: #fff;
+      border: 1.5px solid #d8ccee;
+      border-radius: 9px;
+      margin-top: 2px;
+    }
+    .calc-result-label {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--muted);
+    }
+    .calc-result-value {
+      font-size: 1.18rem;
+      font-weight: 900;
+      color: var(--purple);
+      letter-spacing: -0.02em;
+    }
+
+    /* CTA Buttons */
+    .btn-book {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      min-height: 52px;
+      border-radius: var(--r-md);
+      font-size: 1rem;
+      font-weight: 850;
+      color: #fff;
+      letter-spacing: -0.01em;
+      transition: transform 0.16s, box-shadow 0.16s, filter 0.16s;
+      margin-bottom: 11px;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-book.party {
+      background: linear-gradient(135deg, #f06a0c 0%, #e85708 100%);
+      box-shadow: 0 8px 26px rgba(232, 87, 8, 0.38);
+    }
+    .btn-book.party:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 34px rgba(232, 87, 8, 0.46);
+      filter: brightness(1.06);
+    }
+    .btn-book.wedding {
+      background: linear-gradient(135deg, #8c3587 0%, #6b2066 100%);
+      box-shadow: 0 8px 26px rgba(108, 36, 102, 0.38);
+    }
+    .btn-book.wedding:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 34px rgba(108, 36, 102, 0.46);
+      filter: brightness(1.08);
+    }
+    .btn-coordinator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      width: 100%;
+      min-height: 44px;
+      border-radius: var(--r-md);
+      border: 1.5px solid #d8ccee;
+      background: #fff;
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+      font-weight: 800;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      margin-bottom: 20px;
+    }
+    .btn-coordinator:hover {
+      background: var(--purple-light);
+      border-color: var(--purple-mid);
+      color: var(--purple);
+    }
+
+    /* Trust Bullets */
+    .trust-list {
+      border-top: 1px solid var(--line);
+      padding-top: 16px;
+      display: grid;
+      gap: 9px;
+    }
+    .trust-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      font-size: 0.83rem;
+      font-weight: 700;
+      color: #554a66;
+      line-height: 1.4;
+    }
+    .trust-check {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--green-light);
+      border: 1.5px solid #a7f3c2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 900;
+      color: var(--green);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ─── Responsive ─────────────────────────────────────── */
+    @media (max-width: 860px) {
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+      .sidebar-wrap {
+        position: static;
+        order: -1;
+      }
+      .hero { height: 280px; }
+      .hero-footer { display: none; }
+      .content-body { padding: 22px 20px 28px; }
+      .facts-grid { grid-template-columns: 1fr; }
+      .fact-cell:nth-child(1),
+      .fact-cell:nth-child(2) { border-bottom: none; }
+      .fact-cell { border-bottom: 1px solid var(--line) !important; }
+      .fact-cell:last-child { border-bottom: none !important; }
+    }
+    @media (max-width: 520px) {
+      .container { padding: 16px 14px 60px; }
+      .content-body { padding: 18px 16px 24px; }
+      .price-amount { font-size: 2rem; }
+      .sidebar-body { padding: 18px 16px 22px; }
+      .hero { height: 230px; }
+      .navratri-banner::before { display: none; }
+    }
+  
+    .mobile-venue-sticky-dock {
+      display: none;
+    }
+    @media (max-width: 860px) {
+      .insta-bottom-nav { display: none !important; }
+      body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important; }
+      .mobile-venue-sticky-dock {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 9998;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border-top: 1px solid rgba(103, 58, 183, 0.16);
+        box-shadow: 0 -8px 30px rgba(18, 9, 32, 0.12);
+        padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .m-dock-price-info {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.15;
+      }
+      .m-dock-tag {
+        font-size: 0.65rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+      }
+      .m-dock-rate {
+        font-size: 1.35rem;
+        font-weight: 900;
+        color: var(--purple-deep);
+        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      }
+      .m-dock-rate small {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--muted);
+      }
+      .m-dock-cta-btn {
+        background: linear-gradient(135deg, #7c3aed 0%, #581c87 100%);
+        color: #ffffff !important;
+        font-size: 0.95rem;
+        font-weight: 850;
+        padding: 11px 22px;
+        border-radius: 999px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 4px 18px rgba(124, 58, 237, 0.4);
+        flex-shrink: 0;
+      }
+      .m-dock-cta-btn.soldout {
+        background: #94a3b8;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+    }
+
+  </style>
+{% endblock %}
+
+{% block content %}
+
+  <main class="container">
+
+    <!-- ── Breadcrumb ─────────────────────────────────────── -->
+    <nav class="crumb" aria-label="Breadcrumb">
+      <span class="crumb-home-icon">🏠</span>
+      <a href="{% url 'home' %}">Home</a>
+      <span class="sep">›</span>
+      {% if venue.space_type == 'party_plot' %}
+        <a href="{% url 'party_plots' %}">Party Plots</a>
+      {% else %}
+        <a href="{% url 'wedding_halls' %}">Wedding Halls</a>
+      {% endif %}
+      <span class="sep">›</span>
+      <span class="current">{{ venue.name }}</span>
+    </nav>
+
+    <!-- ── Main 2-col grid ────────────────────────────────── -->
+    <div class="detail-grid">
+
+      <!-- ══ MAIN CONTENT CARD ══════════════════════════════ -->
+      <article class="main-card">
+
+        <!-- Hero Image -->
+        <div class="hero">
+          <!-- Type badge -->
+          {% if venue.space_type == 'party_plot' %}
+            <span class="badge-type party">🎉 Party Plot</span>
+          {% else %}
+            <span class="badge-type wedding">💍 Wedding Hall</span>
+          {% endif %}
+
+          <!-- Capacity badge -->
+          <span class="badge-capacity">👥 Up to {{ venue.capacity }} Guests</span>
+
+          <!-- Cover image -->
+          {% if venue.cover_image_url %}
+            <img class="hero-img" src="{{ venue.cover_image_url }}" alt="{{ venue.name }} – {{ venue.get_space_type_display }} in {{ venue.city }}" onerror="this.onerror=null;this.src='/static/bookings/images/wedding_halls_hero.jpg';">
+          {% else %}
+            {% if venue.space_type == 'party_plot' %}
+              <img class="hero-img" src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=1200&q=82" alt="{{ venue.name }}">
+            {% else %}
+              <img class="hero-img" src="/static/bookings/images/wedding_halls_hero.jpg" alt="{{ venue.name }}">
+            {% endif %}
+          {% endif %}
+
+          <!-- Overlaid title (hidden on mobile via CSS) -->
+          <div class="hero-footer">
+            <div class="hero-footer-name">{{ venue.name }}</div>
+            <div class="hero-footer-loc">📍 {{ venue.address }}{% if venue.address and venue.city %}, {% endif %}{{ venue.city }}</div>
+          </div>
+        </div><!-- /hero -->
+
+        <!-- Content Body -->
+        <div class="content-body">
+
+          <!-- Title + Location -->
+          <div class="title-block">
+            <h1>{{ venue.name }}</h1>
+            <div class="venue-loc">
+              <span class="venue-loc-pin">📍</span>
+              {{ venue.address }}{% if venue.address and venue.city %}, {% endif %}{{ venue.city }}
+            </div>
+          </div>
+
+          <!-- Quick Facts 4-cell grid -->
+          <div class="facts-grid" role="list">
+            <div class="fact-cell" role="listitem">
+              <div class="fact-label">Guest Capacity</div>
+              <div class="fact-value">👥 {{ venue.capacity }} attendees <em>maximum occupancy</em></div>
+            </div>
+            <div class="fact-cell" role="listitem">
+              <div class="fact-label">Slot Range</div>
+              <div class="fact-value">
+                {% if venue.space_type == 'party_plot' %}
+                  ⏱️ 1 – 6 Hours <em>flexible party slots</em>
+                {% else %}
+                  ⏱️ 2 – 12 Hours <em>grand wedding packages</em>
+                {% endif %}
+              </div>
+            </div>
+            <div class="fact-cell" role="listitem">
+              <div class="fact-label">Ideal Occasions</div>
+              <div class="fact-value">
+                {% if venue.space_type == 'party_plot' %}
+                  🎂 Birthdays, Engagements <em>Sangeet &amp; Family Gatherings</em>
+                {% else %}
+                  💍 Weddings, Receptions <em>Sangeet, Banquets &amp; Haldi</em>
+                {% endif %}
+              </div>
+            </div>
+            <div class="fact-cell" role="listitem">
+              <div class="fact-label">Slot Protection</div>
+              <div class="fact-value">🛡️ Real-time Collision Block <em>no double-booking possible</em></div>
+            </div>
+          </div>
+
+          <!-- About -->
+          <section class="section-block">
+            <div class="section-head">
+              <div class="section-icon purple">✨</div>
+              <h2>About This Venue Space</h2>
+            </div>
+            <p class="section-body">{{ venue.description }}</p>
+          </section>
+
+          <!-- Amenities as chips -->
+          <section class="section-block">
+            <div class="section-head">
+              <div class="section-icon {% if venue.space_type == 'party_plot' %}orange{% else %}plum{% endif %}">🏛️</div>
+              <h2>Facilities &amp; Amenities</h2>
+            </div>
+            <div class="chips-wrap">
+              <span class="chip"><span class="chip-emoji">🅿️</span> Ample Parking</span>
+              <span class="chip"><span class="chip-emoji">🔊</span> Professional Sound System</span>
+              <span class="chip"><span class="chip-emoji">💡</span> Decorative Lighting</span>
+              <span class="chip"><span class="chip-emoji">❄️</span> Air Conditioning</span>
+              <span class="chip"><span class="chip-emoji">👥</span> VIP Lounge Area</span>
+              <span class="chip"><span class="chip-emoji">🎤</span> Stage &amp; Mic Setup</span>
+              <span class="chip"><span class="chip-emoji">⚡</span> Generator Backup</span>
+              <span class="chip"><span class="chip-emoji">🚻</span> Clean Washrooms</span>
+              {% if venue.space_type == 'party_plot' %}
+              <span class="chip"><span class="chip-emoji">🌿</span> Open-Air Lawn</span>
+              <span class="chip"><span class="chip-emoji">🍽️</span> Catering Kitchen Area</span>
+              {% else %}
+              <span class="chip"><span class="chip-emoji">💐</span> Floral Décor Ready</span>
+              <span class="chip"><span class="chip-emoji">🎠</span> Bridal Stage / Mandap Space</span>
+              <span class="chip"><span class="chip-emoji">🥂</span> Banquet Hall Seating</span>
+              {% endif %}
+              <span class="chip"><span class="chip-emoji">📷</span> Photography-Friendly Space</span>
+              <span class="chip"><span class="chip-emoji">🛡️</span> 24×7 Security</span>
+            </div>
+            {% if venue.amenities %}
+            <p class="amenity-text-fallback" style="margin-top:14px; font-size:0.9rem; color:var(--muted);">{{ venue.amenities }}</p>
+            {% endif %}
+          </section>
+
+          <!-- Booking Guidelines -->
+          {% if venue.rules %}
+          <section class="section-block">
+            <div class="section-head">
+              <div class="section-icon purple">📋</div>
+              <h2>Booking Guidelines &amp; Policies</h2>
+            </div>
+            <p class="rules-text">{{ venue.rules }}</p>
+          </section>
+          {% endif %}
+
+          <!-- Location + Maps -->
+          <section class="section-block">
+            <div class="section-head">
+              <div class="section-icon orange">📍</div>
+              <h2>Venue Address &amp; Directions</h2>
+            </div>
+            <div class="location-address">
+              <span class="location-address-icon">🗺️</span>
+              <div class="location-address-text">
+                {{ venue.address }}{% if venue.city %}, {{ venue.city }}{% endif %}, Gujarat, India
+              </div>
+            </div>
+            <a class="btn-maps"
+               href="https://maps.google.com/?q={{ venue.address|urlencode }}{% if venue.city %}+{{ venue.city|urlencode }}{% endif %}"
+               target="_blank" rel="noopener noreferrer">
+              🗺️ Open Google Maps Directions &nbsp;→
+            </a>
+          </section>
+
+          <!-- Navratri Special Event Banner -->
+          <div class="navratri-banner" role="complementary" aria-label="Navratri special offer">
+            <div class="navratri-badge">🪔 Seasonal Special</div>
+            <div class="navratri-banner-title">
+              🪔 Navratri Special: Book for Garba Night Celebrations!
+            </div>
+            <div class="navratri-banner-body">
+              Pre-Navratri slots are filling fast at <strong>{{ venue.name }}</strong>. Reserve your garba night or dandiya celebration early and get priority listing for decoration vendors and DJ setup. Limited evening slots available.
+            </div>
+          </div>
+
+          <!-- Custom Inquiry Box -->
+          <div class="inquire-box">
+            <div class="inquire-box-head">
+              <div class="inquire-box-icon">🎨</div>
+              <h3>Need Custom Decoration or Catering Help?</h3>
+            </div>
+            <p>Have special requirements for sound, lighting, generator power, floral stage layout, or a custom catering menu? Send a direct inquiry to our Amazing Ahmedabad event coordination team.</p>
+            <a href="{% url 'contact' %}?topic=venue&subject=Inquiry+regarding+{{ venue.name|urlencode }}" class="btn-inquire">
+              ✉️ Send Venue Inquiry / Custom Package Request &nbsp;→
+            </a>
+          </div>
+
+        </div><!-- /content-body -->
+      </article><!-- /main-card -->
+
+
+      <!-- ══ STICKY SIDEBAR ═════════════════════════════════ -->
+      <div class="sidebar-wrap">
+        <aside class="sidebar-card" aria-label="Booking panel">
+
+          <!-- Accent stripe -->
+          {% if venue.space_type == 'party_plot' %}
+            <div class="sidebar-accent party"></div>
+          {% else %}
+            <div class="sidebar-accent wedding"></div>
+          {% endif %}
+
+          <div class="sidebar-body">
+
+            <!-- Price + unit -->
+            <div class="price-row">
+              <div>
+                <div class="price-label">Hourly Rate</div>
+                <div class="price-amount" id="js-rate" data-rate="{{ venue.hourly_rate }}">₹{{ venue.hourly_rate }}</div>
+              </div>
+              <span class="price-unit">per hour</span>
+            </div>
+
+            <!-- Availability pill -->
+            <div>
+              <span class="avail-pill">
+                <span class="avail-dot"></span>
+                Slots Available
+              </span>
+            </div>
+
+            <!-- Live Price Calculator -->
+            <div class="calc-box">
+              <div class="calc-title">⚡ Instant Price Calculator</div>
+              <div class="calc-input-wrap">
+                <label for="calc-hours">Duration</label>
+                <input
+                  class="calc-input"
+                  type="number"
+                  id="calc-hours"
+                  {% if venue.space_type == 'party_plot' %}
+                    min="1" max="6" value="2" placeholder="1–6 hrs"
+                  {% else %}
+                    min="2" max="12" value="4" placeholder="2–12 hrs"
+                  {% endif %}
+                >
+                <span style="font-size:0.85rem;font-weight:700;color:var(--muted);white-space:nowrap;">hrs</span>
+              </div>
+              <div class="calc-result">
+                <span class="calc-result-label">Estimated Total</span>
+                <span class="calc-result-value" id="calc-total">—</span>
+              </div>
+            </div>
+
+            <!-- Primary CTA -->
+            {% if venue.space_type == 'party_plot' %}
+              <a class="btn-book party" href="{% url 'book_venue' venue.pk %}">
+                🎉 Select Party Hours &amp; Book →
+              </a>
+            {% else %}
+              <a class="btn-book wedding" href="{% url 'book_venue' venue.pk %}">
+                💍 Reserve Wedding Slot →
+              </a>
+            {% endif %}
+
+            <!-- Coordinator button -->
+            <a class="btn-coordinator" href="{% url 'contact' %}?topic=venue&subject=Question+regarding+{{ venue.name|urlencode }}">
+              💬 Ask Venue Coordinator
+            </a>
+
+            <!-- Trust bullets -->
+            <div class="trust-list">
+              <div class="trust-item">
+                <span class="trust-check">✓</span>
+                <span>Automated Slot Collision Protection – no double-bookings</span>
+              </div>
+              <div class="trust-item">
+                <span class="trust-check">✓</span>
+                <span>Flexible Hours with Live Price Calculator</span>
+              </div>
+              <div class="trust-item">
+                <span class="trust-check">✓</span>
+                <span>Pay at Venue in Cash or Online via Razorpay</span>
+              </div>
+              <div class="trust-item">
+                <span class="trust-check">✓</span>
+                <span>Instant Official PDF Contract &amp; Receipt Generated</span>
+              </div>
+            </div>
+
+          </div><!-- /sidebar-body -->
+        </aside>
+      </div><!-- /sidebar-wrap -->
+
+    </div><!-- /detail-grid -->
+  </main>
+{% endblock %}
+
+{% block extra_js %}
+  <!-- ── Price Calculator JS ────────────────────────────── -->
+  <script>
+    (function () {
+      var rateEl  = document.getElementById('js-rate');
+      var hoursEl = document.getElementById('calc-hours');
+      var totalEl = document.getElementById('calc-total');
+      if (!rateEl || !hoursEl || !totalEl) return;
+
+      var rate = parseFloat(rateEl.dataset.rate) || 0;
+
+      function fmt(n) {
+        return '₹' + n.toLocaleString('en-IN');
+      }
+
+      function recalc() {
+        var h = parseFloat(hoursEl.value);
+        if (isNaN(h) || h <= 0) {
+          totalEl.textContent = '—';
+          return;
+        }
+        var total = rate * h;
+        totalEl.textContent = fmt(total) + ' (' + h + ' hr' + (h !== 1 ? 's' : '') + ')';
+      }
+
+      hoursEl.addEventListener('input', recalc);
+      recalc(); // init on load
+    })();
+  </script>
+{% endblock %}

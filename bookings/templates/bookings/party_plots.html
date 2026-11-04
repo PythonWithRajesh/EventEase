@@ -1,0 +1,2487 @@
+{% extends "bookings/base.html" %}
+
+
+
+{% block title %}Party Plots in Ahmedabad – Book Open Lawns by the Hour | Amazing Ahmedabad{% endblock %}
+
+
+
+{% block extra_css %}
+
+<style>
+
+/* ── Reset & Variables (Party Plots Liquid Glassmorphism Edition) ─── */
+
+:root {
+
+  --ink: #141026;
+
+  --ink-soft: #2d2445;
+
+  --muted: #625776;
+
+  --faint: rgba(240, 253, 244, 0.65);
+
+  --line: rgba(255, 255, 255, 0.7);
+
+  --paper: #f6f3fc;
+
+  --white: #ffffff;
+
+  --green: #059669;
+
+  --green-light: #10b981;
+
+  --green-pale: #ecfdf5;
+
+  --purple: #7c3aed;
+
+  --purple-light: #8b5cf6;
+
+  --purple-pale: #f5f0ff;
+
+  --orange: #f97316;
+
+  --orange-light: #fb923c;
+
+  --gold: #f59e0b;
+
+
+
+  /* Liquid Glassmorphism Tokens */
+
+  --glass-base: rgba(255, 255, 255, 0.78);
+
+  --glass-base-hover: rgba(255, 255, 255, 0.92);
+
+  --glass-border: rgba(255, 255, 255, 0.88);
+
+  --glass-border-subtle: rgba(255, 255, 255, 0.65);
+
+  --glass-specular: inset 0 1.5px 2px rgba(255, 255, 255, 0.98);
+
+  --glass-specular-soft: inset 0 1px 1px rgba(255, 255, 255, 0.8);
+
+  --glass-blur: blur(24px) saturate(190%);
+
+  --glass-blur-sm: blur(16px) saturate(170%);
+
+  --shadow-glass-sm: 0 10px 28px rgba(24, 9, 56, 0.05);
+
+  --shadow-glass-md: 0 18px 45px rgba(24, 9, 56, 0.08);
+
+  --shadow-glass-lg: 0 28px 70px rgba(24, 9, 56, 0.13);
+
+  --radius-card: 22px;
+
+  --radius-pill: 9999px;
+
+  --transition: 0.24s cubic-bezier(0.34, 1.25, 0.64, 1);
+
+}
+
+
+
+*, *::before, *::after {
+
+  box-sizing: border-box;
+
+}
+
+
+
+body {
+
+  margin: 0;
+
+  background: var(--paper);
+
+  background-image:
+
+    radial-gradient(circle at 10% 18%, rgba(16, 185, 129, 0.09) 0%, transparent 45%),
+
+    radial-gradient(circle at 88% 25%, rgba(124, 58, 237, 0.11) 0%, transparent 50%),
+
+    radial-gradient(circle at 50% 55%, rgba(249, 115, 22, 0.07) 0%, transparent 45%),
+
+    radial-gradient(circle at 15% 82%, rgba(6, 182, 212, 0.08) 0%, transparent 48%),
+
+    radial-gradient(circle at 85% 90%, rgba(16, 185, 129, 0.08) 0%, transparent 45%);
+
+  background-attachment: fixed;
+
+  color: var(--ink);
+
+  font: 16px/1.6 Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  -webkit-font-smoothing: antialiased;
+
+  overflow-x: clip !important;
+
+  position: relative;
+
+}
+
+
+
+a {
+
+  color: inherit;
+
+  text-decoration: none;
+
+}
+
+
+
+/* ── Liquid Ambient Canvas (Refractive Floating Color Blobs) ──── */
+
+.plots-ambient-canvas {
+
+  position: fixed;
+
+  top: 0;
+
+  left: 0;
+
+  width: 100vw;
+
+  height: 100vh;
+
+  pointer-events: none;
+
+  overflow: hidden;
+
+  z-index: 0;
+
+}
+
+
+
+.plots-ambient-blob {
+
+  position: absolute;
+
+  border-radius: 50%;
+
+  filter: blur(85px);
+
+  opacity: 0.46;
+
+  will-change: transform;
+
+  pointer-events: none;
+
+}
+
+
+
+.plots-blob-1 {
+
+  width: 520px;
+
+  height: 520px;
+
+  top: 15%;
+
+  right: -80px;
+
+  background: radial-gradient(circle, #10b981 0%, #059669 65%, transparent 100%);
+
+  animation: p-float-1 16s ease-in-out infinite alternate;
+
+}
+
+
+
+.plots-blob-2 {
+
+  width: 480px;
+
+  height: 480px;
+
+  top: 45%;
+
+  left: -100px;
+
+  background: radial-gradient(circle, #8b5cf6 0%, #ec4899 65%, transparent 100%);
+
+  animation: p-float-2 18s ease-in-out infinite alternate;
+
+}
+
+
+
+.plots-blob-3 {
+
+  width: 440px;
+
+  height: 440px;
+
+  bottom: 10%;
+
+  right: 15%;
+
+  background: radial-gradient(circle, #f97316 0%, #f59e0b 65%, transparent 100%);
+
+  animation: p-float-3 14s ease-in-out infinite alternate;
+
+}
+
+
+
+@keyframes p-float-1 {
+
+  0%   { transform: translate(0, 0) scale(1); }
+
+  100% { transform: translate(-80px, 90px) scale(1.15); }
+
+}
+
+
+
+@keyframes p-float-2 {
+
+  0%   { transform: translate(0, 0) scale(1); }
+
+  100% { transform: translate(90px, -70px) scale(1.12); }
+
+}
+
+
+
+@keyframes p-float-3 {
+
+  0%   { transform: translate(0, 0) scale(1); }
+
+  100% { transform: translate(-70px, -80px) scale(1.16); }
+
+}
+
+
+
+/* ── Container Helper ─────────────────────────────────────────── */
+
+.plots-outer {
+
+  max-width: 1220px;
+
+  margin: 0 auto;
+
+  padding: 0 20px;
+
+  box-sizing: border-box;
+
+  width: 100%;
+
+  position: relative;
+
+  z-index: 2;
+
+}
+
+
+
+/* ── Hero Section (with Live Party Lawn Celebration Photo) ────── */
+
+.plots-hero {
+
+  position: relative;
+
+  background-color: #0f071f;
+
+  background-image:
+
+    linear-gradient(180deg, rgba(14, 6, 28, 0.45) 0%, rgba(22, 9, 42, 0.35) 45%, rgba(32, 12, 58, 0.52) 80%, rgba(246, 243, 252, 1) 100%),
+
+    url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=2000&q=85');
+
+  background-size: cover;
+
+  background-position: center 42%;
+
+  background-repeat: no-repeat;
+
+  color: #fff;
+
+  padding: 72px 0 68px;
+
+  min-height: 480px;
+
+  overflow: hidden;
+
+  z-index: 2;
+
+}
+
+
+
+.plots-hero::after {
+
+  content: '';
+
+  position: absolute;
+
+  inset: 0;
+
+  background: radial-gradient(ellipse 75% 60% at 85% 15%, rgba(16, 185, 129, 0.28) 0, transparent 65%),
+
+              radial-gradient(ellipse 60% 65% at 10% 85%, rgba(124, 58, 237, 0.28) 0, transparent 60%);
+
+  pointer-events: none;
+
+}
+
+
+
+.plots-hero-inner {
+
+  max-width: 1220px;
+
+  margin: 0 auto;
+
+  padding: 0 20px;
+
+  position: relative;
+
+  z-index: 3;
+
+  text-align: center;
+
+}
+
+
+
+.plots-badge {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  background: rgba(255, 255, 255, 0.16);
+
+  border: 1px solid rgba(255, 255, 255, 0.32);
+
+  border-radius: var(--radius-pill);
+
+  padding: 6px 16px;
+
+  font-size: 0.76rem;
+
+  font-weight: 850;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+
+  color: #a7f3d0;
+
+  margin-bottom: 18px;
+
+  backdrop-filter: blur(14px);
+
+  -webkit-backdrop-filter: blur(14px);
+
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+
+}
+
+
+
+.plots-hero h1 {
+
+  font-size: clamp(2.25rem, 5.4vw, 3.85rem);
+
+  line-height: 1.15;
+
+  letter-spacing: -0.035em;
+
+  font-weight: 900;
+
+  margin: 0 auto 24px;
+
+  max-width: 980px;
+
+  text-align: center;
+
+  color: #ffffff;
+
+  filter: drop-shadow(0 4px 22px rgba(0, 0, 0, 0.85)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.95));
+
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+
+}
+
+
+
+.plots-hero h1 span {
+
+  display: inline-block;
+
+  background: linear-gradient(135deg, #ffffff 0%, #a7f3d0 35%, #34d399 75%, #059669 100%);
+
+  -webkit-background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+
+  background-clip: text;
+
+  filter: drop-shadow(0 2px 16px rgba(16, 185, 129, 0.55));
+
+}
+
+
+
+.plots-hero-sub {
+
+  font-size: 1.05rem;
+
+  line-height: 1.6;
+
+  color: rgba(255, 255, 255, 0.9);
+
+  max-width: 740px;
+
+  margin: 0 0 26px;
+
+}
+
+
+
+/* Trust Pills in Hero */
+
+.plots-trust-pills {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  flex-wrap: wrap;
+
+}
+
+
+
+.plots-pill {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  background: rgba(255, 255, 255, 0.15);
+
+  border: 1px solid rgba(255, 255, 255, 0.28);
+
+  border-radius: var(--radius-pill);
+
+  padding: 7px 16px;
+
+  font-size: 0.82rem;
+
+  font-weight: 750;
+
+  color: #ffffff;
+
+  backdrop-filter: blur(14px);
+
+  -webkit-backdrop-filter: blur(14px);
+
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+
+}
+
+
+
+/* ── Filter Console (Liquid Glassmorphism) ─────────────────────── */
+
+.plots-filter-wrap {
+
+  margin-top: 32px;
+
+  position: relative;
+
+  z-index: 20;
+
+}
+
+
+
+.plots-filter-card {
+
+  background: var(--glass-base);
+
+  backdrop-filter: var(--glass-blur);
+
+  -webkit-backdrop-filter: var(--glass-blur);
+
+  border: 1.5px solid var(--glass-border);
+
+  border-radius: 24px;
+
+  padding: 20px 24px;
+
+  box-shadow: var(--shadow-glass-lg), var(--glass-specular);
+
+}
+
+
+
+.plots-filter-row {
+
+  display: grid;
+
+  grid-template-columns: 2fr 1.25fr 1.15fr 1.15fr auto;
+
+  gap: 12px;
+
+  align-items: center;
+
+}
+
+
+
+.filter-input-wrap {
+
+  position: relative;
+
+  display: flex;
+
+  align-items: center;
+
+}
+
+
+
+.filter-icon {
+
+  position: absolute;
+
+  left: 14px;
+
+  font-size: 1rem;
+
+  pointer-events: none;
+
+  opacity: 0.7;
+
+}
+
+
+
+.filter-input {
+
+  width: 100%;
+
+  height: 48px;
+
+  background: rgba(255, 255, 255, 0.65);
+
+  backdrop-filter: blur(12px);
+
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+
+  border-radius: 14px;
+
+  padding: 0 14px 0 42px;
+
+  font-size: 0.9rem;
+
+  font-weight: 650;
+
+  color: var(--ink);
+
+  outline: none;
+
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8);
+
+  transition: all 0.2s ease;
+
+  font-family: inherit;
+
+}
+
+
+
+.filter-select {
+
+  width: 100%;
+
+  height: 48px;
+
+  background: rgba(255, 255, 255, 0.65);
+
+  backdrop-filter: blur(12px);
+
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+
+  border-radius: 14px;
+
+  padding: 0 34px 0 14px;
+
+  font-size: 0.9rem;
+
+  font-weight: 650;
+
+  color: var(--ink);
+
+  outline: none;
+
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8);
+
+  transition: all 0.2s ease;
+
+  font-family: inherit;
+
+  cursor: pointer;
+
+  appearance: none;
+
+  -webkit-appearance: none;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23059669' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+
+  background-repeat: no-repeat;
+
+  background-position: right 14px center;
+
+}
+
+
+
+.filter-input:focus,
+
+.filter-select:focus {
+
+  border-color: #10b981;
+
+  background: rgba(255, 255, 255, 0.95);
+
+  box-shadow: 0 0 0 3.5px rgba(16, 185, 129, 0.2), inset 0 1px 1px #ffffff;
+
+}
+
+
+
+.btn-search-plots {
+
+  height: 48px;
+
+  padding: 0 24px;
+
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+
+  color: #ffffff;
+
+  border: none;
+
+  border-radius: 14px;
+
+  font-size: 0.92rem;
+
+  font-weight: 850;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  box-shadow: 0 8px 22px rgba(5, 150, 105, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+
+  transition: all var(--transition);
+
+  -webkit-tap-highlight-color: transparent;
+
+}
+
+
+
+.btn-search-plots:hover {
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 12px 28px rgba(5, 150, 105, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+
+}
+
+
+
+.btn-search-plots:active {
+
+  transform: translateY(1px);
+
+}
+
+
+
+/* Quick Area Chips Strip */
+
+.plots-area-strip {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  flex-wrap: wrap;
+
+  margin-top: 16px;
+
+  padding-top: 14px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.75);
+
+}
+
+
+
+.area-chip-label {
+
+  font-size: 0.78rem;
+
+  font-weight: 800;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.08em;
+
+  color: var(--muted);
+
+  white-space: nowrap;
+
+}
+
+
+
+.area-chip {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 4px;
+
+  background: rgba(255, 255, 255, 0.65);
+
+  backdrop-filter: blur(10px);
+
+  -webkit-backdrop-filter: blur(10px);
+
+  border: 1px solid var(--glass-border);
+
+  border-radius: var(--radius-pill);
+
+  padding: 5px 13px;
+
+  font-size: 0.8rem;
+
+  font-weight: 750;
+
+  color: var(--ink-soft);
+
+  box-shadow: 0 4px 12px rgba(24, 9, 56, 0.04);
+
+  transition: all var(--transition);
+
+}
+
+
+
+.area-chip:hover {
+
+  background: var(--glass-base-hover);
+
+  color: #059669;
+
+  border-color: #10b981;
+
+  transform: translateY(-1px);
+
+}
+
+
+
+.area-chip.active {
+
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+
+  color: #ffffff;
+
+  border-color: transparent;
+
+  box-shadow: 0 6px 18px rgba(5, 150, 105, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+
+}
+
+
+
+/* ── Main Content Section ─────────────────────────────────────── */
+
+.plots-main {
+
+  padding: 40px 0 80px;
+
+  position: relative;
+
+  z-index: 2;
+
+}
+
+
+
+.plots-section-header {
+
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-between;
+
+  margin-bottom: 28px;
+
+  gap: 20px;
+
+  flex-wrap: wrap;
+
+}
+
+
+
+.plots-header-left h2 {
+
+  font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+
+  font-weight: 900;
+
+  letter-spacing: -0.04em;
+
+  margin: 0 0 6px;
+
+  color: var(--ink);
+
+}
+
+
+
+.plots-header-left p {
+
+  font-size: 0.95rem;
+
+  color: var(--muted);
+
+  margin: 0;
+
+}
+
+
+
+.plots-header-right {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  flex-wrap: wrap;
+
+}
+
+
+
+.btn-switch-hall {
+
+  background: var(--glass-base);
+
+  backdrop-filter: blur(12px);
+
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid var(--glass-border);
+
+  border-radius: var(--radius-pill);
+
+  padding: 8px 18px;
+
+  font-size: 0.84rem;
+
+  font-weight: 800;
+
+  color: #059669;
+
+  box-shadow: 0 4px 14px rgba(24, 9, 56, 0.04), var(--glass-specular-soft);
+
+  transition: all var(--transition);
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+}
+
+
+
+.btn-switch-hall:hover {
+
+  background: #059669;
+
+  color: #ffffff;
+
+  border-color: #059669;
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 8px 22px rgba(5, 150, 105, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+
+}
+
+
+
+/* ── Party Plots Grid ─────────────────────────────────────────── */
+
+.venue-grid {
+
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 26px;
+
+}
+
+
+
+/* ── Liquid Glassmorphic Venue Card ───────────────────────────── */
+
+.venue-card {
+
+  background: var(--glass-base);
+
+  backdrop-filter: var(--glass-blur);
+
+  -webkit-backdrop-filter: var(--glass-blur);
+
+  border: 1px solid var(--glass-border);
+
+  border-radius: var(--radius-card);
+
+  overflow: hidden;
+
+  box-shadow: 0 12px 35px rgba(24, 9, 56, 0.07), var(--glass-specular-soft);
+
+  display: flex;
+
+  flex-direction: column;
+
+  transition: transform var(--transition), box-shadow var(--transition), background var(--transition), border-color var(--transition);
+
+  position: relative;
+
+}
+
+
+
+.venue-card:hover {
+
+  background: var(--glass-base-hover);
+
+  transform: translateY(-6px);
+
+  box-shadow: 0 22px 50px rgba(24, 9, 56, 0.14), var(--glass-specular);
+
+  border-color: rgba(255, 255, 255, 0.98);
+
+}
+
+
+
+.card-img-wrap {
+
+  position: relative;
+
+  height: 235px;
+
+  overflow: hidden;
+
+  background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
+
+  flex-shrink: 0;
+
+}
+
+
+
+.card-img-wrap img {
+
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+
+  transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+}
+
+
+
+.venue-card:hover .card-img-wrap img {
+
+  transform: scale(1.08);
+
+}
+
+
+
+.card-gradient-overlay {
+
+  position: absolute;
+
+  inset: 0;
+
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.12) 0%, transparent 45%, rgba(10, 4, 24, 0.76) 100%);
+
+  pointer-events: none;
+
+}
+
+
+
+/* Badges on image */
+
+.badge-top-left,
+
+.badge-top-right,
+
+.badge-bottom-left {
+
+  position: absolute;
+
+  border-radius: var(--radius-pill);
+
+  backdrop-filter: blur(10px);
+
+  -webkit-backdrop-filter: blur(10px);
+
+  border: 1px solid rgba(255, 255, 255, 0.35);
+
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+
+  font-weight: 850;
+
+  color: #ffffff;
+
+}
+
+
+
+.badge-top-left {
+
+  top: 14px;
+
+  left: 14px;
+
+  background: rgba(16, 185, 129, 0.9);
+
+  padding: 6px 14px;
+
+  font-size: 0.74rem;
+
+  letter-spacing: 0.04em;
+
+}
+
+
+
+.badge-top-right {
+
+  top: 14px;
+
+  right: 14px;
+
+  background: rgba(124, 58, 237, 0.9);
+
+  padding: 5px 12px;
+
+  font-size: 0.73rem;
+
+}
+
+
+
+.badge-bottom-left {
+
+  bottom: 12px;
+
+  left: 14px;
+
+  background: rgba(20, 8, 38, 0.74);
+
+  border-color: rgba(255, 255, 255, 0.22);
+
+  padding: 6px 12px;
+
+  font-size: 0.78rem;
+
+  color: #fde68a;
+
+}
+
+
+
+/* Card Content Body */
+
+.card-content {
+
+  padding: 20px 22px 16px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  flex: 1;
+
+}
+
+
+
+.card-title {
+
+  font-size: 1.2rem;
+
+  font-weight: 900;
+
+  line-height: 1.28;
+
+  letter-spacing: -0.03em;
+
+  margin: 0 0 8px;
+
+  color: var(--ink);
+
+}
+
+
+
+.card-title a {
+
+  transition: color 0.18s;
+
+}
+
+
+
+.card-title a:hover {
+
+  color: #059669;
+
+}
+
+
+
+.card-loc {
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 6px;
+
+  color: var(--muted);
+
+  font-size: 0.88rem;
+
+  font-weight: 600;
+
+  margin-bottom: 12px;
+
+}
+
+
+
+.card-desc {
+
+  color: #554d64;
+
+  font-size: 0.88rem;
+
+  line-height: 1.55;
+
+  margin: 0 0 16px;
+
+  display: -webkit-box;
+
+  -webkit-line-clamp: 2;
+
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+
+  flex: 1;
+
+}
+
+
+
+/* Fact Tags */
+
+.card-tags {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  flex-wrap: wrap;
+
+  margin-bottom: 12px;
+
+}
+
+
+
+.card-tag {
+
+  background: rgba(236, 253, 245, 0.75);
+
+  backdrop-filter: blur(6px);
+
+  -webkit-backdrop-filter: blur(6px);
+
+  border: 1px solid rgba(16, 185, 129, 0.22);
+
+  border-radius: 8px;
+
+  padding: 4px 9px;
+
+  font-size: 0.76rem;
+
+  font-weight: 750;
+
+  color: #065f46;
+
+  box-shadow: var(--glass-specular-soft);
+
+}
+
+
+
+.card-amenities-row {
+
+  font-size: 0.82rem;
+
+  color: var(--muted);
+
+  line-height: 1.45;
+
+  margin: 0;
+
+  display: -webkit-box;
+
+  -webkit-line-clamp: 1;
+
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+
+}
+
+
+
+.card-amenities-row strong {
+
+  color: var(--ink-soft);
+
+}
+
+
+
+/* Card Footer */
+
+.card-foot {
+
+  padding: 16px 22px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.75);
+
+  background: rgba(255, 255, 255, 0.65);
+
+  backdrop-filter: blur(12px);
+
+  -webkit-backdrop-filter: blur(12px);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 12px;
+
+}
+
+
+
+.card-price-col {
+
+  display: flex;
+
+  flex-direction: column;
+
+}
+
+
+
+.rate-val {
+
+  font-size: 1.35rem;
+
+  font-weight: 900;
+
+  color: var(--ink);
+
+  line-height: 1;
+
+  letter-spacing: -0.03em;
+
+}
+
+
+
+.rate-sub {
+
+  font-size: 0.74rem;
+
+  font-weight: 700;
+
+  color: var(--muted);
+
+  margin-top: 3px;
+
+}
+
+
+
+.card-action-btns {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+}
+
+
+
+.btn-plot-details {
+
+  padding: 9px 15px;
+
+  border-radius: 12px;
+
+  font-size: 0.85rem;
+
+  font-weight: 800;
+
+  color: #059669;
+
+  border: 1.5px solid rgba(16, 185, 129, 0.25);
+
+  background: rgba(255, 255, 255, 0.85);
+
+  backdrop-filter: blur(8px);
+
+  -webkit-backdrop-filter: blur(8px);
+
+  box-shadow: 0 4px 12px rgba(24, 9, 56, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+
+  transition: all var(--transition);
+
+  white-space: nowrap;
+
+}
+
+
+
+.btn-plot-details:hover {
+
+  background: rgba(236, 253, 245, 0.95);
+
+  border-color: #059669;
+
+  transform: translateY(-1px);
+
+}
+
+
+
+.btn-plot-details:active {
+
+  transform: scale(0.97);
+
+}
+
+
+
+.btn-plot-book {
+
+  padding: 10px 18px;
+
+  border-radius: 12px;
+
+  font-size: 0.86rem;
+
+  font-weight: 850;
+
+  color: #ffffff;
+
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+
+  border: none;
+
+  box-shadow: 0 4px 16px rgba(5, 150, 105, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+
+  transition: all var(--transition);
+
+  white-space: nowrap;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+}
+
+
+
+.btn-plot-book:hover {
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 8px 22px rgba(5, 150, 105, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+
+}
+
+
+
+.btn-plot-book:active {
+
+  transform: scale(0.97);
+
+}
+
+
+
+/* ── Festival Navratri Banner (Liquid Amber Glass) ────────────── */
+
+.plots-festival-banner {
+
+  margin: 54px 0 32px;
+
+  background: linear-gradient(135deg, rgba(180, 83, 9, 0.9) 0%, rgba(217, 119, 6, 0.86) 50%, rgba(245, 158, 11, 0.82) 100%);
+
+  backdrop-filter: blur(28px) saturate(180%);
+
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+
+  border-radius: 26px;
+
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+
+  padding: 34px 38px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 24px;
+
+  position: relative;
+
+  overflow: hidden;
+
+  box-shadow: 0 24px 64px rgba(34, 12, 48, 0.22), inset 0 1.5px 2px rgba(255, 255, 255, 0.3);
+
+  color: #ffffff;
+
+}
+
+
+
+.festival-banner-content {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 20px;
+
+  position: relative;
+
+  z-index: 2;
+
+  max-width: 720px;
+
+}
+
+
+
+.festival-banner-icon {
+
+  font-size: 2.8rem;
+
+  flex-shrink: 0;
+
+}
+
+
+
+.festival-banner-text h3 {
+
+  font-size: clamp(1.3rem, 2.6vw, 1.8rem);
+
+  font-weight: 900;
+
+  letter-spacing: -0.03em;
+
+  margin: 0 0 8px;
+
+  line-height: 1.2;
+
+}
+
+
+
+.festival-banner-text p {
+
+  font-size: 0.96rem;
+
+  color: rgba(255, 255, 255, 0.92);
+
+  line-height: 1.55;
+
+  margin: 0;
+
+}
+
+
+
+.festival-banner-btn {
+
+  position: relative;
+
+  z-index: 2;
+
+  background: rgba(255, 255, 255, 0.95);
+
+  backdrop-filter: blur(12px);
+
+  -webkit-backdrop-filter: blur(12px);
+
+  color: #b45309;
+
+  padding: 14px 28px;
+
+  border-radius: 14px;
+
+  border: 1px solid rgba(255, 255, 255, 0.9);
+
+  font-size: 0.95rem;
+
+  font-weight: 900;
+
+  white-space: nowrap;
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18), inset 0 1px 1px #ffffff;
+
+  transition: all var(--transition);
+
+  flex-shrink: 0;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+}
+
+
+
+.festival-banner-btn:hover {
+
+  transform: translateY(-2px);
+
+  background: #ffffff;
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24), inset 0 1px 1px #ffffff;
+
+}
+
+
+
+/* ── Why Pillars Section (Frosted Glass Grid) ─────────────────── */
+
+.plots-why-section {
+
+  margin: 54px 0 20px;
+
+}
+
+
+
+.why-heading-wrap {
+
+  text-align: center;
+
+  max-width: 680px;
+
+  margin: 0 auto 36px;
+
+}
+
+
+
+.why-heading-wrap h3 {
+
+  font-size: clamp(1.5rem, 2.8vw, 2rem);
+
+  font-weight: 900;
+
+  letter-spacing: -0.03em;
+
+  margin: 0 0 8px;
+
+  color: var(--ink);
+
+}
+
+
+
+.why-heading-wrap p {
+
+  font-size: 0.96rem;
+
+  color: var(--muted);
+
+  margin: 0;
+
+}
+
+
+
+.why-pillars-grid {
+
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 20px;
+
+}
+
+
+
+.why-pillar {
+
+  background: var(--glass-base);
+
+  backdrop-filter: var(--glass-blur);
+
+  -webkit-backdrop-filter: var(--glass-blur);
+
+  border: 1.5px solid var(--glass-border);
+
+  border-radius: 20px;
+
+  padding: 24px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
+
+  box-shadow: var(--shadow-glass-sm), var(--glass-specular);
+
+  transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+
+}
+
+
+
+.why-pillar:hover {
+
+  background: var(--glass-base-hover);
+
+  transform: translateY(-4px);
+
+  box-shadow: var(--shadow-glass-md), var(--glass-specular);
+
+}
+
+
+
+.pillar-icon-box {
+
+  width: 50px;
+
+  height: 50px;
+
+  border-radius: 16px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 1.55rem;
+
+  flex-shrink: 0;
+
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8), 0 4px 12px rgba(24, 9, 56, 0.05);
+
+  border: 1px solid rgba(255, 255, 255, 0.8);
+
+  backdrop-filter: blur(8px);
+
+}
+
+
+
+.pillar-purple { background: rgba(243, 232, 255, 0.8); }
+
+.pillar-orange { background: rgba(255, 237, 213, 0.8); }
+
+.pillar-green  { background: rgba(220, 252, 231, 0.8); }
+
+.pillar-blue   { background: rgba(224, 242, 254, 0.8); }
+
+
+
+.why-pillar h4 {
+
+  font-size: 1.05rem;
+
+  font-weight: 850;
+
+  letter-spacing: -0.02em;
+
+  margin: 0;
+
+  color: var(--ink);
+
+}
+
+
+
+.why-pillar p {
+
+  font-size: 0.86rem;
+
+  color: var(--muted);
+
+  line-height: 1.5;
+
+  margin: 0;
+
+}
+
+
+
+/* ── Empty State (Glassmorphic) ───────────────────────────────── */
+
+.plots-empty-state {
+
+  text-align: center;
+
+  padding: 70px 24px;
+
+  background: var(--glass-base);
+
+  backdrop-filter: var(--glass-blur);
+
+  -webkit-backdrop-filter: var(--glass-blur);
+
+  border: 2px dashed rgba(16, 185, 129, 0.35);
+
+  border-radius: var(--radius-card);
+
+  box-shadow: var(--shadow-glass-md), var(--glass-specular);
+
+  margin: 20px 0;
+
+  grid-column: 1 / -1;
+
+}
+
+
+
+.empty-state-icon {
+
+  font-size: 3.5rem;
+
+  margin-bottom: 16px;
+
+}
+
+
+
+.plots-empty-state h3 {
+
+  font-size: 1.45rem;
+
+  font-weight: 900;
+
+  color: var(--ink);
+
+  margin: 0 0 8px;
+
+}
+
+
+
+.plots-empty-state p {
+
+  color: var(--muted);
+
+  font-size: 0.95rem;
+
+  max-width: 480px;
+
+  margin: 0 auto 24px;
+
+}
+
+
+
+.btn-reset-filters {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+
+  color: #ffffff;
+
+  border-radius: 14px;
+
+  padding: 12px 26px;
+
+  font-weight: 850;
+
+  font-size: 0.92rem;
+
+  box-shadow: 0 8px 22px rgba(5, 150, 105, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+
+  transition: all var(--transition);
+
+}
+
+
+
+.btn-reset-filters:hover {
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 12px 28px rgba(5, 150, 105, 0.45);
+
+}
+
+
+
+/* ── Responsive Polish ────────────────────────────────────────── */
+
+@media (max-width: 1060px) {
+
+  .plots-filter-row {
+
+    grid-template-columns: 1fr 1fr;
+
+  }
+
+  .filter-input-wrap {
+
+    grid-column: span 2;
+
+  }
+
+  .btn-search-plots {
+
+    grid-column: span 2;
+
+  }
+
+  .venue-grid {
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  }
+
+  .why-pillars-grid {
+
+    grid-template-columns: repeat(2, 1fr);
+
+  }
+
+}
+
+
+
+@media (max-width: 860px) {
+
+  .plots-festival-banner {
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    padding: 26px 24px;
+
+  }
+
+  .festival-banner-content {
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 12px;
+
+  }
+
+}
+
+
+
+@media (max-width: 640px) {
+
+  .plots-hero {
+
+    padding: 46px 0 52px;
+
+    min-height: auto;
+
+  }
+
+  .plots-hero h1 {
+
+    font-size: 2rem;
+
+  }
+
+  .plots-hero-sub {
+
+    font-size: 0.96rem;
+
+    margin-bottom: 20px;
+
+  }
+
+  .plots-filter-wrap {
+
+    margin-top: 20px;
+
+  }
+
+  .plots-filter-card {
+
+    padding: 14px 14px;
+
+    border-radius: 20px;
+
+  }
+
+  .plots-filter-row {
+
+    grid-template-columns: 1fr;
+
+    gap: 8px;
+
+  }
+
+  .filter-input-wrap,
+
+  .btn-search-plots {
+
+    grid-column: span 1;
+
+  }
+
+  .btn-search-plots {
+
+    width: 100%;
+
+    height: 46px;
+
+  }
+
+  .venue-grid {
+
+    grid-template-columns: 1fr;
+
+    gap: 18px;
+
+  }
+
+  .card-img-wrap {
+
+    height: 210px;
+
+  }
+
+  .why-pillars-grid {
+
+    grid-template-columns: 1fr;
+
+  }
+
+  .plots-section-header {
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+  }
+
+}
+
+
+
+@media (max-width: 480px) {
+
+  .plots-outer {
+
+    padding: 0 12px;
+
+  }
+
+  .card-foot {
+
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 12px;
+
+  }
+
+  .card-action-btns {
+
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 8px;
+
+  }
+
+  .btn-plot-details,
+
+  .btn-plot-book {
+
+    width: 100%;
+
+    text-align: center;
+
+    justify-content: center;
+
+    padding: 10px 8px;
+
+  }
+
+}
+
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<!-- Ambient Liquid Glass Refractive Canvas -->
+
+<div class="plots-ambient-canvas" aria-hidden="true">
+
+  <div class="plots-ambient-blob plots-blob-1"></div>
+
+  <div class="plots-ambient-blob plots-blob-2"></div>
+
+  <div class="plots-ambient-blob plots-blob-3"></div>
+
+</div>
+
+
+
+<!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
+
+<header class="plots-hero">
+
+  <div class="plots-hero-inner">
+
+    <h1>Book Ahmedabad's Most Breathtaking<br><span>Open Party Plots</span></h1>
+
+
+
+    <!-- ═══════════════════════════════ FILTER CONSOLE ═══════════════════════════════ -->
+
+    <div class="plots-filter-wrap">
+
+      <div class="plots-filter-card">
+
+        <form method="GET" action="" class="plots-filter-row">
+
+        <!-- Search Keyword -->
+
+        <div class="filter-input-wrap">
+
+          <span class="filter-icon" aria-hidden="true">🔍</span>
+
+          <input
+
+            type="text"
+
+            name="q"
+
+            value="{{ query }}"
+
+            class="filter-input"
+
+            placeholder="Search by lawn name, address, or amenities..."
+
+            aria-label="Search party plots"
+
+          />
+
+        </div>
+
+
+
+        <!-- Locality Area -->
+
+        <select name="area" class="filter-select" aria-label="Select Area">
+
+          <option value="">📍 All Ahmedabad Localities</option>
+
+          <option value="Sindhu Bhavan" {% if selected_area == 'Sindhu Bhavan' %}selected{% endif %}>Sindhu Bhavan Road (SBR)</option>
+
+          <option value="SG Highway" {% if selected_area == 'SG Highway' %}selected{% endif %}>SG Highway / Bodakdev</option>
+
+          <option value="Bopal" {% if selected_area == 'Bopal' %}selected{% endif %}>Bopal &amp; South Bopal</option>
+
+          <option value="Bodakdev" {% if selected_area == 'Bodakdev' %}selected{% endif %}>Bodakdev &amp; Judges Bung.</option>
+
+          <option value="Thaltej" {% if selected_area == 'Thaltej' %}selected{% endif %}>Thaltej &amp; Science City</option>
+
+          <option value="Chandkheda" {% if selected_area == 'Chandkheda' %}selected{% endif %}>Chandkheda</option>
+
+          <option value="Nikol" {% if selected_area == 'Nikol' %}selected{% endif %}>Nikol &amp; SP Ring Road</option>
+
+          <option value="Gota" {% if selected_area == 'Gota' %}selected{% endif %}>Gota &amp; Vandemataram</option>
+
+          <option value="Naroda" {% if selected_area == 'Naroda' %}selected{% endif %}>Naroda &amp; Hanspura</option>
+
+          <option value="Shela" {% if selected_area == 'Shela' %}selected{% endif %}>Shela &amp; Ghuma</option>
+
+        </select>
+
+
+
+        <!-- Capacity -->
+
+        <select name="capacity" class="filter-select" aria-label="Select Capacity">
+
+          <option value="">👥 Any Capacity</option>
+
+          <option value="300" {% if selected_capacity == '300' %}selected{% endif %}>300+ Guests</option>
+
+          <option value="500" {% if selected_capacity == '500' %}selected{% endif %}>500+ Guests</option>
+
+          <option value="800" {% if selected_capacity == '800' %}selected{% endif %}>800+ Guests</option>
+
+          <option value="1000" {% if selected_capacity == '1000' %}selected{% endif %}>1,000+ Guests</option>
+
+        </select>
+
+
+
+        <!-- Price Range -->
+
+        <select name="price" class="filter-select" aria-label="Select Hourly Price">
+
+          <option value="">💰 Any Rate</option>
+
+          <option value="low" {% if selected_price == 'low' %}selected{% endif %}>Under ₹6,000 / hr</option>
+
+          <option value="mid" {% if selected_price == 'mid' %}selected{% endif %}>₹6,000 – ₹10,000 / hr</option>
+
+          <option value="high" {% if selected_price == 'high' %}selected{% endif %}>Above ₹10,000 / hr</option>
+
+        </select>
+
+
+
+        <!-- Submit Button -->
+
+        <button type="submit" class="btn-search-plots">
+
+          <span>Search Plots</span>
+
+          <span>→</span>
+
+        </button>
+
+      </form>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</header>
+
+
+
+<!-- ═══════════════════════════════ MAIN CONTENT ═══════════════════════════════ -->
+
+<div class="plots-outer">
+
+  <main class="plots-main">
+
+
+
+    <!-- Section Header Bar -->
+
+    <div class="plots-section-header">
+
+      <div class="plots-header-left">
+
+        <h2>Available Party Plots in Ahmedabad ({{ result_count }})</h2>
+
+        <p>Verified open lawns with authentic photos, guest capacity, and hourly rate breakdown.</p>
+
+      </div>
+
+      <div class="plots-header-right">
+
+        {% if query or selected_area or selected_capacity or selected_price %}
+
+          <a href="{% url 'party_plots' %}" class="btn-switch-hall" style="color:#ef4444;border-color:#fca5a5;background:#fef2f2;">✕ Clear Filters</a>
+
+        {% endif %}
+
+        <a href="{% url 'wedding_halls' %}" class="btn-switch-hall">
+
+          <span>🏛️ Need Indoor Banquet Halls?</span>
+
+          <span>→</span>
+
+        </a>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- Party Plots Grid -->
+
+    <div class="venue-grid">
+
+      {% for venue in venues %}
+
+      <article class="venue-card">
+
+
+
+        <!-- Card Image -->
+
+        <div class="card-img-wrap">
+
+          {% if venue.cover_image_url %}
+
+            <img src="{{ venue.cover_image_url }}" alt="{{ venue.name }} open celebration lawn in Ahmedabad" loading="lazy">
+
+          {% else %}
+
+            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80" alt="Outdoor party lawn" loading="lazy">
+
+          {% endif %}
+
+          <div class="card-gradient-overlay"></div>
+
+          <span class="badge-top-left">👥 Up to {{ venue.capacity }} Guests</span>
+
+          <span class="badge-top-right">⚡ 1–6h Slot</span>
+
+          <span class="badge-bottom-left">⭐ 4.9 · Verified Lawn</span>
+
+        </div>
+
+
+
+        <!-- Card Content Body -->
+
+        <div class="card-content">
+
+          <h3 class="card-title">
+
+            <a href="{% url 'venue_detail' venue.pk %}">{{ venue.name }}</a>
+
+          </h3>
+
+
+
+          <div class="card-loc">
+
+            <span>📍</span>
+
+            <span>{{ venue.address }}{% if venue.city and venue.city not in venue.address %}, {{ venue.city }}{% endif %}</span>
+
+          </div>
+
+
+
+          <p class="card-desc">
+
+            {{ venue.description|default:"A spacious, manicured open lawn ideal for celebrations, birthdays, engagements, and cultural gatherings with flexible hourly slots." }}
+
+          </p>
+
+
+
+          <!-- Fact Tags -->
+
+          <div class="card-tags">
+
+            <span class="card-tag">🌿 Natural Turf</span>
+
+            <span class="card-tag">👥 {{ venue.capacity }} Capacity</span>
+
+            <span class="card-tag">⏱️ 1–6h Hourly</span>
+
+            <span class="card-tag">🅿️ Guest Parking</span>
+
+            <span class="card-tag">🛡️ Collision Safe</span>
+
+          </div>
+
+
+
+          <!-- Amenities Summary -->
+
+          <p class="card-amenities-row">
+
+            <strong>Key Features:</strong>
+
+            {{ venue.amenities|default:"Manicured green lawn, decorative lights, elevated stage, power backup, catering counters, on-site manager." }}
+
+          </p>
+
+        </div>
+
+
+
+        <!-- Card Footer -->
+
+        <div class="card-foot">
+
+          <div class="card-price-col">
+
+            <div class="rate-val">₹{{ venue.hourly_rate }}</div>
+
+            <div class="rate-sub">per hour · total by slot</div>
+
+          </div>
+
+          <div class="card-action-btns">
+
+            <a href="{% url 'venue_detail' venue.pk %}" class="btn-plot-details">View Details</a>
+
+            <a href="{% url 'book_venue' venue.pk %}" class="btn-plot-book">Book Slot →</a>
+
+          </div>
+
+        </div>
+
+
+
+      </article>
+
+      {% empty %}
+
+      <div class="plots-empty-state">
+
+        <div class="empty-state-icon">🌿</div>
+
+        <h3>No party plots matched your criteria</h3>
+
+        <p>Try searching for a different Ahmedabad locality, adjusting your capacity filter, or clearing your search filters to explore all available venues.</p>
+
+        <a href="{% url 'party_plots' %}" class="btn-reset-filters">✨ Reset All Filters</a>
+
+      </div>
+
+      {% endfor %}
+
+    </div>
+  </main>
+
+</div>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script>
+
+  // Redirect legacy /party-plots/#navratri to Amdavad Food Hub
+
+  if (window.location.hash === '#navratri') {
+
+    window.location.replace("{% url 'food_hub' %}");
+
+  }
+
+</script>
+
+{% endblock %}
+

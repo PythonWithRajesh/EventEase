@@ -1,0 +1,509 @@
+{% extends "bookings/base.html" %}
+
+{% block title %}{{ event.name }} | Amazing Ahmedabad{% endblock %}
+
+{% block extra_css %}
+  <style>
+    :root {
+      --ink: #1e172a;
+      --ink-soft: #382c4d;
+      --muted: #6e647b;
+      --purple: #673ab7;
+      --purple-dark: #2c1252;
+      --purple-light: #f3ecfb;
+      --orange: #f2720c;
+      --orange-light: #fff3ea;
+      --green: #15803d;
+      --green-light: #ecfdf5;
+      --paper: #faf8f5;
+      --surface: #ffffff;
+      --line: #e9e3ef;
+      --shadow-md: 0 14px 38px rgba(33, 17, 56, 0.08);
+      --shadow-lg: 0 24px 60px rgba(33, 17, 56, 0.14);
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-full: 9999px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font: 16px/1.6 Inter, system-ui, -apple-system, sans-serif;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1180px; margin: 0 auto; padding: 24px 20px 60px; }
+    .crumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 22px;
+    }
+    .crumb a:hover { color: var(--purple); }
+    .detail-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.8fr);
+      gap: 28px;
+      align-items: start;
+    }
+    .main-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    .hero-media {
+      position: relative;
+      height: 380px;
+      background: #25123d;
+    }
+    .hero-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .hero-media-badge {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      color: var(--purple-dark);
+      font-size: 0.78rem;
+      font-weight: 850;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .hero-media-secondary {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: rgba(23, 10, 39, 0.85);
+      color: #ffdcb5;
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+    }
+    .content-body { padding: 32px 36px; }
+    .title-row { margin-bottom: 12px; }
+    .title-row h1 {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -0.04em;
+      margin: 0 0 8px;
+      color: var(--ink);
+    }
+    .organizer-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--purple);
+      font-weight: 750;
+      font-size: 0.92rem;
+    }
+    .organizer-tag::before { content: "✓"; font-weight: 900; }
+    .quick-facts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin: 26px 0;
+      background: #faf8fd;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+    }
+    .q-fact-label { font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+    .q-fact-value { font-size: 0.96rem; font-weight: 850; color: var(--ink); margin-top: 2px; }
+    .content-block {
+      border-top: 1px solid var(--line);
+      padding: 26px 0;
+    }
+    .content-block h2 {
+      font-size: 1.25rem;
+      font-weight: 850;
+      letter-spacing: -0.02em;
+      margin: 0 0 10px;
+      color: var(--ink);
+    }
+    .content-block p {
+      margin: 0;
+      color: #4b3f5c;
+      line-height: 1.7;
+    }
+    .btn-maps {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      padding: 8px 14px;
+      background: #faf7fd;
+      border: 1px solid #dfd4ec;
+      border-radius: var(--radius-sm);
+      color: var(--purple);
+      font-weight: 800;
+      font-size: 0.88rem;
+    }
+    .btn-maps:hover { background: var(--purple-light); }
+
+    /* Sticky Sidebar */
+    .sidebar-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 96px;
+    }
+    .price-box {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 18px;
+      margin-bottom: 20px;
+    }
+    .price-amount {
+      font-size: 2.2rem;
+      font-weight: 950;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .price-unit { font-size: 0.88rem; color: var(--muted); font-weight: 650; }
+    .stock-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+      background: var(--green-light);
+      color: var(--green);
+      font-size: 0.82rem;
+      font-weight: 850;
+      margin-bottom: 18px;
+    }
+    .stock-pill.soldout {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+    .btn-book-primary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      min-height: 52px;
+      background: var(--purple);
+      color: #ffffff;
+      border-radius: var(--radius-md);
+      font-size: 1.05rem;
+      font-weight: 850;
+      box-shadow: 0 8px 24px rgba(103, 58, 183, 0.35);
+      transition: transform 0.18s, background 0.18s;
+      margin-bottom: 12px;
+    }
+    .btn-book-primary:hover {
+      background: var(--purple-dark);
+      transform: translateY(-2px);
+    }
+    .btn-inquiry-secondary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      min-height: 44px;
+      background: #ffffff;
+      border: 1px solid #dfd4ec;
+      border-radius: var(--radius-md);
+      color: var(--purple);
+      font-size: 0.92rem;
+      font-weight: 800;
+      transition: background 0.18s;
+    }
+    .btn-inquiry-secondary:hover { background: var(--purple-light); }
+    .trust-bullets {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      display: grid;
+      gap: 10px;
+    }
+    .trust-bullet {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.84rem;
+      color: #554a66;
+      font-weight: 700;
+    }
+    .trust-bullet span { color: var(--purple); font-weight: 900; }
+    
+    /* Inquire Card Box */
+    .inquire-box {
+      margin-top: 24px;
+      background: linear-gradient(135deg, #fdf8f4 0%, #f6f0fb 100%);
+      border: 1px solid #ebdfee;
+      border-radius: var(--radius-md);
+      padding: 20px;
+    }
+    .inquire-box h3 { font-size: 1.05rem; font-weight: 850; margin: 0 0 6px; color: var(--ink); }
+    .inquire-box p { font-size: 0.86rem; color: var(--muted); margin: 0 0 14px; }
+
+    @media (max-width: 820px) {
+      .detail-layout { grid-template-columns: 1fr; }
+      .hero-media { height: 260px; }
+      .content-body { padding: 22px 20px; }
+      .sidebar-card { position: static; order: -1; }
+      .quick-facts-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .container { padding: 14px 12px 60px; }
+      .content-body { padding: 18px 16px; }
+      .hero-media { height: 210px; }
+      .hero-media-badge, .hero-media-secondary { font-size: 0.72rem; padding: 4px 10px; top: 12px; }
+      .hero-media-badge { left: 12px; }
+      .hero-media-secondary { right: 12px; }
+    }
+  
+    .mobile-event-sticky-dock {
+      display: none;
+    }
+    @media (max-width: 820px) {
+      .detail-layout { grid-template-columns: 1fr; }
+      .sidebar-card { position: static; order: -1; }
+      .insta-bottom-nav { display: none !important; }
+      body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important; }
+      .mobile-event-sticky-dock {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 9998;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border-top: 1px solid rgba(103, 58, 183, 0.16);
+        box-shadow: 0 -8px 30px rgba(18, 9, 32, 0.12);
+        padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .m-dock-price-info {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.15;
+      }
+      .m-dock-tag {
+        font-size: 0.65rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+      }
+      .m-dock-rate {
+        font-size: 1.35rem;
+        font-weight: 900;
+        color: var(--purple-deep);
+        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      }
+      .m-dock-rate small {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--muted);
+      }
+      .m-dock-cta-btn {
+        background: linear-gradient(135deg, #7c3aed 0%, #581c87 100%);
+        color: #ffffff !important;
+        font-size: 0.95rem;
+        font-weight: 850;
+        padding: 11px 22px;
+        border-radius: 999px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 4px 18px rgba(124, 58, 237, 0.4);
+        flex-shrink: 0;
+      }
+      .m-dock-cta-btn.soldout {
+        background: #94a3b8;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+    }
+
+  </style>
+{% endblock %}
+
+{% block content %}
+  <main class="container">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="{% url 'home' %}">Home</a>
+      <span>/</span>
+      <a href="{% url 'events' %}">Events</a>
+      <span>/</span>
+      <span>{{ event.category }}</span>
+      <span>/</span>
+      <span style="color:var(--ink)">{{ event.name }}</span>
+    </nav>
+
+    <div class="detail-layout">
+      <!-- MAIN DETAILS CARD -->
+      <article class="main-card">
+        <div class="hero-media">
+          <span class="hero-media-badge">{{ event.category }}</span>
+          <span class="hero-media-secondary">⚡ {{ event.tickets_available }} Tickets Left</span>
+          {% if event.cover_image_url %}
+          <img src="{{ event.cover_image_url }}" alt="{{ event.name }}">
+          {% else %}
+          <img src="https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1200&q=85" alt="{{ event.name }}">
+          {% endif %}
+        </div>
+
+        <div class="content-body">
+          <div class="title-row">
+            <h1>{{ event.name }}</h1>
+            <div class="organizer-tag">
+              Organised by {{ event.organizer_name|default:"Official Event Organiser" }}
+            </div>
+          </div>
+
+          <div class="quick-facts-grid">
+            <div>
+              <span class="q-fact-label">Date &amp; Schedule</span>
+              <div class="q-fact-value">
+                📅 {{ event.starts_at|date:"l, M j, Y" }}<br>
+                ⏱️ {{ event.starts_at|date:"g:i A" }}{% if event.ends_at %} to {{ event.ends_at|date:"g:i A" }}{% endif %}
+              </div>
+            </div>
+
+            <div>
+              <span class="q-fact-label">Venue Location</span>
+              <div class="q-fact-value">
+                📍 {{ event.venue }}<br>
+                {{ event.city|default:"Ahmedabad" }}
+              </div>
+            </div>
+
+            <div>
+              <span class="q-fact-label">Age &amp; Entry Terms</span>
+              <div class="q-fact-value">👥 {{ event.age_limit }}</div>
+            </div>
+
+            <div>
+              <span class="q-fact-label">Available Tickets</span>
+              <div class="q-fact-value">🎟️ {{ event.tickets_available }} passes remaining</div>
+            </div>
+          </div>
+
+          <section class="content-block">
+            <h2>About This Celebration</h2>
+            <p>{{ event.description|default:"Join Ahmedabad's festive night with music, traditional dance, and live celebrations." }}</p>
+          </section>
+
+          {% if event.what_is_included %}
+          <section class="content-block">
+            <h2>What's Included in Your Pass</h2>
+            <p>{{ event.what_is_included }}</p>
+          </section>
+          {% endif %}
+
+          {% if event.entry_rules %}
+          <section class="content-block">
+            <h2>Entry Guidelines &amp; Attire</h2>
+            <p>{{ event.entry_rules }}</p>
+          </section>
+          {% endif %}
+
+          {% if event.address %}
+          <section class="content-block">
+            <h2>Full Venue Address &amp; Directions</h2>
+            <p>{{ event.address }}{% if event.city %}, {{ event.city }}{% endif %}</p>
+            <a class="btn-maps" target="_blank" rel="noopener" href="https://maps.google.com/?q={{ event.address|urlencode }}+Ahmedabad">
+              📍 Open in Google Maps →
+            </a>
+          </section>
+          {% endif %}
+
+          <!-- QUICK INQUIRY / BULK PASS SECTION -->
+          <div class="inquire-box">
+            <h3>Need Bulk Passes or Have Questions?</h3>
+            <p>Planning to attend as a corporate team, college group, or family gathering? Contact our support team for bulk booking assistance.</p>
+            <a href="{% url 'contact' %}?topic=booking&subject=Bulk+Pass+Inquiry+for+{{ event.name|urlencode }}" class="btn-inquiry-secondary">
+              ✉️ Send Bulk Pass / Event Inquiry →
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- STICKY BOOKING SIDEBAR -->
+      <aside class="sidebar-card">
+        <div class="price-box">
+          <div>
+            <span style="font-size:0.8rem; color:var(--muted); font-weight:800; text-transform:uppercase; letter-spacing:0.08em; display:block;">Ticket Price</span>
+            <span class="price-amount">₹{{ event.ticket_price }}</span>
+          </div>
+          <span class="price-unit">per pass</span>
+        </div>
+
+        {% if event.tickets_available > 0 %}
+        <div class="stock-pill">
+          ⚡ Live Inventory: {{ event.tickets_available }} passes left
+        </div>
+        <a class="btn-book-primary" href="{% url 'book_event' event.pk %}">
+          Book Passes Now →
+        </a>
+        {% else %}
+        <div class="stock-pill soldout">
+          ✕ Passes Sold Out for this event
+        </div>
+        <button class="btn-book-primary" disabled style="opacity:0.6; cursor:not-allowed; background:#888;">
+          Sold Out
+        </button>
+        {% endif %}
+
+        <a class="btn-inquiry-secondary" href="{% url 'contact' %}?topic=booking&subject=Question+regarding+{{ event.name|urlencode }}">
+          ❓ Ask a Question
+        </a>
+
+        <div class="trust-bullets">
+          <div class="trust-bullet"><span>✓</span> 100% Guaranteed Pass with Barcode</div>
+          <div class="trust-bullet"><span>✓</span> Razorpay UPI / Cards or Cash on Entry</div>
+          <div class="trust-bullet"><span>✓</span> Instant Official PDF Receipt</div>
+          <div class="trust-bullet"><span>✓</span> 24/7 Local Ahmedabad Support</div>
+        </div>
+      </aside>
+    </div>
+  
+    <!-- MOBILE STICKY ACTION DOCK -->
+    <div class="mobile-event-sticky-dock" aria-label="Mobile booking dock">
+      <div class="m-dock-price-info">
+        <span class="m-dock-tag">Official Pass</span>
+        <span class="m-dock-rate">₹{{ event.ticket_price }} <small>/ pass</small></span>
+      </div>
+      {% if event.tickets_available > 0 %}
+        <a href="{% url 'book_event' event.pk %}" class="m-dock-cta-btn">
+          <span>Book Passes</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      {% else %}
+        <button class="m-dock-cta-btn soldout" disabled>Passes Sold Out</button>
+      {% endif %}
+    </div>
+
+  </main>
+{% endblock %}

@@ -1,0 +1,160 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Bookings{% endblock %}
+{%block crumb %}Bookings{% endblock %}
+
+{% block content %}
+<div class="heading">
+  <div>
+    <div class="eyebrow">Reservations</div>
+    <h1>Bookings</h1>
+    <p>Find a guest and open their booking to review or update its status.</p>
+  </div>
+</div>
+<section class="panel">
+  <form class="filters" method="get">
+    <input
+      type="search"
+      name="q"
+      value="{{ query }}"
+      placeholder="Search customer, email, phone, event, room, venue or reference"
+    /><select name="status">
+      <option value="">All statuses</option>
+      {% for value,label in statuses %}
+      <option
+        value="{{ value }}"
+        {%
+        if
+        filters.status=""
+        ="value"
+        %}selected{%
+        endif
+        %}
+      >
+        {{ label }}
+      </option>
+      {% endfor %}</select
+    ><select name="kind">
+      <option value="">Events, rooms &amp; venues</option>
+      {% for value,label in kinds %}
+      <option
+        value="{{ value }}"
+        {%
+        if
+        filters.kind=""
+        ="value"
+        %}selected{%
+        endif
+        %}
+      >
+        {{ label }}
+      </option>
+      {% endfor %}</select
+    ><select name="payment">
+      <option value="">All payment methods</option>
+      {% for value,label in payments %}
+      <option
+        value="{{ value }}"
+        {%
+        if
+        filters.payment=""
+        ="value"
+        %}selected{%
+        endif
+        %}
+      >
+        {{ label }}
+      </option>
+      {% endfor %}</select
+    ><select name="payment_status">
+      <option value="">All payment statuses</option>
+      {% for value,label in payment_statuses %}
+      <option
+        value="{{ value }}"
+        {%
+        if
+        filters.payment_status=""
+        ="value"
+        %}selected{%
+        endif
+        %}
+      >
+        {{ label }}
+      </option>
+      {% endfor %}</select
+    ><button type="submit">Apply filters</button>{% if query or filters.status
+    or filters.kind or filters.payment or filters.payment_status %}<a
+      class="button secondary"
+      href="{% url 'dashboard_booking_list' %}"
+      >Reset</a
+    >{% endif %}
+  </form>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>Guest</th>
+          <th>Event, stay or venue</th>
+          <th>Visit / time slot</th>
+          <th>Payment</th>
+          <th>Status</th>
+          <th>Total</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for booking in rows %}
+        <tr>
+          <td>
+            <span class="cell-main">{{ booking.customer_name }}</span
+            ><span class="cell-sub"
+              >{{ booking.email }} · {{ booking.contact_phone }}</span
+            >
+          </td>
+          <td>
+            {% if booking.event %}{{ booking.event.name }}{% elif booking.room
+            %}{{ booking.room.name }}{% elif booking.venue_space %}{{
+            booking.venue_space.name }}{% else %}Listing unavailable{% endif
+            %}<span class="cell-sub"
+              >{{ booking.get_kind_display }} · {{ booking.quantity }} guests /
+              tickets</span
+            >
+          </td>
+          <td>
+            {% if booking.event %}{{ booking.event.starts_at|date:"M j, Y g:i A"
+            }}{% elif booking.venue_start_at %}{{ booking.venue_start_at|date:"M
+            j, Y g:i A" }} – {{ booking.venue_end_at|date:"g:i A" }}{% elif
+            booking.check_in %}{{ booking.check_in|date:"M j, Y" }} – {{
+            booking.check_out|date:"M j, Y" }}{% else %}—{% endif %}
+          </td>
+          <td>
+            {% if booking.payment_method == 'cash' %}Cash at venue{% else
+            %}Razorpay{% endif %}<span class="cell-sub"
+              >{{ booking.get_payment_status_display }}</span
+            >
+          </td>
+          <td>
+            <span class="badge {{ booking.status }}"
+              >{{ booking.get_status_display }}</span
+            >
+          </td>
+          <td>₹{{ booking.total_amount|floatformat:2 }}</td>
+          <td>
+            <a
+              class="rowlink"
+              href="{% url 'dashboard_booking_detail' booking.pk %}"
+              >Open →</a
+            >
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td class="empty" colspan="7">No bookings match these filters.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "dashboard/pagination.html" with page=rows %}
+</section>
+{% endblock %}

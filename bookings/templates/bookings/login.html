@@ -1,0 +1,849 @@
+{% extends "bookings/base.html" %}
+{% load static %}
+
+{% block title %}Log in | Amazing Ahmedabad Celebration Portal{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ══════════════════════════════════════════════════════════════
+   HIGH-END LUXURY LOGIN EXPERIENCE — AMAZING AHMEDABAD
+══════════════════════════════════════════════════════════════ */
+:root {
+  --auth-ink:            #120924;
+  --auth-ink-soft:       #2e1b4d;
+  --auth-muted:          #64748b;
+  --auth-purple:         #7c3aed;
+  --auth-purple-dark:    #5b21b6;
+  --auth-purple-light:   #ede9fe;
+  --auth-purple-glow:    rgba(124, 58, 237, 0.35);
+  
+  --auth-gold:           #f59e0b;
+  --auth-gold-light:     #fef3c7;
+  --auth-gold-glow:      rgba(245, 158, 11, 0.35);
+  
+  --auth-glass:          rgba(255, 255, 255, 0.88);
+  --auth-glass-hover:    rgba(255, 255, 255, 0.96);
+  --auth-glass-border:   rgba(255, 255, 255, 0.92);
+  --auth-glass-specular: inset 0 1.5px 2px rgba(255, 255, 255, 0.98);
+  --auth-glass-blur:     blur(26px) saturate(190%);
+  
+  --auth-radius-md:      18px;
+  --auth-radius-lg:      24px;
+  --auth-radius-xl:      32px;
+  --auth-radius-pill:    9999px;
+  --auth-transition:     0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  background-color: #f7f5fb !important;
+  background-image:
+    radial-gradient(circle at 10% 12%, rgba(124, 58, 237, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 90% 22%, rgba(245, 158, 11, 0.09) 0%, transparent 50%),
+    radial-gradient(circle at 50% 85%, rgba(16, 185, 129, 0.06) 0%, transparent 48%) !important;
+  background-attachment: fixed !important;
+  color: var(--auth-ink);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-x: clip !important;
+  min-height: 100vh;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FLOATING AMBIENT GLOW BLOBS
+══════════════════════════════════════════════════════════════ */
+.auth-ambient-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.auth-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.45;
+  will-change: transform;
+}
+
+.auth-blob-1 {
+  width: 520px; height: 520px;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.45) 0%, rgba(167, 139, 250, 0.12) 70%, transparent 100%);
+  top: -60px; left: -60px;
+  animation: authFloat1 24s ease-in-out infinite alternate;
+}
+
+.auth-blob-2 {
+  width: 560px; height: 560px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.38) 0%, rgba(251, 191, 36, 0.12) 70%, transparent 100%);
+  bottom: -80px; right: -80px;
+  animation: authFloat2 28s ease-in-out infinite alternate;
+}
+
+@keyframes authFloat1 {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(60px, 50px) scale(1.1); }
+}
+
+@keyframes authFloat2 {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-60px, -50px) scale(1.12); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MAIN PAGE WRAPPER & SPLIT-SCREEN MASTER CARD
+══════════════════════════════════════════════════════════════ */
+.auth-page-wrap {
+  min-height: calc(100vh - 84px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 44px 24px 74px;
+  position: relative;
+  z-index: 2;
+}
+
+.auth-master-card {
+  width: 100%;
+  max-width: 1060px;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  border-radius: var(--auth-radius-xl);
+  overflow: hidden;
+  border: 1.5px solid var(--auth-glass-border);
+  box-shadow: 0 28px 70px rgba(22, 9, 44, 0.12), var(--auth-glass-specular);
+  background: #ffffff;
+  position: relative;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LEFT COLUMN: AMBIENT SHOWCASE PANEL
+══════════════════════════════════════════════════════════════ */
+.auth-showcase-panel {
+  position: relative;
+  background-color: #170724;
+  background-image:
+    linear-gradient(180deg, rgba(20, 8, 40, 0.84) 0%, rgba(35, 12, 64, 0.88) 100%),
+    url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=85');
+  background-size: cover;
+  background-position: center;
+  color: #ffffff;
+  padding: 48px 42px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-showcase-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 75% 60% at 85% 15%, rgba(245, 158, 11, 0.28) 0, transparent 65%),
+    radial-gradient(ellipse 60% 65% at 12% 85%, rgba(124, 58, 237, 0.32) 0, transparent 60%);
+  pointer-events: none;
+}
+
+.auth-showcase-content {
+  position: relative;
+  z-index: 2;
+}
+
+.auth-showcase-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: var(--auth-radius-pill);
+  padding: 6px 16px;
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+}
+
+.auth-showcase-title {
+  font-size: clamp(2rem, 3.2vw, 2.5rem);
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  line-height: 1.18;
+  margin: 0 0 16px;
+  color: #ffffff;
+}
+
+.auth-showcase-title span {
+  display: inline-block;
+  background: linear-gradient(135deg, #ffffff 0%, #fef08a 40%, #f59e0b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 14px rgba(245, 158, 11, 0.60));
+}
+
+.auth-showcase-desc {
+  font-size: 0.98rem;
+  line-height: 1.65;
+  color: #e2e8f0;
+  margin: 0 0 32px;
+}
+
+/* Trust Feature Badges */
+.auth-trust-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth-trust-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background: rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--auth-radius-md);
+  padding: 14px 18px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  transition: transform var(--auth-transition), background var(--auth-transition);
+}
+
+.auth-trust-item:hover {
+  transform: translateX(4px);
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.auth-trust-text strong {
+  display: block;
+  font-size: 0.94rem;
+  font-weight: 850;
+  color: #ffffff;
+  margin-bottom: 2px;
+}
+
+.auth-trust-text span {
+  display: block;
+  font-size: 0.82rem;
+  color: #cbd5e1;
+  line-height: 1.4;
+}
+
+/* Bottom Showcase Concierge Seal */
+.auth-showcase-footer {
+  position: relative;
+  z-index: 2;
+  margin-top: 36px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Continuous Rotating Dual Blue & Red Neon Ring */
+.auth-dev-avatar-wrap {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 12px rgba(0, 210, 255, 0.70)) drop-shadow(0 0 16px rgba(239, 68, 68, 0.70));
+}
+
+.auth-dev-avatar-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    #00d2ff 0deg,
+    #2563eb 85deg,
+    transparent 110deg,
+    #ff0055 180deg,
+    #ef4444 265deg,
+    transparent 290deg,
+    #00d2ff 360deg
+  );
+  animation: aaLiveSpinRing 2.4s linear infinite;
+  z-index: 1;
+}
+
+@keyframes aaLiveSpinRing {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.auth-dev-img {
+  position: relative;
+  z-index: 2;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #1a102a;
+  background: #17101f;
+  display: block;
+}
+
+.auth-dev-info strong {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 850;
+  color: #ffffff;
+}
+
+.auth-dev-info span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: #a7f3d0;
+  font-weight: 650;
+}
+
+.auth-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: authPulseDot 1.8s infinite;
+}
+
+@keyframes authPulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.35); opacity: 0.6; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RIGHT COLUMN: LIQUID GLASS AUTH FORM
+══════════════════════════════════════════════════════════════ */
+.auth-form-panel {
+  background: var(--auth-glass);
+  backdrop-filter: var(--auth-glass-blur);
+  -webkit-backdrop-filter: var(--auth-glass-blur);
+  padding: 48px 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.auth-form-header {
+  margin-bottom: 28px;
+}
+
+.auth-header-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--auth-purple-light);
+  color: var(--auth-purple-dark);
+  border: 1px solid rgba(124, 58, 237, 0.22);
+  border-radius: var(--auth-radius-pill);
+  padding: 5px 16px;
+  font-size: 0.74rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.auth-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  color: var(--auth-ink);
+  margin: 0 0 8px;
+  line-height: 1.15;
+}
+
+.auth-subtitle {
+  color: var(--auth-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Alerts */
+.auth-next-alert {
+  background: #f5f3ff;
+  border: 1.5px solid #ddd6fe;
+  color: #5b21b6;
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin-bottom: 22px;
+}
+
+.auth-error-alert {
+  background: #fff1f2;
+  border: 1.5px solid #fecdd3;
+  color: #be123c;
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin-bottom: 22px;
+  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.08);
+}
+
+/* Form Fields */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auth-field-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-field-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.auth-label {
+  font-size: 0.84rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--auth-ink-soft);
+}
+
+.auth-forgot-link {
+  font-size: 0.82rem;
+  font-weight: 750;
+  color: var(--auth-purple);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.auth-forgot-link:hover {
+  color: var(--auth-purple-dark);
+  text-decoration: underline;
+}
+
+.auth-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.auth-form input[type="text"],
+.auth-form input[type="password"],
+.auth-form input[type="email"] {
+  width: 100%;
+  height: 50px;
+  padding: 0 16px;
+  border: 1.5px solid #e2d9f3;
+  border-radius: 14px;
+  font-size: 16px; /* Prevents auto-zoom on iOS */
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--auth-ink);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 6px rgba(24, 9, 56, 0.03), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  transition: all var(--auth-transition);
+  -webkit-appearance: none;
+}
+
+.auth-form input:focus {
+  outline: none;
+  border-color: var(--auth-purple);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.16), 0 8px 20px rgba(124, 58, 237, 0.08);
+  transform: translateY(-1px);
+}
+
+.errorlist {
+  color: #be123c;
+  font-size: 0.82rem;
+  margin: 6px 0 0;
+  padding-left: 18px;
+  font-weight: 700;
+}
+
+/* Submit Button */
+.auth-btn-submit {
+  width: 100%;
+  height: 52px;
+  margin-top: 6px;
+  padding: 0 24px;
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+  color: #ffffff;
+  font-size: 1.02rem;
+  font-weight: 850;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.38), var(--auth-glass-specular);
+  transition: all var(--auth-transition);
+  font-family: inherit;
+  touch-action: manipulation;
+}
+
+.auth-btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(124, 58, 237, 0.48);
+  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+}
+
+.auth-btn-submit:active {
+  transform: translateY(1px);
+}
+
+.auth-btn-arrow {
+  font-size: 1.2rem;
+  line-height: 1;
+  transition: transform 0.15s ease;
+}
+.auth-btn-submit:hover .auth-btn-arrow {
+  transform: translateX(4px);
+}
+
+/* Switch & Navigation Links */
+.auth-switch {
+  text-align: center;
+  margin: 22px 0 0;
+  font-size: 0.92rem;
+  color: var(--auth-muted);
+}
+
+.auth-switch a {
+  color: var(--auth-purple);
+  font-weight: 850;
+  text-decoration: none;
+}
+.auth-switch a:hover {
+  text-decoration: underline;
+  color: var(--auth-purple-dark);
+}
+
+.auth-back-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 22px;
+  font-size: 0.88rem;
+  font-weight: 750;
+  color: var(--auth-muted);
+  text-decoration: none;
+  transition: color 0.15s ease;
+  text-align: center;
+  touch-action: manipulation;
+}
+
+.auth-back-link:hover {
+  color: var(--auth-purple);
+}
+
+/* Security Guarantee Strip */
+.auth-secure-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px dashed #e2d9f3;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-weight: 650;
+  flex-wrap: wrap;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE & TABLET RESPONSIVE TUNING
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 920px) {
+  .insta-bottom-nav {
+    display: none !important;
+  }
+  body {
+    padding-bottom: 0 !important;
+  }
+  .auth-page-wrap {
+    padding: 16px 14px 40px;
+    min-height: auto;
+  }
+  .auth-master-card {
+    grid-template-columns: 1fr;
+    max-width: 520px;
+    border-radius: 24px;
+  }
+  .auth-showcase-panel {
+    padding: 26px 22px 22px;
+    text-align: center;
+    border-bottom: 1.5px solid var(--auth-glass-border);
+  }
+  .auth-showcase-badge {
+    margin-bottom: 12px;
+    font-size: 0.72rem;
+    padding: 4px 12px;
+  }
+  .auth-showcase-title {
+    font-size: 1.55rem;
+    margin-bottom: 8px;
+    line-height: 1.25;
+  }
+  .auth-showcase-desc {
+    font-size: 0.86rem;
+    margin-bottom: 0;
+    line-height: 1.45;
+  }
+  .auth-trust-list,
+  .auth-showcase-footer {
+    display: none;
+  }
+  .auth-form-panel {
+    padding: 30px 22px 34px;
+  }
+  .auth-title {
+    font-size: 1.75rem;
+  }
+  .auth-subtitle {
+    font-size: 0.88rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-page-wrap {
+    padding: 12px 10px 36px;
+  }
+  .auth-master-card {
+    border-radius: 20px;
+  }
+  .auth-showcase-panel {
+    padding: 22px 18px 18px;
+  }
+  .auth-form-panel {
+    padding: 24px 16px 28px;
+  }
+  .auth-title {
+    font-size: 1.6rem;
+  }
+  .auth-secure-strip {
+    font-size: 0.74rem;
+    gap: 8px 10px;
+  }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ── Floating Ambient Refractive Blobs ──────────────────────── -->
+<div class="auth-ambient-canvas" aria-hidden="true">
+  <div class="auth-blob auth-blob-1"></div>
+  <div class="auth-blob auth-blob-2"></div>
+</div>
+
+<div class="auth-page-wrap">
+  <main class="auth-master-card">
+
+    <!-- ══════════════════════════════════════════════════════════
+         LEFT PANEL: AMDAWAD CELEBRATION SHOWCASE
+    ══════════════════════════════════════════════════════════ -->
+    <section class="auth-showcase-panel" aria-label="About Amazing Ahmedabad portal">
+      <div class="auth-showcase-content">
+        <div class="auth-showcase-badge">
+          Amazing Ahmedabad · Celebration Portal
+        </div>
+
+        <h2 class="auth-showcase-title">
+          Your Gateway to<br>
+          <span>Grand Celebrations</span>
+        </h2>
+
+        <p class="auth-showcase-desc">
+          Sign in to access your instant QR event passes, verified banquet hall bookings, and authentic Amdavad food hub orders.
+        </p>
+
+        <!-- Trust Features -->
+        <div class="auth-trust-list">
+          <div class="auth-trust-item">
+            <div class="auth-trust-text">
+              <strong>Instant Digital QR Passes</strong>
+              <span>Collision-protected booking lock &amp; downloadable invoices</span>
+            </div>
+          </div>
+
+          <div class="auth-trust-item">
+            <div class="auth-trust-text">
+              <strong>100% Physically Verified Venues</strong>
+              <span>Direct organizer rates across SBR, Bodakdev &amp; SG Highway</span>
+            </div>
+          </div>
+
+          <div class="auth-trust-item">
+            <div class="auth-trust-text">
+              <strong>24/7 Dedicated Concierge Support</strong>
+              <span>Direct on-ground venue coordination and WhatsApp assistance</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Developer / Concierge Seal -->
+      <div class="auth-showcase-footer">
+        <div class="auth-dev-avatar-wrap">
+          <img
+            src="{% static 'bookings/developer-badge.jpg' %}?v=20261031v2"
+            alt="Founder &amp; Developer Rutvik"
+            class="auth-dev-img"
+          />
+        </div>
+        <div class="auth-dev-info">
+          <strong>Founder &amp; Developer Concierge Desk</strong>
+          <span><span class="auth-live-dot"></span> Online in Ahmedabad, Gujarat</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         RIGHT PANEL: LIQUID GLASS AUTH FORM
+    ══════════════════════════════════════════════════════════ -->
+    <section class="auth-form-panel" aria-label="Sign in form">
+      
+      <div class="auth-form-header">
+        <div class="auth-header-pill">
+          <span>Secure Sign-In</span>
+        </div>
+        <h1 class="auth-title">Welcome back</h1>
+        <p class="auth-subtitle">
+          Enter your credentials to continue your Amdavad celebration journey.
+        </p>
+      </div>
+
+      {# Redirect alert if user came from a booking or payment page #}
+      {% if next %}
+        <div class="auth-next-alert" role="status">
+          <span>Please log in to complete your booking or pass reservation.</span>
+        </div>
+      {% endif %}
+
+      {# Non-field errors banner #}
+      {% if form.non_field_errors %}
+        <div class="auth-error-alert" role="alert">
+          <span>{{ form.non_field_errors|striptags }}</span>
+        </div>
+      {% endif %}
+
+      <form class="auth-form" method="post" id="login-auth-form" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
+
+        <!-- Username Field -->
+        <div class="auth-field-group">
+          <div class="auth-field-header">
+            <label class="auth-label" for="{{ form.username.id_for_label }}">
+              <span>{{ form.username.label }}</span>
+            </label>
+          </div>
+          <div class="auth-input-wrapper">
+            {{ form.username }}
+          </div>
+          {% if form.username.errors %}
+            <div class="errorlist">{{ form.username.errors }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Password Field -->
+        <div class="auth-field-group">
+          <div class="auth-field-header">
+            <label class="auth-label" for="{{ form.password.id_for_label }}">
+              <span>{{ form.password.label }}</span>
+            </label>
+            <a href="{% url 'forgot_password' %}" class="auth-forgot-link">Forgot password?</a>
+          </div>
+          <div class="auth-input-wrapper">
+            {{ form.password }}
+          </div>
+          {% if form.password.errors %}
+            <div class="errorlist">{{ form.password.errors }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Submit Button -->
+        <button class="auth-btn-submit" type="submit" id="btn-login-submit">
+          <span>Log in securely</span>
+          <span class="auth-btn-arrow" aria-hidden="true">&rarr;</span>
+        </button>
+      </form>
+
+      <!-- Account Switch -->
+      <p class="auth-switch">
+        New to Amazing Ahmedabad? 
+        <a href="{% url 'register' %}{% if next %}?next={{ next|urlencode }}{% endif %}">Create an account &rarr;</a>
+      </p>
+
+      <a class="auth-back-link" href="{% url 'home' %}">
+        &larr; Return to Celebration Home
+      </a>
+
+      <!-- Security Guarantee Strip -->
+      <div class="auth-secure-strip">
+        <span>256-Bit SSL Encrypted</span>
+        <span>•</span>
+        <span>Instant QR Delivery</span>
+        <span>•</span>
+        <span>Zero Brokerage</span>
+      </div>
+
+    </section>
+
+  </main>
+</div>
+{% endblock %}
+
+{% block site_footer %}{% endblock %}
+
+{% block extra_js %}
+  {# Built-in password reveal toggle #}
+  {% include "bookings/_password_toggle.html" %}
+
+  <script>
+    (function() {
+      // Auto-focus username field if empty
+      var userField = document.querySelector('input[name="username"]');
+      if (userField && !userField.value && window.innerWidth > 768) {
+        userField.focus(); // only auto-focus on desktop to avoid aggressive mobile keyboard popup
+      }
+
+      // Add loading state on submit
+      var form = document.getElementById('login-auth-form');
+      var btn = document.getElementById('btn-login-submit');
+      if (form && btn) {
+        form.addEventListener('submit', function() {
+          btn.style.opacity = '0.85';
+          btn.innerHTML = '<span>Verifying credentials...</span>';
+        });
+      }
+    })();
+  </script>
+{% endblock %}

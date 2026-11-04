@@ -1,0 +1,976 @@
+{% extends "bookings/base.html" %}
+
+{% block title %}
+  {% if booking.status == "confirmed" %}Booking Confirmed!
+  {% elif booking.status == "cancelled" %}Booking Cancelled
+  {% else %}Booking Pending{% endif %} | Amazing Ahmedabad
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ── Reset & tokens ─────────────────────────────────────── */
+:root {
+  --ink: #1a1228;
+  --muted: #6f6880;
+  --line: #e8e3f0;
+  --surface: #f8f6fb;
+  --paper: #f3f1f7;
+  --purple: #6534ad;
+  --purple-d: #4a228a;
+  --purple-light: #f3eeff;
+  --green: #15803d;
+  --green-bg: #dcfce7;
+  --green-d: #14532d;
+  --amber: #92400e;
+  --amber-bg: #fef3c7;
+  --red: #991b1b;
+  --red-bg: #fee2e2;
+  --shadow-sm: 0 1px 3px #1a122810, 0 1px 2px #1a122808;
+  --shadow: 0 4px 24px #1a122814, 0 1px 3px #1a122810;
+  --shadow-lg: 0 20px 60px #1a122818, 0 4px 16px #1a122812;
+  --r: 20px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font: 15px / 1.6 "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  min-height: 100vh;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; }
+img { display: block; max-width: 100%; }
+
+/* ── Layout ─────────────────────────────────────────────── */
+.page { max-width: 1140px; margin: 0 auto; padding: 32px 20px 80px; }
+.crumb {
+  display: flex; align-items: center; gap: 8px;
+  color: var(--muted); font-size: .82rem; margin-bottom: 28px;
+}
+.crumb a { color: var(--purple); font-weight: 700; }
+.crumb a:hover { text-decoration: underline; }
+.crumb-sep { opacity: .4; }
+
+/* ── Hero status banner ─────────────────────────────────── */
+.hero-banner {
+  border-radius: 24px;
+  padding: 44px 40px 40px;
+  margin-bottom: 28px;
+  display: flex; align-items: center; gap: 36px;
+  position: relative; overflow: hidden;
+}
+.hero-banner--confirmed { background: linear-gradient(135deg, #0d4f2e 0%, #15803d 50%, #16a34a 100%); color: #fff; }
+.hero-banner--pending   { background: linear-gradient(135deg, #78350f 0%, #b45309 50%, #d97706 100%); color: #fff; }
+.hero-banner--cancelled { background: linear-gradient(135deg, #7f1d1d 0%, #b91c1c 50%, #dc2626 100%); color: #fff; }
+.hero-banner::after {
+  content: ""; position: absolute; right: -60px; top: -60px;
+  width: 300px; height: 300px; border-radius: 50%;
+  background: rgba(255,255,255,.06);
+}
+.hero-banner::before {
+  content: ""; position: absolute; right: 80px; bottom: -80px;
+  width: 200px; height: 200px; border-radius: 50%;
+  background: rgba(255,255,255,.04);
+}
+
+/* ── Animated status icon ───────────────────────────────── */
+.status-icon-wrap {
+  flex: none;
+  position: relative; z-index: 1;
+}
+
+/* Checkmark circle */
+.check-circle {
+  width: 88px; height: 88px;
+  background: rgba(255,255,255,.15);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  animation: pulse-green 2.4s ease infinite;
+}
+@keyframes pulse-green {
+  0%,100% { box-shadow: 0 0 0 0 rgba(255,255,255,.3); }
+  50% { box-shadow: 0 0 0 18px rgba(255,255,255,0); }
+}
+.check-svg { width: 48px; height: 48px; }
+.check-circle-path {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: draw-circle 0.7s ease forwards 0.1s;
+}
+.check-tick {
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  animation: draw-tick 0.45s ease forwards 0.75s;
+}
+@keyframes draw-circle { to { stroke-dashoffset: 0; } }
+@keyframes draw-tick { to { stroke-dashoffset: 0; } }
+
+/* Clock icon */
+.clock-icon {
+  width: 88px; height: 88px;
+  background: rgba(255,255,255,.15);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 46px; line-height: 1;
+  animation: tick-rock 1.8s ease-in-out infinite;
+}
+@keyframes tick-rock {
+  0%,100% { transform: rotate(-6deg); }
+  50% { transform: rotate(6deg); }
+}
+
+/* X icon */
+.x-icon {
+  width: 88px; height: 88px;
+  background: rgba(255,255,255,.15);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 48px; line-height: 1;
+  animation: shake-x 0.5s ease 0.2s both;
+}
+@keyframes shake-x {
+  0%,100% { transform: translateX(0); }
+  20%,60% { transform: translateX(-6px); }
+  40%,80% { transform: translateX(6px); }
+}
+
+.hero-text { flex: 1; position: relative; z-index: 1; }
+.hero-eyebrow {
+  font-size: .78rem; text-transform: uppercase; letter-spacing: .14em;
+  font-weight: 800; opacity: .75; margin-bottom: 8px;
+}
+.hero-heading {
+  font-size: clamp(1.7rem, 4vw, 2.5rem);
+  font-weight: 900; letter-spacing: -.04em; line-height: 1.1;
+  margin-bottom: 10px;
+}
+.hero-sub { opacity: .85; font-size: .95rem; max-width: 520px; }
+
+/* ── Confetti (Navratri) ────────────────────────────────── */
+.confetti-strip {
+  text-align: center; font-size: 1.8rem;
+  padding: 10px 0;
+  letter-spacing: 4px;
+  animation: drift 3s ease-in-out infinite alternate;
+}
+@keyframes drift {
+  from { letter-spacing: 4px; }
+  to { letter-spacing: 14px; }
+}
+
+/* ── Two-column layout ──────────────────────────────────── */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(280px, .75fr);
+  gap: 24px;
+  align-items: start;
+}
+
+/* ── Card ───────────────────────────────────────────────── */
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+/* ── Cover image ────────────────────────────────────────── */
+.cover {
+  height: 220px; position: relative; overflow: hidden;
+  background: linear-gradient(135deg, #38205e, #8653c0 58%, #e4a45f);
+}
+.cover img { width: 100%; height: 100%; object-fit: cover; }
+.cover::after {
+  content: ""; position: absolute; inset: 40% 0 0;
+  background: linear-gradient(transparent, #160d25cc);
+}
+.cover-tag {
+  position: absolute; z-index: 1; left: 18px; bottom: 16px;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.cover-tag span {
+  padding: 6px 12px;
+  border: 1px solid rgba(255,255,255,.35);
+  background: rgba(20,10,38,.45);
+  border-radius: 99px;
+  backdrop-filter: blur(8px);
+  color: #fff; font-size: .74rem; text-transform: uppercase;
+  letter-spacing: .11em; font-weight: 800;
+}
+
+/* ── Section ────────────────────────────────────────────── */
+.section {
+  padding: 24px 26px;
+  border-bottom: 1px solid var(--line);
+}
+.section:last-child { border-bottom: 0; }
+.section-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-bottom: 18px;
+}
+.section-title { font-size: 1rem; font-weight: 800; letter-spacing: -.01em; }
+.section-badge {
+  font-size: .72rem; color: var(--muted); font-weight: 700;
+  background: var(--surface); padding: 4px 9px; border-radius: 99px;
+  border: 1px solid var(--line);
+}
+
+/* ── Reference block ────────────────────────────────────── */
+.reference-block {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 16px 18px;
+  background: linear-gradient(135deg, #f8f4ff, #f0eaff);
+  border: 1px solid #d8c9f5;
+  border-radius: 14px;
+}
+.ref-left small {
+  display: block; font-size: .72rem; color: var(--muted);
+  font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+  margin-bottom: 4px;
+}
+.ref-code {
+  font-size: 1.35rem; font-weight: 900;
+  letter-spacing: .12em; color: var(--purple);
+  font-variant-numeric: tabular-nums;
+}
+.ref-hint {
+  font-size: .73rem; color: var(--muted); margin-top: 5px;
+}
+.copy-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 14px; border-radius: 10px;
+  background: var(--purple); color: #fff;
+  border: none; font-size: .8rem; font-weight: 800;
+  white-space: nowrap; flex: none;
+  transition: background .2s, transform .1s;
+}
+.copy-btn:hover { background: var(--purple-d); }
+.copy-btn:active { transform: scale(.97); }
+.copy-btn svg { width: 14px; height: 14px; }
+
+/* ── Data grid ──────────────────────────────────────────── */
+.prop-name { margin-bottom: 6px; }
+.prop-name h2 { font-size: 1.38rem; font-weight: 800; letter-spacing: -.02em; }
+.prop-location { color: var(--muted); font-size: .87rem; margin-top: 6px; }
+.pill {
+  display: inline-flex; padding: 4px 10px; border-radius: 99px;
+  background: var(--purple-light); color: var(--purple);
+  font-size: .73rem; font-weight: 800; white-space: nowrap;
+}
+.data-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 18px 22px; margin-top: 20px;
+}
+.data-item {}
+.d-label {
+  display: block; font-size: .74rem; font-weight: 700;
+  color: var(--muted); text-transform: uppercase; letter-spacing: .08em;
+  margin-bottom: 4px;
+}
+.d-value {
+  display: block; font-weight: 750; font-size: .95rem;
+  overflow-wrap: anywhere;
+}
+.d-value a { color: var(--purple); }
+.d-value a:hover { text-decoration: underline; }
+.rules-text {
+  color: #5a5265; font-size: .84rem; margin-top: 4px;
+  white-space: pre-line; line-height: 1.5;
+}
+
+/* ── QR / entry notice ──────────────────────────────────── */
+.entry-notice {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 16px;
+  background: #fafafa; border: 1px solid var(--line); border-radius: 12px;
+  margin-top: 20px;
+}
+.entry-icon { font-size: 1.5rem; flex: none; }
+.entry-text strong { display: block; font-size: .88rem; font-weight: 800; }
+.entry-text span { font-size: .78rem; color: var(--muted); }
+
+/* ── Sidebar / summary ──────────────────────────────────── */
+.summary { padding: 24px; position: sticky; top: 90px; }
+.summary-heading { font-size: 1rem; font-weight: 800; margin-bottom: 4px; }
+.summary-sub { font-size: .81rem; color: var(--muted); margin-bottom: 18px; }
+.sum-line {
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 9px 0; border-bottom: 1px solid #f0ebf5;
+  font-size: .88rem;
+}
+.sum-line span:first-child { color: var(--muted); }
+.sum-line span:last-child { font-weight: 750; text-align: right; }
+.sum-total {
+  border: 0 !important; border-top: 1.5px dashed #d8cfe5 !important;
+  margin-top: 6px; padding-top: 14px !important;
+  font-size: 1.1rem; font-weight: 800;
+}
+
+/* ── Payment status banner ──────────────────────────────── */
+.pay-banner {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 15px; border-radius: 14px; margin-top: 16px;
+}
+.pay-icon {
+  flex: none; width: 34px; height: 34px; border-radius: 50%;
+  display: grid; place-items: center; font-size: .95rem; font-weight: 900;
+}
+.pay-content strong { display: block; font-size: .88rem; font-weight: 800; }
+.pay-content p { font-size: .78rem; margin-top: 2px; opacity: .8; }
+/* paid */
+.pay-banner--paid { background: var(--green-bg); color: var(--green-d); }
+.pay-banner--paid .pay-icon { background: #bbf7d0; }
+/* due / cash */
+.pay-banner--due { background: var(--amber-bg); color: var(--amber); }
+.pay-banner--due .pay-icon { background: #fde68a; }
+/* failed */
+.pay-banner--failed { background: var(--red-bg); color: var(--red); }
+.pay-banner--failed .pay-icon { background: #fecaca; }
+/* cancelled */
+.pay-banner--cancelled { background: #f1f5f9; color: #475569; }
+.pay-banner--cancelled .pay-icon { background: #e2e8f0; }
+
+/* ── Action buttons ─────────────────────────────────────── */
+.actions { display: grid; gap: 9px; margin-top: 18px; }
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; min-height: 46px; padding: 11px 16px;
+  border-radius: 11px; border: 1.5px solid transparent;
+  font-size: .88rem; font-weight: 800; text-align: center;
+  text-decoration: none; transition: background .2s, transform .1s;
+}
+.btn:active { transform: scale(.98); }
+.btn-primary { background: var(--purple); border-color: var(--purple); color: #fff; }
+.btn-primary:hover { background: var(--purple-d); border-color: var(--purple-d); }
+.btn-green { background: #15803d; border-color: #15803d; color: #fff; }
+.btn-green:hover { background: #166534; }
+.btn-amber { background: #b45309; border-color: #b45309; color: #fff; }
+.btn-amber:hover { background: #92400e; }
+.btn-light { background: #fff; border-color: var(--line); color: var(--ink); }
+.btn-light:hover { background: var(--surface); }
+.btn-outline { background: transparent; border-color: #d8cfe5; color: #51347a; }
+.btn-outline:hover { background: var(--purple-light); }
+.btn svg { width: 16px; height: 16px; flex: none; }
+
+.note-text {
+  text-align: center; font-size: .74rem; color: var(--muted);
+  margin-top: 12px;
+}
+.help-row {
+  margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line);
+  font-size: .79rem; color: var(--muted); text-align: center;
+}
+.help-row a { color: var(--purple); font-weight: 700; }
+.help-row a:hover { text-decoration: underline; }
+
+/* ── Toast ──────────────────────────────────────────────── */
+.toast {
+  position: fixed; left: 50%; bottom: 24px;
+  transform: translate(-50%, 14px); opacity: 0;
+  pointer-events: none;
+  background: #1a1228; color: #fff;
+  padding: 11px 18px; border-radius: 12px;
+  font-size: .83rem; font-weight: 700;
+  box-shadow: 0 8px 32px #1a122840;
+  transition: .22s cubic-bezier(.4,0,.2,1);
+  z-index: 9999; white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ── Footer ─────────────────────────────────────────────── */
+.site-footer {
+  max-width: 1140px; margin: 0 auto;
+  padding: 0 20px 36px;
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  font-size: .78rem; color: var(--muted);
+  border-top: 1px solid var(--line);
+}
+.site-footer a { color: var(--purple); font-weight: 700; }
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .insta-bottom-nav { display: none !important; }
+  body { padding-bottom: 24px !important; }
+  .layout { grid-template-columns: 1fr; }
+  .summary { position: static; grid-row: 1; }
+  .hero-banner { flex-direction: column; align-items: flex-start; gap: 20px; padding: 32px 24px 28px; }
+  .check-circle, .clock-icon, .x-icon { width: 68px; height: 68px; }
+  .check-svg { width: 36px; height: 36px; }
+  .clock-icon, .x-icon { font-size: 36px; }
+}
+@media (max-width: 540px) {
+  .page { padding: 20px 14px 60px; }
+  .hero-banner { border-radius: 18px; padding: 26px 18px 22px; }
+  .hero-heading { font-size: 1.5rem; }
+  .section { padding: 18px 16px; }
+  .summary { padding: 18px; }
+  .data-grid { gap: 14px 16px; }
+  .reference-block { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .copy-btn { width: 100%; justify-content: center; }
+  .cover { height: 175px; }
+  .site-footer { flex-direction: column; text-align: center; }
+}
+@media (max-width: 420px) {
+  .data-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Print ──────────────────────────────────────────────── */
+@media print {
+  body { background: #fff; }
+  .page { max-width: none; padding: 0; }
+  .hero-banner { border-radius: 0; }
+  .crumb, .actions, .help-row, .site-footer, .copy-btn, .confetti-strip { display: none !important; }
+  .layout { display: block; }
+  .card { box-shadow: none; border-color: #ddd; margin-bottom: 16px; }
+  .summary { position: static; }
+  .cover { height: 130px; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .hero-banner, .pay-banner, .pill, .status-icon-wrap { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page">
+
+  <!-- Breadcrumb -->
+  <nav class="crumb" aria-label="Breadcrumb">
+    <a href="{% url 'home' %}">Amazing Ahmedabad</a>
+    <span class="crumb-sep">›</span>
+    <span>Booking
+      {% if booking.status == "confirmed" %}Confirmed
+      {% elif booking.status == "cancelled" %}Cancelled
+      {% else %}Pending{% endif %}
+    </span>
+  </nav>
+
+  <!-- ── Navratri confetti ── -->
+  {% if booking.event and "navratri" in booking.event.name|lower %}
+  <div class="confetti-strip" aria-hidden="true">🏮🪔✨🎊🌺🎉🌼🪅✨🎊🏮</div>
+  {% endif %}
+
+  <!-- ── Hero status banner ── -->
+  {% if booking.status == "confirmed" %}
+  <div class="hero-banner hero-banner--confirmed" role="banner">
+    <div class="status-icon-wrap">
+      <div class="check-circle" aria-hidden="true">
+        <svg class="check-svg" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle class="check-circle-path" cx="26" cy="26" r="24" stroke="rgba(255,255,255,.7)" stroke-width="2.5" fill="none"/>
+          <polyline class="check-tick" points="14,27 22,35 38,18" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+    <div class="hero-text">
+      <div class="hero-eyebrow">Your reservation</div>
+      <h1 class="hero-heading">
+        {% if booking.kind == "event" %}
+          Booking Confirmed! 🎉
+        {% elif booking.payment_method == "cash" and booking.payment_status != "paid" %}
+          Booking Confirmed! 🎉
+        {% else %}
+          You're All Set! 🎉
+        {% endif %}
+      </h1>
+      <p class="hero-sub">
+        {% if booking.kind == "event" %}
+          Your ticket{{ booking.quantity|pluralize }} {% if booking.quantity > 1 %}are{% else %}is{% endif %} reserved. Show your booking reference at the entry gate.
+        {% elif booking.kind == "room" %}
+          Your room is reserved. We look forward to welcoming you!
+        {% else %}
+          Your venue is booked. Please arrive on time and present your reference.
+        {% endif %}
+      </p>
+    </div>
+  </div>
+
+  {% elif booking.status == "cancelled" %}
+  <div class="hero-banner hero-banner--cancelled" role="banner">
+    <div class="status-icon-wrap">
+      <div class="x-icon" aria-hidden="true">✕</div>
+    </div>
+    <div class="hero-text">
+      <div class="hero-eyebrow">Reservation status</div>
+      <h1 class="hero-heading">Booking Cancelled</h1>
+      <p class="hero-sub">This reservation has been cancelled. Your booking details and payment record are shown below for reference.</p>
+    </div>
+  </div>
+
+  {% elif booking.payment_status == "failed" %}
+  <div class="hero-banner hero-banner--cancelled" role="banner">
+    <div class="status-icon-wrap">
+      <div class="x-icon" aria-hidden="true">!</div>
+    </div>
+    <div class="hero-text">
+      <div class="hero-eyebrow">Payment status</div>
+      <h1 class="hero-heading">Payment Not Completed</h1>
+      <p class="hero-sub">Your booking details are saved. Retry the secure payment below to confirm your reservation.</p>
+    </div>
+  </div>
+
+  {% else %}
+  <div class="hero-banner hero-banner--pending" role="banner">
+    <div class="status-icon-wrap">
+      <div class="clock-icon" aria-hidden="true">⏳</div>
+    </div>
+    <div class="hero-text">
+      <div class="hero-eyebrow">Reservation status</div>
+      <h1 class="hero-heading">Booking Pending Review</h1>
+      <p class="hero-sub">Your reservation details are saved. Complete the payment below to confirm your booking.</p>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ── Two-col layout ── -->
+  <div class="layout">
+
+    <!-- LEFT: booking details card -->
+    <article class="card">
+
+      <!-- Cover image -->
+      <div class="cover">
+        {% if booking.event and booking.event.cover_image_url %}
+          <img src="{{ booking.event.cover_image_url }}" alt="{{ booking.event.name }}">
+        {% elif booking.room and booking.room.cover_image_url %}
+          <img src="{{ booking.room.cover_image_url }}" alt="{{ booking.room.name }}">
+        {% elif booking.venue_space and booking.venue_space.cover_image_url %}
+          <img src="{{ booking.venue_space.cover_image_url }}" alt="{{ booking.venue_space.name }}">
+        {% endif %}
+        <div class="cover-tag">
+          <span>
+            {% if booking.kind == "event" %}Event booking
+            {% elif booking.kind == "venue" %}Venue booking
+            {% else %}Room booking{% endif %}
+            &nbsp;·&nbsp; {{ booking.created_at|date:"M j, Y" }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Reference -->
+      <section class="section">
+        <div class="section-head">
+          <span class="section-title">Booking Reference</span>
+          <span class="section-badge">Keep this for entry / check-in</span>
+        </div>
+        <div class="reference-block">
+          <div class="ref-left">
+            <small>Confirmation code</small>
+            <div class="ref-code" id="booking-reference">AA-{{ booking.public_token|slice:":8"|upper }}</div>
+            <div class="ref-hint">
+              {% if booking.kind == "event" %}📲 Show this at the entry gate
+              {% elif booking.kind == "room" %}🏨 Present at front desk on arrival
+              {% else %}🏛 Show at the venue on your booking date{% endif %}
+            </div>
+          </div>
+          <button class="copy-btn" type="button" id="copy-reference" aria-label="Copy booking reference">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            Copy code
+          </button>
+        </div>
+      </section>
+
+      <!-- Booking details -->
+      <section class="section">
+        <div class="section-head">
+          <span class="section-title">Reservation Details</span>
+          {% if booking.kind == "event" %}
+            <span class="pill">{{ booking.event.category|default:"Event" }}</span>
+          {% elif booking.kind == "venue" %}
+            <span class="pill">{{ booking.venue_space.get_space_type_display|default:"Venue" }}</span>
+          {% else %}
+            <span class="pill">{{ booking.room.room_type|default:"Room" }}</span>
+          {% endif %}
+        </div>
+
+        <!-- EVENT -->
+        {% if booking.kind == "event" or booking.event %}
+          <div class="prop-name">
+            <h2>{{ booking.event.name }}</h2>
+            <p class="prop-location">
+              📍 {{ booking.event.venue }}{% if booking.event.city %}, {{ booking.event.city }}{% endif %}
+            </p>
+          </div>
+          <div class="data-grid">
+            <div class="data-item">
+              <span class="d-label">Event date</span>
+              <span class="d-value">{{ booking.event.starts_at|date:"l, M j, Y" }}</span>
+            </div>
+            <div class="data-item">
+              <span class="d-label">Event time</span>
+              <span class="d-value">
+                {{ booking.event.starts_at|date:"g:i A" }}{% if booking.event.ends_at %} – {{ booking.event.ends_at|date:"g:i A" }}{% endif %}
+              </span>
+            </div>
+            <div class="data-item">
+              <span class="d-label">Tickets reserved</span>
+              <span class="d-value">{{ booking.quantity }} ticket{{ booking.quantity|pluralize }}</span>
+            </div>
+            {% if booking.event.age_limit %}
+            <div class="data-item">
+              <span class="d-label">Age requirement</span>
+              <span class="d-value">{{ booking.event.age_limit }}</span>
+            </div>
+            {% endif %}
+            {% if booking.event.organizer_name %}
+            <div class="data-item">
+              <span class="d-label">Organiser</span>
+              <span class="d-value">{{ booking.event.organizer_name }}</span>
+            </div>
+            {% endif %}
+          </div>
+          {% if booking.event.entry_rules %}
+          <div style="margin-top:18px">
+            <span class="d-label">Entry information</span>
+            <p class="rules-text">{{ booking.event.entry_rules }}</p>
+          </div>
+          {% endif %}
+          <div class="entry-notice">
+            <div class="entry-icon">📱</div>
+            <div class="entry-text">
+              <strong>Show booking reference at entry</strong>
+              <span>Keep your reference code AA-{{ booking.public_token|slice:":8"|upper }} handy at the gate.</span>
+            </div>
+          </div>
+
+        <!-- VENUE SPACE -->
+        {% elif booking.kind == "venue" or booking.venue_space %}
+          <div class="prop-name">
+            <h2>{{ booking.venue_space.name }}</h2>
+            <p class="prop-location">
+              📍 {{ booking.venue_space.address }}{% if booking.venue_space.city %}, {{ booking.venue_space.city }}{% endif %}
+            </p>
+          </div>
+          {% if booking.occasion %}
+          <p style="margin-top:8px"><span class="pill">{{ booking.occasion }}</span></p>
+          {% endif %}
+          <div class="data-grid">
+            <div class="data-item">
+              <span class="d-label">Function date</span>
+              <span class="d-value">{{ booking.venue_start_at|date:"l, M j, Y" }}</span>
+            </div>
+            <div class="data-item">
+              <span class="d-label">Reserved time</span>
+              <span class="d-value">{{ booking.venue_start_at|date:"g:i A" }} – {{ booking.venue_end_at|date:"g:i A" }}</span>
+            </div>
+            <div class="data-item">
+              <span class="d-label">Duration</span>
+              <span class="d-value">{{ venue_hours }} hour{{ venue_hours|pluralize }}</span>
+            </div>
+            <div class="data-item">
+              <span class="d-label">Expected guests</span>
+              <span class="d-value">{{ booking.quantity }} of {{ booking.venue_space.capacity }}</span>
+            </div>
+          </div>
+          {% if booking.venue_space.amenities %}
+          <div style="margin-top:18px">
+            <span class="d-label">Included facilities</span>
+            <p class="rules-text">{{ booking.venue_space.amenities }}</p>
+          </div>
+          {% endif %}
+          {% if booking.venue_space.rules %}
+          <div style="margin-top:14px">
+            <span class="d-label">Venue notes</span>
+            <p class="rules-text">{{ booking.venue_space.rules }}</p>
+          </div>
+          {% endif %}
+
+        <!-- ROOM -->
+        {% else %}
+          <div class="prop-name">
+            <h2>{{ booking.room.property_name }}</h2>
+            <p class="prop-location">
+              🏨 {{ booking.room.name }}{% if booking.room.address %} · {{ booking.room.address }}{% endif %}{% if booking.room.city %}, {{ booking.room.city }}{% endif %}
+            </p>
+          </div>
+          <div class="data-grid">
+            <div class="data-item">
+              <span class="d-label">Check-in</span>
+              <span class="d-value">
+                {{ booking.check_in|date:"D, M j, Y" }}<br>
+                <small style="font-weight:500;color:var(--muted)">After {{ booking.room.check_in_time|time:"g:i A" }}</small>
+              </span>
+            </div>
+            <div class="data-item">
+              <span class="d-label">Check-out</span>
+              <span class="d-value">
+                {{ booking.check_out|date:"D, M j, Y" }}<br>
+                <small style="font-weight:500;color:var(--muted)">By {{ booking.room.check_out_time|time:"g:i A" }}</small>
+              </span>
+            </div>
+            <div class="data-item">
+              <span class="d-label">Length of stay</span>
+              <span class="d-value">{{ nights }} night{{ nights|pluralize }}</span>
+            </div>
+            <div class="data-item">
+              <span class="d-label">Guests &amp; bedding</span>
+              <span class="d-value">{{ booking.quantity }} guest{{ booking.quantity|pluralize }} · {{ booking.room.bed_type }}</span>
+            </div>
+          </div>
+          {% if booking.room.amenities %}
+          <div style="margin-top:18px">
+            <span class="d-label">Room amenities</span>
+            <p class="rules-text">{{ booking.room.amenities }}</p>
+          </div>
+          {% endif %}
+          {% if booking.room.house_rules %}
+          <div style="margin-top:14px">
+            <span class="d-label">Stay information</span>
+            <p class="rules-text">{{ booking.room.house_rules }}</p>
+          </div>
+          {% endif %}
+        {% endif %}
+      </section>
+
+      <!-- Guest details -->
+      <section class="section">
+        <div class="section-head">
+          <span class="section-title">Guest Details</span>
+          <span class="section-badge">Booking contact</span>
+        </div>
+        <div class="data-grid">
+          <div class="data-item">
+            <span class="d-label">Full name</span>
+            <span class="d-value">{{ booking.customer_name }}</span>
+          </div>
+          <div class="data-item">
+            <span class="d-label">Email address</span>
+            <span class="d-value"><a href="mailto:{{ booking.email }}">{{ booking.email }}</a></span>
+          </div>
+          <div class="data-item">
+            <span class="d-label">Mobile number</span>
+            <span class="d-value"><a href="tel:{{ booking.contact_phone }}">{{ booking.contact_phone }}</a></span>
+          </div>
+          {% if booking.event and booking.event.contact_phone %}
+          <div class="data-item">
+            <span class="d-label">Event contact</span>
+            <span class="d-value"><a href="tel:{{ booking.event.contact_phone }}">{{ booking.event.contact_phone }}</a></span>
+          </div>
+          {% elif booking.venue_space and booking.venue_space.contact_phone %}
+          <div class="data-item">
+            <span class="d-label">Venue contact</span>
+            <span class="d-value"><a href="tel:{{ booking.venue_space.contact_phone }}">{{ booking.venue_space.contact_phone }}</a></span>
+          </div>
+          {% elif booking.room and booking.room.contact_phone %}
+          <div class="data-item">
+            <span class="d-label">Property contact</span>
+            <span class="d-value"><a href="tel:{{ booking.room.contact_phone }}">{{ booking.room.contact_phone }}</a></span>
+          </div>
+          {% endif %}
+        </div>
+      </section>
+
+    </article><!-- /LEFT -->
+
+    <!-- RIGHT: summary & payment sidebar -->
+    <aside class="card summary">
+      <h2 class="summary-heading">Price &amp; Payment</h2>
+      <p class="summary-sub">A clear summary of your reservation</p>
+
+      <!-- Price breakdown -->
+      {% if booking.kind == "event" or booking.event %}
+        <div class="sum-line">
+          <span>{{ booking.quantity }} ticket{{ booking.quantity|pluralize }} × ₹{{ booking.event.ticket_price }}</span>
+          <span>₹{{ booking.total_amount|floatformat:2 }}</span>
+        </div>
+      {% elif booking.kind == "venue" or booking.venue_space %}
+        <div class="sum-line">
+          <span>{{ venue_hours }} hr{{ venue_hours|pluralize }} × ₹{{ booking.venue_space.hourly_rate }}</span>
+          <span>₹{{ booking.total_amount|floatformat:2 }}</span>
+        </div>
+      {% else %}
+        <div class="sum-line">
+          <span>{{ nights }} night{{ nights|pluralize }} × ₹{{ booking.room.price_per_night }}</span>
+          <span>₹{{ booking.total_amount|floatformat:2 }}</span>
+        </div>
+      {% endif %}
+      <div class="sum-line">
+        <span>Payment method</span>
+        <span>{{ booking.get_payment_method_display }}</span>
+      </div>
+      {% if booking.paid_at %}
+      <div class="sum-line">
+        <span>Paid on</span>
+        <span>{{ booking.paid_at|date:"M j, Y · g:i A" }}</span>
+      </div>
+      {% endif %}
+      {% if booking.razorpay_payment_id %}
+      <div class="sum-line">
+        <span>Payment ref</span>
+        <span style="font-size:.78rem">{{ booking.razorpay_payment_id }}</span>
+      </div>
+      {% endif %}
+      <div class="sum-line sum-total">
+        <span>Total</span>
+        <span>₹{{ booking.total_amount|floatformat:2 }}</span>
+      </div>
+
+      <!-- Payment status banner -->
+      {% if booking.payment_status == "paid" %}
+        <div class="pay-banner pay-banner--paid">
+          <div class="pay-icon">✓</div>
+          <div class="pay-content">
+            <strong>Payment Received</strong>
+            <p>
+              {{ booking.get_payment_status_display }}
+              {% if booking.payment_method == "razorpay" and booking.razorpay_payment_id %}
+                · Ref {{ booking.razorpay_payment_id }}
+              {% else %}
+                · Cash recorded
+              {% endif %}
+            </p>
+          </div>
+        </div>
+
+      {% elif booking.payment_status == "failed" %}
+        <div class="pay-banner pay-banner--failed">
+          <div class="pay-icon">!</div>
+          <div class="pay-content">
+            <strong>Payment Not Completed</strong>
+            <p>Retry online payment to confirm this reservation.</p>
+          </div>
+        </div>
+
+      {% elif booking.payment_method == "cash" and booking.status == "confirmed" %}
+        <div class="pay-banner pay-banner--due">
+          <div class="pay-icon">₹</div>
+          <div class="pay-content">
+            <strong>Pay at {% if booking.kind == "room" %}Check-in{% else %}the Venue{% endif %}</strong>
+            <p>Booking confirmed. Please pay ₹{{ booking.total_amount|floatformat:2 }} on arrival.</p>
+          </div>
+        </div>
+
+      {% elif booking.status == "cancelled" %}
+        <div class="pay-banner pay-banner--cancelled">
+          <div class="pay-icon">✕</div>
+          <div class="pay-content">
+            <strong>Booking Cancelled</strong>
+            <p>Payment status: {{ booking.get_payment_status_display }}.</p>
+          </div>
+        </div>
+
+      {% else %}
+        <div class="pay-banner pay-banner--due">
+          <div class="pay-icon">⏳</div>
+          <div class="pay-content">
+            <strong>Payment Pending</strong>
+            <p>Complete checkout below to confirm your booking.</p>
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- CTA action buttons -->
+      <div class="actions">
+
+        <!-- Unpaid online → Pay Now CTA (big prominent) -->
+        {% if booking.payment_method == "razorpay" and booking.payment_status != "paid" and booking.status != "cancelled" %}
+          <a class="btn btn-amber" href="{% url 'payment_checkout' booking.public_token %}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
+            </svg>
+            Pay Online Now &nbsp;→
+          </a>
+        {% endif %}
+
+        <!-- Retry payment (failed) -->
+        {% if booking.payment_status == "failed" and booking.status != "cancelled" %}
+          <form method="post" action="{% url 'retry_payment' booking.public_token %}">
+            {% csrf_token %}
+            <button class="btn btn-amber" type="submit" style="width:100%">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+              </svg>
+              Retry Secure Payment
+            </button>
+          </form>
+        {% endif %}
+
+        <!-- Download receipt (paid) -->
+        {% if booking.payment_status == "paid" %}
+          <a class="btn btn-green" href="{% url 'booking_receipt_pdf' booking.public_token %}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download Receipt &nbsp;↓
+          </a>
+        {% endif %}
+
+        <!-- View my bookings / explore -->
+        {% if request.user.is_authenticated %}
+          <a class="btn btn-light" href="{% url 'account' %}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+            View My Bookings
+          </a>
+        {% else %}
+          <a class="btn btn-light" href="{% url 'home' %}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            Explore More Experiences
+          </a>
+        {% endif %}
+
+        <!-- Back to home -->
+        <a class="btn btn-outline" href="{% url 'home' %}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          Back to Home
+        </a>
+
+        <!-- Print -->
+        <button class="btn btn-outline" type="button" onclick="window.print()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+            <rect x="6" y="14" width="12" height="8"/>
+          </svg>
+          Print Booking Details
+        </button>
+
+      </div><!-- /actions -->
+
+      <p class="note-text">Your booking reference and details are available at this URL.</p>
+      <div class="help-row">
+        Need help? <a href="{% url 'contact' %}">Contact our team →</a>
+      </div>
+
+    </aside><!-- /RIGHT -->
+
+  </div><!-- /layout -->
+
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="copy-toast" role="status" aria-live="polite">✓ &nbsp;Booking code copied!</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(()=>{
+  // Copy reference
+  const btn = document.getElementById("copy-reference");
+  const ref = document.getElementById("booking-reference");
+  const toast = document.getElementById("copy-toast");
+  if (btn && ref && toast) {
+    btn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(ref.textContent.trim());
+        toast.textContent = "✓  Booking code copied!";
+      } catch (e) {
+        const range = document.createRange();
+        range.selectNodeContents(ref);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        toast.textContent = "Select and copy your booking code";
+      }
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2200);
+    });
+  }
+})();
+</script>
+{% endblock %}

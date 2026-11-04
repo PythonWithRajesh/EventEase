@@ -1,0 +1,201 @@
+{% extends "bookings/base.html" %}
+
+{% block title %}Order Confirmed #{{ order.public_token|stringformat:"s"|slice:":8"|upper }} | Amdavad Food Hub{% endblock %}
+
+{% block extra_css %}
+<style>
+.food-done-wrap {
+  max-width: 680px;
+  margin: 40px auto 80px;
+  padding: 0 20px;
+}
+.food-done-card {
+  background: #ffffff;
+  border: 1px solid #ede2d7;
+  border-radius: 24px;
+  padding: 36px 32px;
+  box-shadow: 0 16px 48px rgba(78, 38, 12, 0.08);
+  text-align: center;
+}
+.done-icon-badge {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #ecfdf5;
+  color: #15803d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  margin: 0 auto 18px;
+}
+.done-title {
+  font-size: 1.8rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin: 0 0 8px;
+  color: #1f1426;
+}
+.done-sub {
+  color: #73647c;
+  font-size: 0.96rem;
+  margin: 0 0 26px;
+}
+.order-summary-box {
+  background: #faf5f0;
+  border: 1px solid #ede2d7;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: left;
+  margin-bottom: 26px;
+}
+.order-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px dashed #e5d8cc;
+  font-size: 0.92rem;
+}
+.order-summary-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+  font-weight: 900;
+  font-size: 1.1rem;
+  color: #ea580c;
+}
+.order-summary-label {
+  color: #73647c;
+  font-weight: 600;
+}
+.done-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-done-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+  color: #ffffff;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 850;
+  font-size: 0.92rem;
+  box-shadow: 0 4px 16px rgba(234, 88, 12, 0.3);
+}
+.btn-done-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1.5px solid #dcd1c6;
+  color: #1f1426;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 0.92rem;
+}
+
+@media (max-width: 680px) {
+  .insta-bottom-nav { display: none !important; }
+  body { padding-bottom: 24px !important; }
+  .food-done-wrap { padding: 0 12px; margin: 24px auto 48px; }
+  .food-done-card { padding: 24px 18px; border-radius: 20px; }
+  .btn-done-primary, .btn-done-outline { width: 100%; justify-content: center; }
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="food-done-wrap">
+  <div class="food-done-card">
+    <div class="done-icon-badge">✅</div>
+    <h1 class="done-title">Order Confirmed!</h1>
+    <p class="done-sub">
+      Your fresh food order has been sent directly to <strong>{{ order.food_item.restaurant_name }}</strong>.
+    </p>
+
+    <div class="order-summary-box">
+      <div class="order-summary-row">
+        <span class="order-summary-label">Order Ref #</span>
+        <strong>{{ order.public_token|stringformat:"s"|slice:":8"|upper }}</strong>
+      </div>
+      <div class="order-summary-row">
+        <span class="order-summary-label">Item Ordered</span>
+        <strong>{{ order.quantity }}x {{ order.food_item.name }}</strong>
+      </div>
+      <div class="order-summary-row">
+        <span class="order-summary-label">Food Stall / Cafe</span>
+        <span>{{ order.food_item.restaurant_name }} ({{ order.food_item.area }})</span>
+      </div>
+      <div class="order-summary-row">
+        <span class="order-summary-label">Customer</span>
+        <span>{{ order.customer_name }} ({{ order.contact_phone }})</span>
+      </div>
+      <div class="order-summary-row">
+        <span class="order-summary-label">Order Type</span>
+        <span>{{ order.get_order_type_display }}</span>
+      </div>
+      {% if order.delivery_address %}
+      <div class="order-summary-row">
+        <span class="order-summary-label">Delivery To</span>
+        <span>{{ order.delivery_address }}</span>
+      </div>
+      {% endif %}
+      {% if order.notes %}
+      <div class="order-summary-row">
+        <span class="order-summary-label">Cooking Notes</span>
+        <span>{{ order.notes }}</span>
+      </div>
+      {% endif %}
+      <div class="order-summary-row">
+        <span class="order-summary-label">Payment Method</span>
+        <span>
+          {% if order.payment_method == "razorpay" %}
+            ⚡ Online Payment (Razorpay / UPI)
+          {% else %}
+            💵 Cash on Delivery / Pay at Stall (Offline)
+          {% endif %}
+        </span>
+      </div>
+      <div class="order-summary-row">
+        <span class="order-summary-label">Payment Status</span>
+        <span>
+          {% if order.payment_status == "paid" %}
+            <span style="color:#15803d;font-weight:900;">🟢 Paid Online</span>
+            {% if order.razorpay_payment_id %}
+              <small style="display:block;color:#6b7280;font-size:0.75rem;">Ref: {{ order.razorpay_payment_id }}</small>
+            {% endif %}
+          {% else %}
+            <span style="color:#b45309;font-weight:900;">⏳ Pay upon Delivery / Pickup</span>
+          {% endif %}
+        </span>
+      </div>
+      <div class="order-summary-row">
+        <span>Total Amount:</span>
+        <span style="color:#ea580c;font-weight:900;">₹{{ order.total_amount }}</span>
+      </div>
+    </div>
+
+    <div class="done-actions">
+      {% if order.payment_status == 'paid' or order.payment_method == 'razorpay' %}
+      <a href="{% url 'food_order_receipt_pdf' order.public_token %}" class="btn-done-primary" style="background:linear-gradient(135deg, #2563eb, #1d4ed8);box-shadow:0 4px 16px rgba(37,99,235,0.35);" target="_blank" download>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="margin-right:3px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Tax Invoice &amp; Receipt (PDF)
+      </a>
+      {% endif %}
+      <a href="{% url 'account' %}?filter=food&ref={{ order.public_token }}" class="btn-done-primary" style="background:linear-gradient(135deg, #ea580c 0%, #c2410c 100%);box-shadow:0 4px 16px rgba(234, 88, 12, 0.35);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        📦 View My Orders &amp; Track Status
+      </a>
+      <a href="{% url 'food_hub' %}" class="btn-done-outline">
+        ← Back to Food Hub
+      </a>
+    </div>
+  </div>
+</main>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% if page.paginator.num_pages > 1 %}
+<div class="pagination">
+  <span
+    >Page {{ page.number }} of {{ page.paginator.num_pages }} · {{
+    page.paginator.count }} records</span
+  >
+  <nav class="pages">
+    {% if page.has_previous %}<a
+      href="?{% if query %}q={{ query|urlencode }}&{% endif %}{% if filters.status %}status={{ filters.status }}&{% endif %}{% if filters.kind %}kind={{ filters.kind }}&{% endif %}{% if filters.payment %}payment={{ filters.payment }}&{% endif %}{% if filters.payment_status %}payment_status={{ filters.payment_status }}&{% endif %}{% if filters.state %}state={{ filters.state }}&{% endif %}{% if filters.topic %}topic={{ filters.topic }}&{% endif %}page={{ page.previous_page_number }}"
+      >‹</a
+    >{% endif %}{% for number in page.paginator.page_range %}{% if number ==
+    page.number %}<span class="current">{{ number }}</span>{% elif number >
+    page.number|add:"-3" and number < page.number|add:"3" %}<a
+      href="?{% if query %}q={{ query|urlencode }}&{% endif %}{% if filters.status %}status={{ filters.status }}&{% endif %}{% if filters.kind %}kind={{ filters.kind }}&{% endif %}{% if filters.payment %}payment={{ filters.payment }}&{% endif %}{% if filters.payment_status %}payment_status={{ filters.payment_status }}&{% endif %}{% if filters.state %}state={{ filters.state }}&{% endif %}{% if filters.topic %}topic={{ filters.topic }}&{% endif %}page={{ number }}"
+      >{{ number }}</a
+    >{% endif %}{% endfor %}{% if page.has_next %}<a
+      href="?{% if query %}q={{ query|urlencode }}&{% endif %}{% if filters.status %}status={{ filters.status }}&{% endif %}{% if filters.kind %}kind={{ filters.kind }}&{% endif %}{% if filters.payment %}payment={{ filters.payment }}&{% endif %}{% if filters.payment_status %}payment_status={{ filters.payment_status }}&{% endif %}{% if filters.state %}state={{ filters.state }}&{% endif %}{% if filters.topic %}topic={{ filters.topic }}&{% endif %}page={{ page.next_page_number }}"
+      >›</a
+    >{% endif %}
+  </nav>
+</div>
+{% endif %}

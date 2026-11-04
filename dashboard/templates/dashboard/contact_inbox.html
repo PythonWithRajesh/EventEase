@@ -1,0 +1,27 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Contact inbox{% endblock %}
+{% block crumb %}Contact inbox{% endblock %}
+{% block content %}
+<div class="heading">
+  <div><div class="eyebrow">Customer support</div><h1>Contact inbox</h1><p>Review customer requests, update their details and keep every reply with its inquiry.</p></div>
+  <div class="contact-heading-actions"><div class="inbox-count"><strong>{{ new_count }}</strong><span>awaiting review</span></div><a class="button" href="{% url 'dashboard_contact_create' %}">＋ New inquiry</a></div>
+</div>
+<form class="panel filters" method="get">
+  <input name="q" value="{{ query }}" placeholder="Search customer, email or conversation">
+  <select name="status"><option value="">All statuses</option>{% for value,label in statuses %}<option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select>
+  <select name="topic"><option value="">All topics</option>{% for value,label in topics %}<option value="{{ value }}" {% if selected_topic == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select>
+  <button type="submit">Search inbox</button><a class="button secondary" href="{% url 'dashboard_contact_inbox' %}">Reset</a>
+</form>
+<section class="panel">
+  <div class="panel-head"><div><h2>All inquiries</h2><span class="muted">Open an inquiry to edit its customer details or add a reply.</span></div><span class="badge">{{ rows.paginator.count }} total</span></div>
+  <div class="table-scroll"><table><thead><tr><th>Customer</th><th>Inquiry</th><th>Topic</th><th>Received</th><th>Messages</th><th>Status</th><th></th></tr></thead><tbody>
+  {% for inquiry in rows %}<tr>
+    <td><span class="cell-main">{{ inquiry.name }}</span><span class="cell-sub">{{ inquiry.email }}{% if inquiry.phone %} · {{ inquiry.phone }}{% endif %}</span></td>
+    <td><span class="cell-main">{{ inquiry.subject }}</span><span class="cell-sub">{{ inquiry.message|truncatechars:74 }}</span></td>
+    <td>{{ inquiry.get_topic_display }}</td><td>{{ inquiry.created_at|date:"M j, Y, g:i A" }}</td><td>{{ inquiry.message_count|default:0 }}</td>
+    <td><span class="badge {{ inquiry.status }}">{{ inquiry.get_status_display }}</span></td>
+    <td><a class="rowlink" href="{% url 'dashboard_contact_detail' inquiry.pk %}">Manage →</a></td>
+  </tr>{% empty %}<tr><td colspan="7" class="empty">No inquiries match these filters.</td></tr>{% endfor %}
+  </tbody></table></div>{% include "dashboard/pagination.html" %}
+</section>
+{% endblock %}

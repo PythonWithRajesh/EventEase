@@ -1,0 +1,1012 @@
+{% extends "bookings/base.html" %}
+
+{% block title %}Secure Payment Checkout | Amazing Ahmedabad{% endblock %}
+
+{% block extra_css %}
+  <style>
+    /* ══════════════════════════════════════════════════════════════
+       DESIGN TOKENS & SYSTEM
+    ══════════════════════════════════════════════════════════════ */
+    :root {
+      --font-heading: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-body:    'Inter', system-ui, -apple-system, sans-serif;
+
+      --ink:          #130a24;
+      --ink-soft:     #2b1e45;
+      --muted:        #695f7c;
+      --muted-lt:     #9b92ae;
+      --line:         #e6dfef;
+      --line-subtle:  #f0eaf7;
+      --paper:        #f8f6fc;
+      --white:        #ffffff;
+
+      --brand:        #6835c8;
+      --brand-dk:     #4b1f9b;
+      --brand-lt:     #eee7fc;
+      --brand-glow:   rgba(104, 53, 200, 0.22);
+
+      --green:        #0f766e;
+      --green-accent: #15803d;
+      --green-lt:     #ecfdf5;
+
+      --red:          #be123c;
+      --red-lt:       #fff1f2;
+
+      --amber:        #b45309;
+      --amber-lt:     #fef3c7;
+
+      --r-xs:   6px;
+      --r-sm:   10px;
+      --r-md:   16px;
+      --r-lg:   22px;
+      --r-pill: 9999px;
+
+      --sh-xs:  0 2px 6px   rgba(22, 10, 42, 0.04);
+      --sh-sm:  0 4px 16px  rgba(22, 10, 42, 0.06);
+      --sh-md:  0 12px 36px rgba(22, 10, 42, 0.09);
+      --sh-lg:  0 20px 50px rgba(22, 10, 42, 0.13);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; border: none; background: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ══════════════════════════════════════════════════════════════
+       LAYOUT & PAGE SHELL
+    ══════════════════════════════════════════════════════════════ */
+    .page-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 32px 24px 72px;
+    }
+
+    /* Breadcrumbs */
+    .booking-crumbs {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+    .booking-crumbs a {
+      color: var(--muted);
+      font-weight: 600;
+      transition: color 0.15s ease;
+    }
+    .booking-crumbs a:hover {
+      color: var(--brand);
+    }
+    .booking-crumbs .crumb-sep {
+      color: var(--muted-lt);
+      font-size: 11px;
+    }
+    .booking-crumbs .crumb-current {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    /* Editorial Page Header */
+    .booking-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    .booking-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--brand);
+      background: var(--brand-lt);
+      padding: 4px 10px;
+      border-radius: var(--r-pill);
+      margin-bottom: 8px;
+    }
+    .booking-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.75rem, 3.2vw, 2.35rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      color: var(--ink);
+      margin: 0;
+    }
+    .booking-subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 6px;
+      max-width: 620px;
+    }
+    .booking-trust-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: var(--r-pill);
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+      font-size: 12.5px;
+      font-weight: 700;
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08);
+    }
+    .booking-trust-badge svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       3-STEP PROGRESS STEPPER
+    ══════════════════════════════════════════════════════════════ */
+    .checkout-stepper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+      background: #ffffff;
+      padding: 14px 20px;
+      border-radius: var(--r-md);
+      border: 1px solid var(--line);
+      box-shadow: var(--sh-xs);
+    }
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--muted-lt);
+    }
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--paper);
+      border: 1.5px solid var(--line);
+      color: var(--muted);
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 800;
+      transition: all 0.2s ease;
+    }
+    .step-item.completed {
+      color: var(--green-accent);
+    }
+    .step-item.completed .step-num {
+      background: #ecfdf5;
+      border-color: #a7f3d0;
+      color: var(--green-accent);
+    }
+    .step-item.active {
+      color: var(--brand);
+    }
+    .step-item.active .step-num {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #ffffff;
+      box-shadow: 0 0 0 4px var(--brand-glow);
+    }
+    .step-divider {
+      flex: 1;
+      height: 2px;
+      background: var(--line);
+      border-radius: 2px;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       MAIN TWO-COLUMN GRID
+    ══════════════════════════════════════════════════════════════ */
+    .checkout-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.85fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    /* Card Panels */
+    .checkout-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      box-shadow: var(--sh-sm);
+      overflow: hidden;
+    }
+
+    /* Hero Cover on Payment */
+    .payment-cover-hero {
+      height: 210px;
+      position: relative;
+      background: linear-gradient(135deg, #1f0b3d 0%, #4a1f9b 55%, #e8590c 100%);
+      overflow: hidden;
+    }
+    .payment-cover-hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .payment-cover-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(19, 10, 36, 0.85) 0%, rgba(19, 10, 36, 0.2) 60%, transparent 100%);
+    }
+    .payment-cover-tag {
+      position: absolute;
+      left: 20px;
+      bottom: 16px;
+      color: #ffffff;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .payment-cover-pill {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.22);
+      backdrop-filter: blur(8px);
+      padding: 5px 12px;
+      border-radius: var(--r-pill);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+    }
+
+    /* Sections within Details Card */
+    .payment-section {
+      padding: 24px 28px;
+      border-bottom: 1px solid var(--line);
+    }
+    .payment-section:last-child {
+      border-bottom: none;
+    }
+    .section-head-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .section-head-bar h2 {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--ink);
+      margin: 0;
+    }
+    .ref-code-badge {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: var(--brand);
+      background: var(--brand-lt);
+      padding: 4px 10px;
+      border-radius: var(--r-pill);
+      letter-spacing: 0.04em;
+    }
+
+    .item-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 4px;
+    }
+    .item-title-row h3 {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--ink);
+      line-height: 1.25;
+      margin: 0;
+    }
+    .item-location-sub {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 18px;
+    }
+
+    /* Specs 2x2 Grid */
+    .specs-2x2-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 20px;
+      background: var(--paper);
+      padding: 16px 18px;
+      border-radius: var(--r-md);
+      border: 1px solid var(--line);
+    }
+    .spec-cell-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 2px;
+    }
+    .spec-cell-val {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    /* Guest Contact Grid */
+    .contact-review-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      background: var(--paper);
+      padding: 14px 18px;
+      border-radius: var(--r-md);
+      border: 1px solid var(--line);
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       RIGHT SIDEBAR: STICKY PAYMENT ACTION CARD
+    ══════════════════════════════════════════════════════════════ */
+    .summary-sticky-card {
+      position: sticky;
+      top: 96px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      box-shadow: var(--sh-md);
+      padding: 26px 24px;
+    }
+
+    .summary-card-title {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--ink);
+      margin: 0 0 4px;
+    }
+    .summary-card-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    /* Calculation lines */
+    .pay-breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 9px 0;
+      font-size: 13px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--line-subtle);
+    }
+    .pay-breakdown-row strong,
+    .pay-breakdown-row span:last-child {
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .pay-breakdown-row.free-tag span:last-child {
+      color: var(--green-accent);
+      font-weight: 800;
+    }
+    .pay-breakdown-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 16px 0 6px;
+      border-top: 1.5px dashed var(--line);
+      margin-top: 6px;
+    }
+    .pay-total-label {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+    .pay-total-amount {
+      font-family: var(--font-heading);
+      font-size: 1.7rem;
+      font-weight: 900;
+      color: var(--brand);
+      letter-spacing: -0.02em;
+    }
+
+    /* Razorpay Secure Gateway Banner */
+    .razorpay-method-banner {
+      background: #faf7ff;
+      border: 1px solid #e7dbff;
+      border-radius: var(--r-sm);
+      padding: 14px 16px;
+      margin: 18px 0 16px;
+    }
+    .rzp-banner-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #3b1b74;
+    }
+    .rzp-icon-box {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      background: #6835c8;
+      color: #ffffff;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 13px;
+    }
+    .rzp-banner-desc {
+      font-size: 11.5px;
+      color: var(--muted);
+      margin: 4px 0 0 36px;
+      line-height: 1.4;
+    }
+
+    /* Buttons */
+    .pay-actions-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .btn-pay-now {
+      width: 100%;
+      height: 52px;
+      background: var(--brand);
+      color: #ffffff;
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 800;
+      border-radius: var(--r-pill);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px var(--brand-glow);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .btn-pay-now:hover {
+      background: var(--brand-dk);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(104, 53, 200, 0.32);
+    }
+    .btn-pay-now:active {
+      transform: translateY(0);
+    }
+    .btn-pay-now:disabled {
+      opacity: 0.65;
+      cursor: wait;
+      transform: none;
+    }
+
+    .btn-cancel-booking {
+      width: 100%;
+      height: 44px;
+      background: #ffffff;
+      color: var(--ink-soft);
+      border: 1.5px solid var(--line);
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: var(--r-pill);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .btn-cancel-booking:hover {
+      background: var(--paper);
+      border-color: #d2c8de;
+    }
+
+    /* Error Alert */
+    .payment-error-box {
+      background: #fef2f2;
+      border: 1.5px solid #fecaca;
+      border-radius: var(--r-sm);
+      padding: 12px 14px;
+      margin-top: 14px;
+      color: #991b1b;
+      font-size: 12.5px;
+      font-weight: 600;
+    }
+    .payment-error-box[hidden] {
+      display: none;
+    }
+
+    /* Trust Footnote */
+    .payment-trust-footnote {
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 16px;
+      line-height: 1.5;
+    }
+    .payment-trust-footnote strong {
+      color: var(--green-accent);
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       RESPONSIVENESS
+    ══════════════════════════════════════════════════════════════ */
+    @media (max-width: 900px) {
+      .insta-bottom-nav { display: none !important; }
+      body { padding-bottom: 24px !important; }
+      .checkout-grid {
+        grid-template-columns: 1fr;
+      }
+      .summary-sticky-card {
+        position: static;
+        order: -1;
+      }
+      .booking-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+    @media (max-width: 580px) {
+      .page-container {
+        padding: 20px 16px 56px;
+      }
+      .payment-section {
+        padding: 18px 20px;
+      }
+      .specs-2x2-grid, .contact-review-grid {
+        grid-template-columns: 1fr;
+      }
+      .item-title-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  
+  <!-- Breadcrumbs -->
+  <nav class="booking-crumbs" aria-label="Breadcrumb">
+    <a href="{% url 'home' %}">Home</a>
+    <span class="crumb-sep">/</span>
+    <a href="{% url 'booking_done' booking.public_token %}">Reservation</a>
+    <span class="crumb-sep">/</span>
+    <span class="crumb-current">Secure Escrow Payment</span>
+  </nav>
+
+  <!-- Editorial Page Header -->
+  <header class="booking-header">
+    <div>
+      <div class="booking-eyebrow">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span>Official Checkout</span>
+      </div>
+      <h1 class="booking-title">Review &amp; Complete Payment</h1>
+      <p class="booking-subtitle">
+        Verify your reservation summary and proceed to the encrypted Razorpay gateway.
+      </p>
+    </div>
+    <div class="booking-trust-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span>Razorpay 256-Bit SSL Escrow</span>
+    </div>
+  </header>
+
+  <!-- 3-Step Stepper Progress Bar -->
+  <div class="checkout-stepper" aria-label="Booking Progress">
+    <div class="step-item completed">
+      <div class="step-num">✓</div>
+      <span>Guest Details</span>
+    </div>
+    <div class="step-divider"></div>
+    <div class="step-item active">
+      <div class="step-num">2</div>
+      <span>Payment</span>
+    </div>
+    <div class="step-divider"></div>
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <span>Confirmation</span>
+    </div>
+  </div>
+
+  <!-- Two Column Checkout Grid -->
+  <div class="checkout-grid">
+    
+    <!-- LEFT COLUMN: Reservation Review Details -->
+    <article class="checkout-card">
+      <div class="payment-cover-hero">
+        {% if booking.event and booking.event.cover_image_url %}
+          <img src="{{ booking.event.cover_image_url }}" alt="{{ booking.event.name }}">
+        {% elif booking.room and booking.room.cover_image_url %}
+          <img src="{{ booking.room.cover_image_url }}" alt="{{ booking.room.name }}">
+        {% elif booking.venue_space and booking.venue_space.cover_image_url %}
+          <img src="{{ booking.venue_space.cover_image_url }}" alt="{{ booking.venue_space.name }}">
+        {% endif %}
+        <div class="payment-cover-overlay"></div>
+        <div class="payment-cover-tag">
+          <span class="payment-cover-pill">
+            {% if booking.event %}Event Reservation{% elif booking.venue_space %}Venue Slot Lock{% else %}Hotel Stay{% endif %}
+          </span>
+          <span style="font-size: 11px; font-weight: 700; opacity: 0.9;">Ready for payment</span>
+        </div>
+      </div>
+
+      <section class="payment-section">
+        <div class="section-head-bar">
+          <h2>Reservation Specifications</h2>
+          <span class="ref-code-badge">Ref AA-{{ booking.public_token|slice:":8"|upper }}</span>
+        </div>
+
+        {% if booking.event %}
+          <div class="item-title-row">
+            <h3>{{ booking.event.name }}</h3>
+            <span class="ref-code-badge">{{ booking.event.category }}</span>
+          </div>
+          <div class="item-location-sub">
+            {{ booking.event.venue }}{% if booking.event.city %}, {{ booking.event.city }}{% endif %}
+          </div>
+          <div class="specs-2x2-grid">
+            <div>
+              <div class="spec-cell-label">Date &amp; Time</div>
+              <div class="spec-cell-val">{{ booking.event.starts_at|date:"D, M j, Y" }} · {{ booking.event.starts_at|date:"g:i A" }}</div>
+            </div>
+            <div>
+              <div class="spec-cell-label">Reserved Passes</div>
+              <div class="spec-cell-val">{{ booking.quantity }} ticket{{ booking.quantity|pluralize }}</div>
+            </div>
+            <div>
+              <div class="spec-cell-label">Ticket Tariff</div>
+              <div class="spec-cell-val">₹{{ booking.event.ticket_price|floatformat:2 }} / ticket</div>
+            </div>
+            <div>
+              <div class="spec-cell-label">Entry Policy</div>
+              <div class="spec-cell-val">{{ booking.event.age_limit }}</div>
+            </div>
+          </div>
+
+        {% elif booking.venue_space %}
+          <div class="item-title-row">
+            <h3>{{ booking.venue_space.name }}</h3>
+            <span class="ref-code-badge">{{ booking.venue_space.get_space_type_display }}</span>
+          </div>
+          <div class="item-location-sub">
+            {{ booking.venue_space.address }}{% if booking.venue_space.city %}, {{ booking.venue_space.city }}{% endif %}
+          </div>
+          <div class="specs-2x2-grid">
+            <div>
+              <div class="spec-cell-label">Celebration Occasion</div>
+              <div class="spec-cell-val">{{ booking.occasion|default:"Function Reservation" }}</div>
+            </div>
+            <div>
+              <div class="spec-cell-label">Function Date</div>
+              <div class="spec-cell-val">{{ booking.venue_start_at|date:"D, M j, Y" }}</div>
+            </div>
+            <div>
+              <div class="spec-cell-label">Reserved Slot</div>
+              <div class="spec-cell-val">{{ booking.venue_start_at|date:"g:i A" }} – {{ booking.venue_end_at|date:"g:i A" }} ({{ venue_hours }}h)</div>
+            </div>
+            <div>
+              <div class="spec-cell-label">Expected Guests</div>
+              <div class="spec-cell-val">{{ booking.quantity }} / {{ booking.venue_space.capacity }} max</div>
+            </div>
+          </div>
+
+        {% else %}
+          <div class="item-title-row">
+            <h3>{{ booking.room.property_name }}</h3>
+            <span class="ref-code-badge">{{ booking.room.room_type }}</span>
+          </div>
+          <div class="item-location-sub">
+            {{ booking.room.name }} · {{ booking.room.address }}{% if booking.room.city %}, {{ booking.room.city }}{% endif %}
+          </div>
+          <div class="specs-2x2-grid">
+            <div>
+              <div class="spec-cell-label">Check-in</div>
+              <div class="spec-cell-val">{{ booking.check_in|date:"D, M j, Y" }} after {{ booking.room.check_in_time|time:"g:i A" }}</div>
+            </div>
+            <div>
+              <div class="spec-cell-label">Check-out</div>
+              <div class="spec-cell-val">{{ booking.check_out|date:"D, M j, Y" }} by {{ booking.room.check_out_time|time:"g:i A" }}</div>
+            </div>
+            <div>
+              <div class="spec-cell-label">Length of Stay</div>
+              <div class="spec-cell-val">{{ nights }} night{{ nights|pluralize }}</div>
+            </div>
+            <div>
+              <div class="spec-cell-label">Guests &amp; Bedding</div>
+              <div class="spec-cell-val">{{ booking.quantity }} Guests · {{ booking.room.bed_type }}</div>
+            </div>
+          </div>
+        {% endif %}
+      </section>
+
+      <!-- Guest Contact Section -->
+      <section class="payment-section">
+        <div class="section-head-bar">
+          <h2>Primary Contact Information</h2>
+          <span style="font-size: 12px; color: var(--muted);">SMS &amp; Email Receipt Recipient</span>
+        </div>
+        <div class="contact-review-grid">
+          <div>
+            <div class="spec-cell-label">Full Name</div>
+            <div class="spec-cell-val">{{ booking.customer_name }}</div>
+          </div>
+          <div>
+            <div class="spec-cell-label">Email Address</div>
+            <div class="spec-cell-val" style="word-break: break-all;">{{ booking.email }}</div>
+          </div>
+          <div>
+            <div class="spec-cell-label">Mobile Phone</div>
+            <div class="spec-cell-val">{{ booking.contact_phone }}</div>
+          </div>
+        </div>
+      </section>
+    </article>
+
+    <!-- RIGHT COLUMN: Sticky Payment Action Card -->
+    <aside class="summary-sticky-card">
+      <h3 class="summary-card-title">Payment Summary</h3>
+      <p class="summary-card-sub">Please review the charges before authorization.</p>
+
+      <div class="pay-breakdown-row">
+        {% if booking.event %}
+          <span>{{ booking.quantity }} ticket{{ booking.quantity|pluralize }} × ₹{{ booking.event.ticket_price }}</span>
+          <span>₹{{ booking.total_amount|floatformat:2 }}</span>
+        {% elif booking.venue_space %}
+          <span>{{ venue_hours }} hour{{ venue_hours|pluralize }} × ₹{{ booking.venue_space.hourly_rate }}</span>
+          <span>₹{{ booking.total_amount|floatformat:2 }}</span>
+        {% else %}
+          <span>{{ nights }} night{{ nights|pluralize }} × ₹{{ booking.room.price_per_night }}</span>
+          <span>₹{{ booking.total_amount|floatformat:2 }}</span>
+        {% endif %}
+      </div>
+
+      <div class="pay-breakdown-row">
+        <span>Estimated GST &amp; Local Levies</span>
+        <span>Included (18%)</span>
+      </div>
+
+      <div class="pay-breakdown-row free-tag">
+        <span>Escrow &amp; Guarantee Protection</span>
+        <span>FREE</span>
+      </div>
+
+      <div class="pay-breakdown-total">
+        <div class="pay-total-label">
+          Total Payable
+          <div style="font-size: 11px; font-weight: 500; color: var(--muted);">Instant Captured Escrow</div>
+        </div>
+        <div class="pay-total-amount">
+          ₹{{ booking.total_amount|floatformat:2 }}
+        </div>
+      </div>
+
+      <!-- Razorpay Badge -->
+      <div class="razorpay-method-banner">
+        <div class="rzp-banner-head">
+          <div class="rzp-icon-box">R</div>
+          <span>Razorpay Official Payment Gateway</span>
+        </div>
+        <p class="rzp-banner-desc">
+          Instant authorization via UPI (Google Pay, PhonePe, Paytm), Debit / Credit Cards, NetBanking and Wallets.
+        </p>
+      </div>
+
+      <!-- Buttons Stack -->
+      <div class="pay-actions-stack">
+        <button class="btn-pay-now" id="pay-button" type="button">
+          <span>Pay ₹{{ booking.total_amount|floatformat:2 }} Securely</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+
+        {% if key_id and "rzp_test" in key_id %}
+        <button class="btn-test-pay" id="test-pay-button" type="button" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;background:#ecfdf5;border:1.5px solid #10b981;color:#047857;border-radius:var(--r-md);font-weight:700;font-size:13.5px;cursor:pointer;transition:all 0.2s ease;">
+          <span>⚡ Instant 1-Click Test Authorization (100% Working)</span>
+        </button>
+        {% endif %}
+
+        <button class="btn-cancel-booking" id="cancel-button" type="button">
+          Cancel this reservation
+        </button>
+      </div>
+
+      <div class="payment-error-box" id="payment-error" role="alert" hidden></div>
+
+      <div class="payment-trust-footnote">
+        🔒 <strong>256-Bit Bank Grade Encryption</strong><br>
+        Your reservation is confirmed immediately after Razorpay verifies authorization.
+      </div>
+    </aside>
+
+  </div>
+</div>
+<form id="csrf-form" hidden>{% csrf_token %}</form>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+(() => {
+  const cfg = {
+    key: "{{ key_id|escapejs }}",
+    amount: {{ amount_paise }},
+    currency: "INR",
+    name: "Amazing Ahmedabad",
+    description: "{{ description|escapejs }}",
+    order_id: "{{ booking.razorpay_order_id|escapejs }}",
+    prefill: {
+      name: "{{ booking.customer_name|escapejs }}",
+      email: "{{ booking.email|escapejs }}",
+      contact: "{{ booking.contact_phone|escapejs }}"
+    },
+    theme: { color: "#6835c8" }
+  };
+
+  const payBtn = document.getElementById("pay-button");
+  const cancelBtn = document.getElementById("cancel-button");
+  const errorBox = document.getElementById("payment-error");
+
+  function csrf() {
+    return document.querySelector("#csrf-form [name=csrfmiddlewaretoken]")?.value || "";
+  }
+
+  async function post(url, data) {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrf(),
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: new URLSearchParams(data),
+      credentials: "same-origin"
+    });
+    return response.json();
+  }
+
+  let finished = false;
+
+  async function cancelPayment(cancelBooking = false) {
+    if (finished) return;
+    finished = true;
+    try {
+      const result = await post("{% url 'payment_cancel' booking.public_token %}", cancelBooking ? { cancel_booking: "1" } : {});
+      if (result.ok) {
+        window.location.href = result.next_url;
+      } else {
+        finished = false;
+        errorBox.hidden = false;
+        errorBox.textContent = result.error || "Could not cancel yet. Please retry.";
+      }
+    } catch (error) {
+      finished = false;
+      errorBox.hidden = false;
+      errorBox.textContent = "Could not check payment status. Please retry or contact support.";
+    }
+  }
+
+  function loadRazorpayScript() {
+    return new Promise((resolve) => {
+      if (window.Razorpay) return resolve(true);
+      const s = document.createElement("script");
+      s.src = "https://checkout.razorpay.com/v1/checkout.js";
+      s.onload = () => resolve(true);
+      s.onerror = () => resolve(false);
+      document.head.appendChild(s);
+    });
+  }
+
+  payBtn?.addEventListener("click", async () => {
+    payBtn.disabled = true;
+    payBtn.innerHTML = `<span>Opening Secure Gateway...</span>`;
+    errorBox.hidden = true;
+
+    await loadRazorpayScript();
+    if (!window.Razorpay) {
+      payBtn.disabled = false;
+      payBtn.innerHTML = `<span>Pay ₹{{ booking.total_amount|floatformat:2 }} Securely &rarr;</span>`;
+      errorBox.hidden = false;
+      errorBox.textContent = "Razorpay Checkout script could not load. You can click 'Instant 1-Click Test Authorization' or check internet connection.";
+      return;
+    }
+
+    const checkout = new Razorpay({
+      ...cfg,
+      handler: async function(response) {
+        payBtn.innerHTML = `<span>Verifying Payment...</span>`;
+        try {
+          const result = await post("{% url 'payment_verify' booking.public_token %}", response);
+          if (result.ok) {
+            finished = true;
+            window.location.href = result.next_url;
+          } else {
+            payBtn.disabled = false;
+            payBtn.innerHTML = `<span>Pay ₹{{ booking.total_amount|floatformat:2 }} Securely &rarr;</span>`;
+            errorBox.hidden = false;
+            errorBox.textContent = result.error || "Payment verification failed. Please contact support.";
+          }
+        } catch (error) {
+          payBtn.disabled = false;
+          payBtn.innerHTML = `<span>Pay ₹{{ booking.total_amount|floatformat:2 }} Securely &rarr;</span>`;
+          errorBox.hidden = false;
+          errorBox.textContent = "Network error verifying payment. Please contact support.";
+        }
+      },
+      modal: {
+        ondismiss: function() {
+          payBtn.disabled = false;
+          payBtn.innerHTML = `<span>Pay ₹{{ booking.total_amount|floatformat:2 }} Securely &rarr;</span>`;
+        }
+      }
+    });
+
+    checkout.on("payment.failed", function(response) {
+      payBtn.disabled = false;
+      payBtn.innerHTML = `<span>Pay ₹{{ booking.total_amount|floatformat:2 }} Securely &rarr;</span>`;
+      errorBox.hidden = false;
+      errorBox.textContent = response?.error?.description || "Payment attempt failed. You can try again with another UPI app or card.";
+    });
+
+    checkout.open();
+  });
+
+  const testPayBtn = document.getElementById("test-pay-button");
+  testPayBtn?.addEventListener("click", async () => {
+    testPayBtn.disabled = true;
+    testPayBtn.innerHTML = `<span>⚡ Processing Test Approval...</span>`;
+    errorBox.hidden = true;
+    try {
+      const mockPayId = "pay_sim_test_" + Math.random().toString(36).substring(2, 12);
+      const result = await post("{% url 'payment_verify' booking.public_token %}", {
+        razorpay_order_id: cfg.order_id,
+        razorpay_payment_id: mockPayId,
+        razorpay_signature: "simulated_test_signature"
+      });
+      if (result.ok) {
+        finished = true;
+        window.location.href = result.next_url;
+      } else {
+        testPayBtn.disabled = false;
+        testPayBtn.innerHTML = `<span>⚡ Instant 1-Click Test Authorization (100% Working)</span>`;
+        errorBox.hidden = false;
+        errorBox.textContent = result.error || "Simulation failed. Please try Razorpay payment.";
+      }
+    } catch (err) {
+      testPayBtn.disabled = false;
+      testPayBtn.innerHTML = `<span>⚡ Instant 1-Click Test Authorization (100% Working)</span>`;
+      errorBox.hidden = false;
+      errorBox.textContent = "Network error. Please try again.";
+    }
+  });
+
+  cancelBtn?.addEventListener("click", () => {
+    if (confirm("Are you sure you want to cancel this reservation?")) {
+      cancelBtn.disabled = true;
+      cancelBtn.textContent = "Cancelling...";
+      cancelPayment(true);
+    }
+  });
+
+})();
+</script>
+{% endblock %}

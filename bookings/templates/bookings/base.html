@@ -1,0 +1,1658 @@
+{% load static %}
+
+<!doctype html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+
+  <meta name="theme-color" content="#673ab7">
+
+  <meta name="description" content="{% block meta_description %}Amazing Ahmedabad — Ahmedabad's premier celebration platform for Navratri festival passes, hourly open celebration lawns, grand wedding banquet halls, and hotel stays.{% endblock %}">
+
+  <title>{% block title %}Amazing Ahmedabad | Navratri Garba, Hourly Party Plots, Wedding Halls &amp; Stays{% endblock %}</title>
+
+
+
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'bookings/site.css' %}">
+
+
+
+  <style>
+
+    /* ── Base layout & Toast messages ──────────────────────────── */
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html {
+
+      width: 100%;
+
+      max-width: 100%;
+
+      overflow-x: clip;
+
+      overflow-x: hidden;
+
+      scroll-behavior: smooth;
+
+      scroll-padding-top: 86px;
+
+      -webkit-text-size-adjust: 100%;
+
+    }
+
+    body {
+
+      width: 100%;
+
+      max-width: 100%;
+
+      min-width: 0;
+
+      overflow-x: clip;
+
+      overflow-x: hidden;
+
+      margin: 0;
+
+      padding: 0;
+
+      min-height: 100vh;
+
+      display: flex;
+
+      flex-direction: column;
+
+      background: #faf8f5;
+
+      color: #1e1a2d;
+
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+
+      -webkit-font-smoothing: antialiased;
+
+      -moz-osx-font-smoothing: grayscale;
+
+    }
+
+    .base-content-body {
+
+      flex: 1 0 auto;
+
+      width: 100%;
+
+      max-width: 100%;
+
+      min-width: 0;
+
+      overflow-x: clip;
+
+    }
+
+
+
+    /* ── Django Alert Messages Toasts ──────────────────────────── */
+
+    .messages-container {
+
+      position: fixed;
+
+      top: 82px;
+
+      right: 20px;
+
+      z-index: 10000;
+
+      display: flex;
+
+      flex-direction: column;
+
+      gap: 10px;
+
+      max-width: 420px;
+
+      width: calc(100vw - 40px);
+
+      pointer-events: none;
+
+    }
+
+    .message-toast {
+
+      background: #ffffff;
+
+      color: #1e1a2d;
+
+      border: 1px solid #ece6f4;
+
+      border-radius: 12px;
+
+      padding: 12px 16px;
+
+      box-shadow: 0 10px 30px rgba(18, 9, 32, 0.15);
+
+      font-size: 0.9rem;
+
+      font-weight: 600;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      gap: 12px;
+
+      pointer-events: auto;
+
+      animation: toast-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+    }
+
+    .message-toast.success { border-left: 4px solid #16a34a; }
+
+    .message-toast.error   { border-left: 4px solid #dc2626; }
+
+    .message-toast.warning { border-left: 4px solid #f59e0b; }
+
+    .message-toast.info    { border-left: 4px solid #673ab7; }
+
+    .toast-close {
+
+      background: none;
+
+      border: none;
+
+      font-size: 1.2rem;
+
+      line-height: 1;
+
+      color: #6b6280;
+
+      cursor: pointer;
+
+      padding: 0 4px;
+
+    }
+
+    @keyframes toast-in {
+
+      from { opacity: 0; transform: translateY(-10px) scale(0.96); }
+
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+
+    }
+
+
+
+    /* ── Original Floating WhatsApp Button CSS (Exact UI) ──────── */
+
+    .wa-float {
+
+      position: fixed;
+
+      bottom: 28px;
+
+      right: 28px;
+
+      z-index: 9999;
+
+      display: flex;
+
+      flex-direction: column;
+
+      align-items: flex-end;
+
+      gap: 10px;
+
+    }
+
+    .wa-float-tooltip {
+
+      background: #1a1229;
+
+      color: #fff;
+
+      font-size: .75rem;
+
+      font-weight: 800;
+
+      font-family: Inter, system-ui, sans-serif;
+
+      padding: 6px 14px;
+
+      border-radius: 9999px;
+
+      white-space: nowrap;
+
+      opacity: 0;
+
+      transform: translateX(10px);
+
+      transition: opacity .22s ease, transform .22s ease;
+
+      pointer-events: none;
+
+      box-shadow: 0 4px 14px rgba(0,0,0,.18);
+
+    }
+
+    .wa-float:hover .wa-float-tooltip {
+
+      opacity: 1;
+
+      transform: translateX(0);
+
+    }
+
+    .wa-float-btn {
+
+      width: 56px;
+
+      height: 56px;
+
+      border-radius: 50%;
+
+      background: linear-gradient(135deg, #25d366 0%, #1ab757 55%, #128c7e 100%);
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      box-shadow: 0 6px 22px rgba(37,211,102,.52), 0 2px 8px rgba(37,211,102,.25);
+
+      text-decoration: none;
+
+      animation: wa-bob 3s ease-in-out infinite;
+
+      transition: transform .22s ease, box-shadow .22s ease;
+
+      position: relative;
+
+    }
+
+    .wa-float-btn::before {
+
+      content: '';
+
+      position: absolute;
+
+      inset: -6px;
+
+      border-radius: 50%;
+
+      border: 2.5px solid rgba(37,211,102,.45);
+
+      animation: wa-ring 2.5s ease-out infinite;
+
+    }
+
+    .wa-float-btn:hover {
+
+      transform: scale(1.1) translateY(-2px);
+
+      box-shadow: 0 12px 32px rgba(37,211,102,.65);
+
+      animation-play-state: paused;
+
+    }
+
+    @keyframes wa-bob {
+
+      0%,100% { transform: translateY(0); }
+
+      50%      { transform: translateY(-6px); }
+
+    }
+
+    @keyframes wa-ring {
+
+      0%   { opacity: .8; transform: scale(1); }
+
+      70%  { opacity: 0;  transform: scale(1.35); }
+
+      100% { opacity: 0;  transform: scale(1.35); }
+
+    }
+
+    /* ── Instagram-Style Mobile Bottom Navigation Bar (App Experience) ── */
+
+    .insta-bottom-nav {
+
+      display: none;
+
+      position: fixed;
+
+      bottom: 0;
+
+      left: 0;
+
+      right: 0;
+
+      width: 100%;
+
+      height: calc(58px + env(safe-area-inset-bottom, 0px));
+
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+
+      background: rgba(255, 255, 255, 0.98);
+
+      backdrop-filter: blur(20px) saturate(180%);
+
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+
+      box-shadow: 0 -4px 22px rgba(22, 10, 42, 0.08);
+
+      z-index: 9995;
+
+      justify-content: space-around;
+
+      align-items: center;
+
+      padding-left: 2px;
+
+      padding-right: 2px;
+
+    }
+
+    .insta-nav-item {
+
+      flex: 1 1 0;
+
+      min-width: 0;
+
+      display: flex;
+
+      flex-direction: column;
+
+      align-items: center;
+
+      justify-content: center;
+
+      gap: 2px;
+
+      color: #64748b;
+
+      text-decoration: none;
+
+      font-size: 0.64rem;
+
+      font-weight: 750;
+
+      padding: 4px 1px;
+
+      transition: all 0.15s ease;
+
+      position: relative;
+
+      -webkit-tap-highlight-color: transparent;
+
+      user-select: none;
+
+      text-align: center;
+
+    }
+
+    .insta-nav-item:active {
+
+      transform: scale(0.92);
+
+    }
+
+    .insta-nav-item.active {
+
+      color: #ea580c;
+
+      font-weight: 900;
+
+    }
+
+    .insta-nav-icon {
+
+      width: 22px;
+
+      height: 22px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      position: relative;
+
+    }
+
+    .insta-nav-icon svg {
+
+      width: 20px;
+
+      height: 20px;
+
+      stroke: currentColor;
+
+      stroke-width: 2;
+
+      fill: none;
+
+      transition: transform 0.18s, stroke 0.18s;
+
+    }
+
+    .insta-nav-item.active .insta-nav-icon svg {
+
+      stroke: #ea580c;
+
+      transform: scale(1.12);
+
+    }
+
+    .insta-nav-badge-dot {
+
+      position: absolute;
+
+      top: -1px;
+
+      right: -2px;
+
+      width: 6px;
+
+      height: 6px;
+
+      background: #ff6d00;
+
+      border-radius: 50%;
+
+      box-shadow: 0 0 0 2px #ffffff;
+
+      animation: sn-blink 1.2s ease-in-out infinite;
+
+    }
+
+    .insta-nav-cart-badge {
+
+      position: absolute;
+
+      top: -4px;
+
+      right: -8px;
+
+      background: #ea580c;
+
+      color: #ffffff;
+
+      font-size: 0.6rem;
+
+      font-weight: 900;
+
+      min-width: 17px;
+
+      height: 17px;
+
+      border-radius: 999px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      padding: 0 3px;
+
+      box-shadow: 0 2px 6px rgba(234, 88, 12, 0.45);
+
+      border: 2px solid #ffffff;
+
+      animation: popBadge 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+    }
+
+    @keyframes popBadge {
+
+      0% { transform: scale(0.6); }
+
+      70% { transform: scale(1.15); }
+
+      100% { transform: scale(1); }
+
+    }
+
+    .insta-nav-label {
+
+      line-height: 1.1;
+
+      letter-spacing: -0.02em;
+
+      white-space: nowrap;
+
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+
+      max-width: 100%;
+
+    }
+
+    .insta-nav-avatar-circle {
+
+      width: 25px;
+
+      height: 25px;
+
+      border-radius: 50%;
+
+      overflow: hidden;
+
+      border: 1.5px solid #7c3aed;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      background: linear-gradient(135deg, #7c3aed, #f59e0b);
+
+      color: #ffffff;
+
+      font-size: 0.70rem;
+
+      font-weight: 900;
+
+      box-shadow: 0 1px 4px rgba(124, 58, 237, 0.25);
+
+      transition: all 0.15s ease;
+
+      flex-shrink: 0;
+
+    }
+
+    .insta-nav-avatar-circle img {
+
+      width: 100%;
+
+      height: 100%;
+
+      object-fit: cover;
+
+      display: block;
+
+    }
+
+    .insta-nav-item.active .insta-nav-avatar-circle {
+
+      border: 2px solid #7c3aed;
+
+      box-shadow: 0 0 0 2.5px rgba(124, 58, 237, 0.40);
+
+      transform: scale(1.08);
+
+    }
+
+
+
+    @media (max-width: 768px) {
+
+      .insta-bottom-nav {
+
+        display: flex;
+
+      }
+
+      body {
+
+        padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px)) !important;
+
+      }
+
+      .wa-float {
+
+        bottom: calc(74px + env(safe-area-inset-bottom, 0px)) !important;
+
+        right: 16px !important;
+
+      }
+
+      .wa-float-btn { width: 50px; height: 50px; }
+
+      .wa-float-tooltip { display: none; }
+
+    }
+
+    @media (max-width: 340px) {
+
+      .insta-bottom-nav {
+
+        overflow-x: auto;
+
+        -webkit-overflow-scrolling: touch;
+
+        scrollbar-width: none;
+
+      }
+
+      .insta-bottom-nav::-webkit-scrollbar {
+
+        display: none;
+
+      }
+
+      .insta-nav-item {
+
+        flex: 0 0 50px;
+
+      }
+
+    }
+
+
+
+    /* ── Hide bottom nav bar & WhatsApp when mobile hamburger menu is open ── */
+
+    html.sn-menu-locked,
+
+    body.sn-menu-locked {
+
+      overflow: hidden !important;
+
+      height: 100% !important;
+
+      max-height: 100% !important;
+
+      overscroll-behavior: none !important;
+
+    }
+
+    body.sn-menu-locked .insta-bottom-nav,
+
+    body.sn-menu-locked .wa-float,
+
+    body.sn-menu-locked .gtranslate_wrapper,
+
+    body.sn-menu-locked #google_translate_element,
+
+    body.sn-menu-locked .skiptranslate {
+
+      display: none !important;
+
+      opacity: 0 !important;
+
+      visibility: hidden !important;
+
+      pointer-events: none !important;
+
+    }
+
+
+
+    /* ── Total Eradication of Google Translate Banner Bar ─────── */
+
+    body > .skiptranslate,
+
+    body > div[class*="skiptranslate"],
+
+    iframe.goog-te-banner-frame,
+
+    iframe[id*=":1.container"],
+
+    iframe[id*=":2.container"],
+
+    iframe[id*="goog"],
+
+    iframe.VIpgJd-ZVi9od-ORHb-OEVmcd,
+
+    .VIpgJd-ZVi9od-ORHb-OEVmcd,
+
+    .VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+
+    .VIpgJd-ZVi9od-aZ2wEe-OiiCO,
+
+    .VIpgJd-ZVi9od-l4eHX-hSRGPd,
+
+    #goog-gt-tt,
+
+    .goog-te-balloon-frame,
+
+    .goog-tooltip,
+
+    .goog-tooltip:hover {
+
+      display: none !important;
+
+      visibility: hidden !important;
+
+      opacity: 0 !important;
+
+      height: 0 !important;
+
+      max-height: 0 !important;
+
+      min-height: 0 !important;
+
+      width: 0 !important;
+
+      pointer-events: none !important;
+
+      position: absolute !important;
+
+      top: -9999px !important;
+
+      left: -9999px !important;
+
+      z-index: -999999 !important;
+
+    }
+
+    html, body {
+
+      top: 0px !important;
+
+      position: static !important;
+
+      margin-top: 0px !important;
+
+      transform: none !important;
+
+    }
+
+    #google_translate_element {
+
+      display: none !important;
+
+      position: absolute !important;
+
+      top: -9999px !important;
+
+      left: -9999px !important;
+
+      visibility: hidden !important;
+
+    }
+
+    .goog-text-highlight {
+
+      background: transparent !important;
+
+      box-shadow: none !important;
+
+      border: none !important;
+
+    }
+
+
+
+    /* ══════════════════════════════════════════════════════════════
+
+       UNIVERSAL MOBILE RESPONSIVENESS & TOUCH OPTIMIZATION
+
+    ══════════════════════════════════════════════════════════════ */
+
+    @media (max-width: 768px) {
+
+      /* Prevent iOS auto-zoom on input focus by setting 16px font-size */
+
+      input, select, textarea {
+
+        font-size: 16px !important;
+
+      }
+
+
+
+      /* Universal container width safety */
+
+      .container, .page-container, .rooms-outer, .plots-outer, .halls-outer, .events-container, .food-container, .footer-grid-container {
+
+        width: 100% !important;
+
+        max-width: 100vw !important;
+
+        padding-left: 16px !important;
+
+        padding-right: 16px !important;
+
+        box-sizing: border-box !important;
+
+      }
+
+
+
+      /* Universal viewport safety - strictly prevent horizontal scroll */
+
+      html, body, .base-content-body, main {
+
+        max-width: 100vw !important;
+
+        overflow-x: clip !important;
+
+        overflow-x: hidden !important;
+
+      }
+
+
+
+      /* Smooth horizontal touch scrolling for chips, pills and tabs */
+
+      .plots-area-strip, .halls-area-strip, .rm-areas-strip, .ev-areas-strip,
+
+      .fd-chips-scroll, .rm-chips-scroll, .ev-chips-scroll, .category-tabs,
+
+      .rm-areas-strip, .plots-trust-pills, .halls-trust-pills {
+
+        -webkit-overflow-scrolling: touch !important;
+
+        scrollbar-width: none !important;
+
+      }
+
+      .plots-area-strip::-webkit-scrollbar, .halls-area-strip::-webkit-scrollbar,
+
+      .rm-areas-strip::-webkit-scrollbar, .ev-areas-strip::-webkit-scrollbar,
+
+      .fd-chips-scroll::-webkit-scrollbar, .rm-chips-scroll::-webkit-scrollbar,
+
+      .ev-chips-scroll::-webkit-scrollbar, .category-tabs::-webkit-scrollbar {
+
+        display: none !important;
+
+      }
+
+
+
+      /* Comfortable touch tap targets */
+
+      button, .btn, a.btn-primary, a.btn-solid, a.btn-outline,
+
+      .btn-plot-book, .btn-plot-details, .btn-hall-book, .btn-hall-details,
+
+      .rm-btn-book, .rm-btn-details, .ev-btn-book, .ev-btn-details, .fd-btn-order {
+
+        min-height: 44px;
+
+        -webkit-tap-highlight-color: transparent;
+
+      }
+
+
+
+      /* Responsive media scaling */
+
+      img, video, iframe {
+
+        max-width: 100% !important;
+
+      }
+
+
+
+      /* Card grids single column on mobile */
+
+      .venue-grid, .rm-grid, .ev-grid {
+
+        grid-template-columns: 1fr !important;
+
+        gap: 18px !important;
+
+      }
+
+
+
+      /* Mobile Hero title scaling */
+
+      .hero h1, .plots-hero h1, .halls-hero h1, .rm-hero h1, .ev-hero h1, .fd-hero h1, .account-hero .hero-title {
+
+        font-size: clamp(1.8rem, 6.5vw, 2.75rem) !important;
+
+        line-height: 1.15 !important;
+
+      }
+
+
+
+      /* Mobile Hero padding */
+
+      .hero, .plots-hero, .halls-hero, .rm-hero, .ev-hero, .fd-hero, .account-hero {
+
+        padding-top: 42px !important;
+
+        padding-bottom: 60px !important;
+
+      }
+
+    }
+
+
+
+    @media (max-width: 480px) {
+
+      .plots-filter-wrap, .halls-filter-wrap, .rm-filter-wrapper, .ev-filter-wrapper, .fd-filter-wrapper {
+
+        margin-top: -28px !important;
+
+      }
+
+      .plots-filter-card, .halls-filter-card, .rm-filter-box, .ev-filter-box, .fd-filter-box {
+
+        padding: 14px 12px !important;
+
+        border-radius: 16px !important;
+
+      }
+
+      .card-foot, .rm-card-footer, .ev-card-footer, .fd-card-footer {
+
+        flex-direction: column !important;
+
+        align-items: stretch !important;
+
+        gap: 12px !important;
+
+      }
+
+      .card-action-btns, .rm-actions, .ev-actions, .fd-actions {
+
+        width: 100% !important;
+
+        display: grid !important;
+
+        grid-template-columns: 1fr 1fr !important;
+
+        gap: 8px !important;
+
+      }
+
+      .btn-plot-details, .btn-plot-book, .btn-hall-details, .btn-hall-book,
+
+      .rm-btn-details, .rm-btn-book, .ev-btn-details, .ev-btn-book, .fd-btn-order {
+
+        width: 100% !important;
+
+        text-align: center !important;
+
+        justify-content: center !important;
+
+        padding: 10px 8px !important;
+
+        font-size: 0.82rem !important;
+
+      }
+
+    }
+
+  </style>
+
+
+
+  {% block extra_css %}{% endblock %}
+
+
+  <style id="criticalSkeletonStyles">
+    /* ── Critical Global Skeleton Styles (Immediate First-Paint) ── */
+    @keyframes aa-skeleton-shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .sk-line, .sk-circle, .sk-pill, .sk-badge, .sk-title, .sk-subtitle,
+    .sk-search-bar, .sk-card-media, .sk-btn, .skeleton, .skeleton-box {
+      background: linear-gradient(90deg, #ede7f3 0%, #fcfbfe 35%, #ede7f3 70%) !important;
+      background-size: 200% 100% !important;
+      animation: aa-skeleton-shimmer 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite !important;
+      border-radius: 8px;
+    }
+    .global-page-skeleton {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 99998;
+      background: #faf8f5;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 16px;
+      pointer-events: auto;
+      transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 1;
+      visibility: visible;
+    }
+    .global-page-skeleton.sk-fade-out {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .sk-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .sk-nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 18px;
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid #ebe5f1;
+      box-shadow: 0 4px 16px rgba(33, 17, 56, 0.04);
+      margin-bottom: 24px;
+    }
+    .sk-nav-pills {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sk-hero {
+      background: linear-gradient(135deg, #2b134d 0%, #3d1b6b 100%);
+      border-radius: 24px;
+      padding: 44px 24px;
+      text-align: center;
+      margin-bottom: 24px;
+      box-shadow: 0 12px 36px rgba(28, 12, 50, 0.16);
+    }
+    .sk-hero .sk-badge {
+      background: linear-gradient(90deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.15) 100%) !important;
+      border-radius: 999px;
+    }
+    .sk-hero .sk-title, .sk-hero .sk-subtitle {
+      background: linear-gradient(90deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0.18) 100%) !important;
+    }
+    .sk-search-bar {
+      max-width: 820px;
+      height: 52px;
+      border-radius: 18px;
+      margin: 20px auto 0;
+      background: linear-gradient(90deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.45) 50%, rgba(255,255,255,0.25) 100%) !important;
+    }
+    .sk-stories-row {
+      display: flex;
+      gap: 18px;
+      overflow-x: hidden;
+      padding: 8px 12px 20px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .sk-story-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .sk-circle {
+      border-radius: 50% !important;
+    }
+    .sk-pill {
+      height: 28px;
+      border-radius: 999px;
+    }
+    .sk-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    .sk-card {
+      background: #ffffff;
+      border-radius: 20px;
+      border: 1px solid #ebe5f1;
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(33, 17, 56, 0.05);
+    }
+    .sk-card-media {
+      width: 100%;
+      aspect-ratio: 16/10;
+      border-radius: 0 !important;
+    }
+    .sk-card-body {
+      padding: 18px;
+    }
+    .sk-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #f2edf7;
+      padding-top: 14px;
+      margin-top: 8px;
+    }
+    .sk-btn {
+      border-radius: 10px;
+    }
+    @media (max-width: 768px) {
+      .sk-nav-pills { display: none; }
+      .sk-hero { padding: 32px 16px; }
+      .sk-hero .sk-title { width: 90%; height: 28px; }
+      .sk-hero .sk-subtitle { width: 70%; height: 16px; }
+      .sk-search-bar { height: 46px; }
+      .sk-stories-row { justify-content: flex-start; gap: 14px; padding-left: 4px; }
+      .sk-cards-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <!-- Global Skeleton Screen Overlay (Instant Shimmer on Load & Navigation) -->
+  <div id="globalPageSkeleton" class="global-page-skeleton" aria-hidden="true">
+    <div class="sk-container">
+      <!-- Skeleton Top Navigation -->
+      <div class="sk-nav">
+        <div class="sk-circle" style="width: 40px; height: 40px; flex-shrink: 0;"></div>
+        <div class="sk-line" style="width: 140px; height: 18px; border-radius: 6px;"></div>
+        <div class="sk-nav-pills">
+          <div class="sk-pill" style="width: 60px;"></div>
+          <div class="sk-pill" style="width: 85px;"></div>
+          <div class="sk-pill" style="width: 70px;"></div>
+          <div class="sk-pill" style="width: 75px;"></div>
+          <div class="sk-pill" style="width: 65px;"></div>
+          <div class="sk-circle" style="width: 34px; height: 34px;"></div>
+        </div>
+      </div>
+
+      <!-- Skeleton Hero Banner -->
+      <div class="sk-hero">
+        <div class="sk-badge" style="width: 190px; height: 22px; margin: 0 auto 16px;"></div>
+        <div class="sk-title" style="width: 65%; height: 38px; margin: 0 auto 14px;"></div>
+        <div class="sk-subtitle" style="width: 45%; height: 16px; margin: 0 auto 26px;"></div>
+        <div class="sk-search-bar"></div>
+      </div>
+
+      <!-- Skeleton Stories / Category Reel -->
+      <div class="sk-stories-row">
+        <div class="sk-story-item">
+          <div class="sk-circle" style="width: 62px; height: 62px;"></div>
+          <div class="sk-line" style="width: 54px; height: 10px; margin-top: 8px;"></div>
+        </div>
+        <div class="sk-story-item">
+          <div class="sk-circle" style="width: 62px; height: 62px;"></div>
+          <div class="sk-line" style="width: 54px; height: 10px; margin-top: 8px;"></div>
+        </div>
+        <div class="sk-story-item">
+          <div class="sk-circle" style="width: 62px; height: 62px;"></div>
+          <div class="sk-line" style="width: 54px; height: 10px; margin-top: 8px;"></div>
+        </div>
+        <div class="sk-story-item">
+          <div class="sk-circle" style="width: 62px; height: 62px;"></div>
+          <div class="sk-line" style="width: 54px; height: 10px; margin-top: 8px;"></div>
+        </div>
+        <div class="sk-story-item">
+          <div class="sk-circle" style="width: 62px; height: 62px;"></div>
+          <div class="sk-line" style="width: 54px; height: 10px; margin-top: 8px;"></div>
+        </div>
+        <div class="sk-story-item">
+          <div class="sk-circle" style="width: 62px; height: 62px;"></div>
+          <div class="sk-line" style="width: 54px; height: 10px; margin-top: 8px;"></div>
+        </div>
+      </div>
+
+      <!-- Skeleton Cards Grid -->
+      <div class="sk-cards-grid">
+        <div class="sk-card">
+          <div class="sk-card-media"></div>
+          <div class="sk-card-body">
+            <div class="sk-line" style="width: 78%; height: 20px; margin-bottom: 10px;"></div>
+            <div class="sk-line" style="width: 45%; height: 14px; margin-bottom: 14px;"></div>
+            <div style="display: flex; gap: 8px; margin-bottom: 14px;">
+              <div class="sk-pill" style="width: 65px; height: 22px;"></div>
+              <div class="sk-pill" style="width: 75px; height: 22px;"></div>
+            </div>
+            <div class="sk-line" style="width: 90%; height: 12px; margin-bottom: 6px;"></div>
+            <div class="sk-line" style="width: 65%; height: 12px; margin-bottom: 18px;"></div>
+            <div class="sk-card-footer">
+              <div class="sk-line" style="width: 75px; height: 22px;"></div>
+              <div class="sk-btn" style="width: 95px; height: 34px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sk-card">
+          <div class="sk-card-media"></div>
+          <div class="sk-card-body">
+            <div class="sk-line" style="width: 72%; height: 20px; margin-bottom: 10px;"></div>
+            <div class="sk-line" style="width: 50%; height: 14px; margin-bottom: 14px;"></div>
+            <div style="display: flex; gap: 8px; margin-bottom: 14px;">
+              <div class="sk-pill" style="width: 65px; height: 22px;"></div>
+              <div class="sk-pill" style="width: 75px; height: 22px;"></div>
+            </div>
+            <div class="sk-line" style="width: 92%; height: 12px; margin-bottom: 6px;"></div>
+            <div class="sk-line" style="width: 60%; height: 12px; margin-bottom: 18px;"></div>
+            <div class="sk-card-footer">
+              <div class="sk-line" style="width: 75px; height: 22px;"></div>
+              <div class="sk-btn" style="width: 95px; height: 34px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sk-card">
+          <div class="sk-card-media"></div>
+          <div class="sk-card-body">
+            <div class="sk-line" style="width: 82%; height: 20px; margin-bottom: 10px;"></div>
+            <div class="sk-line" style="width: 40%; height: 14px; margin-bottom: 14px;"></div>
+            <div style="display: flex; gap: 8px; margin-bottom: 14px;">
+              <div class="sk-pill" style="width: 65px; height: 22px;"></div>
+              <div class="sk-pill" style="width: 75px; height: 22px;"></div>
+            </div>
+            <div class="sk-line" style="width: 86%; height: 12px; margin-bottom: 6px;"></div>
+            <div class="sk-line" style="width: 70%; height: 12px; margin-bottom: 18px;"></div>
+            <div class="sk-card-footer">
+              <div class="sk-line" style="width: 75px; height: 22px;"></div>
+              <div class="sk-btn" style="width: 95px; height: 34px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  {# ── Header: Original _site_nav.html (Exact UI) ── #}
+
+  {% block site_header %}
+
+    {% include "bookings/_site_nav.html" %}
+
+  {% endblock %}
+
+
+
+  {# ── Messages ── #}
+
+  {% if messages %}
+
+  <div class="messages-container" id="djangoMessagesContainer">
+
+    {% for message in messages %}
+
+      <div class="message-toast {{ message.tags }}">
+
+        <span>{{ message }}</span>
+
+        <button type="button" class="toast-close" onclick="this.parentElement.remove()" aria-label="Close notification">&times;</button>
+
+      </div>
+
+    {% endfor %}
+
+  </div>
+
+  {% endif %}
+
+
+
+  {# ── Main Page Content ── #}
+
+  <div class="base-content-body">
+
+    {% block content %}{% endblock %}
+
+  </div>
+
+
+
+  {% block site_footer %}{% endblock %}
+
+
+
+  <!-- Floating WhatsApp Button (Original Exact UI) -->
+
+  <div class="wa-float">
+
+    <span class="wa-float-tooltip">Chat on WhatsApp 💬</span>
+
+    <a class="wa-float-btn"
+
+       href="https://wa.me/917203928160?text=Hi%2C+I+want+to+know+more+about+Amazing+Ahmedabad+bookings!"
+
+       target="_blank"
+
+       rel="noopener noreferrer"
+
+       aria-label="Chat with Amazing Ahmedabad on WhatsApp">
+
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="#ffffff" aria-hidden="true">
+
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+
+      </svg>
+
+    </a>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+
+       INSTAGRAM-STYLE MOBILE BOTTOM NAVIGATION BAR
+
+  ══════════════════════════════════════════════════════════════ -->
+
+      <nav class="insta-bottom-nav" aria-label="Mobile Navigation">
+
+    <!-- 1. Home -->
+
+    <a href="{% url 'home' %}" class="insta-nav-item {% if request.resolver_match.url_name == 'home' and not request.GET.type %}active{% endif %}">
+
+      <div class="insta-nav-icon">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+
+          <path d="M3 10.5L12 3l9 7.5V20a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+
+          <polyline points="9 22 9 12 15 12 15 22"/>
+
+        </svg>
+
+      </div>
+
+      <span class="insta-nav-label">Home</span>
+
+    </a>
+
+
+
+    <!-- 2. Garba / Events -->
+
+    <a href="{% url 'events' %}" class="insta-nav-item {% if request.resolver_match.url_name == 'events' or request.resolver_match.url_name == 'event_detail' or request.resolver_match.url_name == 'book_event' or request.GET.type == 'events' %}active{% endif %}">
+
+      <div class="insta-nav-icon">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+
+          <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/>
+
+          <line x1="9" y1="12" x2="15" y2="12"/>
+
+        </svg>
+
+        <span class="insta-nav-badge-dot"></span>
+
+      </div>
+
+      <span class="insta-nav-label">Garba</span>
+
+    </a>
+
+
+
+    <!-- 3. Food & Snacks with Live Cart Badge -->
+
+    <a href="{% url 'food_hub' %}" class="insta-nav-item {% if request.resolver_match.url_name == 'food_hub' or request.resolver_match.url_name == 'food_order_done' or 'food' in request.resolver_match.url_name %}active{% endif %}" id="mobileNavFoodTab">
+
+      <div class="insta-nav-icon">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+
+          <path d="M12 3a9 9 0 0 1 9 9H3a9 9 0 0 1 9-9z"/>
+
+          <path d="M2 12h20"/>
+
+          <path d="M4 16h16"/>
+
+          <path d="M6 20h12"/>
+
+        </svg>
+
+        <span class="insta-nav-cart-badge" id="mobileNavCartBadge" style="display:none;">0</span>
+
+      </div>
+
+      <span class="insta-nav-label">Food</span>
+
+    </a>
+
+
+
+    <!-- 4. Party Plots -->
+
+    <a href="{% url 'party_plots' %}" class="insta-nav-item {% if request.resolver_match.url_name == 'party_plots' or request.GET.type == 'party_plots' %}active{% endif %}">
+
+      <div class="insta-nav-icon">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+
+        </svg>
+
+      </div>
+
+      <span class="insta-nav-label">Plots</span>
+
+    </a>
+
+
+
+    <!-- 5. Wedding Halls -->
+
+    <a href="{% url 'wedding_halls' %}" class="insta-nav-item {% if request.resolver_match.url_name == 'wedding_halls' or request.GET.type == 'wedding_halls' %}active{% endif %}">
+
+      <div class="insta-nav-icon">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+
+          <path d="M3 21h18"/>
+
+          <path d="M5 21V7l7-4 7 4v14"/>
+
+          <path d="M10 21v-4h4v4"/>
+
+          <line x1="9" y1="10" x2="10" y2="10"/>
+
+          <line x1="14" y1="10" x2="15" y2="10"/>
+
+        </svg>
+
+      </div>
+
+      <span class="insta-nav-label">Halls</span>
+
+    </a>
+
+
+
+    <!-- 6. Luxury Rooms -->
+
+    <a href="{% url 'rooms' %}" class="insta-nav-item {% if request.resolver_match.url_name == 'rooms' or request.resolver_match.url_name == 'room_detail' or request.resolver_match.url_name == 'room_book' or request.GET.type == 'rooms' %}active{% endif %}">
+
+      <div class="insta-nav-icon">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+
+          <path d="M2 4v16"/>
+
+          <path d="M2 8h18a2 2 0 0 1 2 2v10"/>
+
+          <path d="M2 17h20"/>
+
+          <path d="M6 8v9"/>
+
+        </svg>
+
+      </div>
+
+      <span class="insta-nav-label">Rooms</span>
+
+    </a>
+
+
+
+    <!-- 7. Profile / Log in -->
+
+    {% if request.user.is_authenticated %}
+
+    <a href="{% url 'profile' %}" class="insta-nav-item {% if request.resolver_match.url_name == 'profile' or request.resolver_match.url_name == 'account' or request.resolver_match.url_name == 'dashboard' %}active{% endif %}" title="My Profile">
+
+      <div class="insta-nav-avatar-circle">
+
+        {% if request.user.profile and request.user.profile.profile_photo %}
+
+          <img src="{{ request.user.profile.profile_photo.url }}" alt="{{ request.user.first_name|default:request.user.username }}">
+
+        {% else %}
+
+          <span>{{ request.user.first_name|default:request.user.username|slice:":1"|upper }}</span>
+
+        {% endif %}
+
+      </div>
+
+      <span class="insta-nav-label">Profile</span>
+
+    </a>
+
+    {% else %}
+
+    <a href="{% url 'login' %}?next={% url 'profile' %}" class="insta-nav-item {% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' %}active{% endif %}" title="Log In">
+
+      <div class="insta-nav-icon">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+
+          <circle cx="12" cy="7" r="4"/>
+
+        </svg>
+
+      </div>
+
+      <span class="insta-nav-label">Log in</span>
+
+    </a>
+
+    {% endif %}
+
+  </nav>
+
+  {% include "bookings/_online_pay_modal.html" %}
+
+  {% block extra_js %}{% endblock %}
+
+
+
+  <!-- Global Mobile Nav Food Cart Badge Synchronizer -->
+
+  <script>
+
+    function syncGlobalMobileCartBadge() {
+
+      try {
+
+        var raw = localStorage.getItem('amd_zomato_cart_v1');
+
+        var badge = document.getElementById('mobileNavCartBadge');
+
+        if (!badge) return;
+
+        if (raw) {
+
+          var cart = JSON.parse(raw);
+
+          var count = 0;
+
+          for (var k in cart) {
+
+            count += (cart[k].qty || 0);
+
+          }
+
+          if (count > 0) {
+
+            badge.textContent = count > 99 ? '99+' : count;
+
+            badge.style.display = 'flex';
+
+            return;
+
+          }
+
+        }
+
+        badge.style.display = 'none';
+
+      } catch (e) {}
+
+    }
+
+    document.addEventListener('DOMContentLoaded', syncGlobalMobileCartBadge);
+
+    window.addEventListener('storage', syncGlobalMobileCartBadge);
+
+  </script>
+
+
+  <!-- Global Skeleton Screen Controller -->
+  <script id="globalSkeletonController">
+    (function () {
+      var skeleton = document.getElementById('globalPageSkeleton');
+      if (!skeleton) return;
+
+      function hideSkeleton() {
+        if (!skeleton || skeleton.classList.contains('sk-fade-out')) return;
+        skeleton.classList.add('sk-fade-out');
+        setTimeout(function () {
+          skeleton.style.display = 'none';
+        }, 360);
+      }
+
+      // Smooth dismiss after DOM ready + micro perception window (240ms)
+      if (document.readyState === 'complete') {
+        setTimeout(hideSkeleton, 200);
+      } else {
+        window.addEventListener('load', function () {
+          setTimeout(hideSkeleton, 240);
+        });
+      }
+
+      // Safety timeout so user is NEVER blocked
+      setTimeout(hideSkeleton, 1000);
+
+      // Dismiss on Back/Forward cache restore
+      window.addEventListener('pageshow', function (e) {
+        if (e.persisted) {
+          hideSkeleton();
+        }
+      });
+
+      // Internal Navigation: Show smooth skeleton on page transitions
+      document.addEventListener('click', function (e) {
+        var link = e.target.closest('a');
+        if (!link || !link.href) return;
+        if (link.target === '_blank' || link.hasAttribute('download')) return;
+        if (link.getAttribute('href') && link.getAttribute('href').startsWith('#')) return;
+
+        try {
+          var url = new URL(link.href, window.location.origin);
+          if (url.origin === window.location.origin) {
+            // Check if it leads to a different route
+            if (url.pathname !== window.location.pathname || url.search !== window.location.search) {
+              skeleton.style.display = 'block';
+              skeleton.offsetHeight; // reflow
+              skeleton.classList.remove('sk-fade-out');
+            }
+          }
+        } catch (err) {}
+      });
+    })();
+  </script>
+
+</body>
+
+</html>
+

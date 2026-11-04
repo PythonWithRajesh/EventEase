@@ -1,0 +1,174 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Booking {{ booking.pk }}
+{%endblock %}{% block crumb %}<a href="{% url 'dashboard_booking_list' %}"
+  >Bookings</a
+>
+/ {{ booking.public_token|slice:":8"|upper }}{% endblock %}
+
+{% block content %}
+<div class="heading">
+  <div>
+    <div class="eyebrow">Booking record</div>
+    <h1>{{ booking.customer_name }}</h1>
+    <p>
+      Reference {{ booking.public_token }} · created {{
+      booking.created_at|date:"M j, Y, g:i A" }}
+    </p>
+  </div>
+  <a class="button secondary" href="{% url 'dashboard_booking_list' %}"
+    >← All bookings</a
+  >
+</div>
+<div class="grid-2">
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Guest and reservation details</h2>
+      <span class="badge {{ booking.status }}"
+        >{{ booking.get_status_display }}</span
+      >
+    </div>
+    <div class="detail-grid">
+      <div class="detail">
+        <label>Guest name</label>
+        <div>{{ booking.customer_name }}</div>
+      </div>
+      <div class="detail">
+        <label>Account</label>
+        <div>
+          {% if booking.user %}{{ booking.user.username }} · {{
+          booking.user.email }}{% else %}Guest checkout{% endif %}
+        </div>
+      </div>
+      <div class="detail">
+        <label>Email</label>
+        <div>{{ booking.email }}</div>
+      </div>
+      <div class="detail">
+        <label>Phone</label>
+        <div>{{ booking.contact_phone|default:"Not provided" }}</div>
+      </div>
+      <div class="detail">
+        <label>Booking type</label>
+        <div>{{ booking.get_kind_display }}</div>
+      </div>
+      <div class="detail">
+        <label
+          >{% if booking.venue_space %}Expected guests{% else %}Guests /
+          tickets{% endif %}</label
+        >
+        <div>
+          {{ booking.quantity }}{% if booking.venue_space %} / {{
+          booking.venue_space.capacity }}{% endif %}
+        </div>
+      </div>
+      <div class="detail full">
+        <label
+          >{% if booking.event %}Event{% elif booking.venue_space %}Party plot /
+          banquet hall{% else %}Room and property{% endif %}</label
+        >
+        <div>
+          {% if booking.event %}{{ booking.event.name }} · {{
+          booking.event.venue }}{% if booking.event.city %}, {{
+          booking.event.city }}{% endif %}{% elif booking.venue_space %}{{
+          booking.venue_space.name }} · {{
+          booking.venue_space.get_space_type_display }} · {{
+          booking.venue_space.address }}{% elif booking.room %}{{
+          booking.room.name }} · {{ booking.room.property_name }} · {{
+          booking.room.address }}{% endif %}
+        </div>
+      </div>
+      <div class="detail full">
+        <label>Visit dates</label>
+        <div>
+          {% if booking.event %}{{ booking.event.starts_at|date:"l, M j, Y, g:i
+          A" }}{% if booking.event.ends_at %} – {{
+          booking.event.ends_at|date:"g:i A" }}{% endif %}{% elif
+          booking.venue_start_at %}{{ booking.venue_start_at|date:"l, M j, Y,
+          g:i A" }} – {{ booking.venue_end_at|date:"g:i A" }} · {{
+          booking.occasion }}{% elif booking.check_in %}Check-in {{
+          booking.check_in|date:"M j, Y" }} · check-out {{
+          booking.check_out|date:"M j, Y" }}{% else %}Dates not applicable{%
+          endif %}
+        </div>
+      </div>
+    </div>
+    <div class="detail-grid" style="margin-top: 18px">
+      <div class="detail">
+        <label>Total amount</label>
+        <div><b>₹{{ booking.total_amount|floatformat:2 }}</b></div>
+      </div>
+      <div class="detail">
+        <label>Payment method</label>
+        <div>{{ booking.get_payment_method_display }}</div>
+      </div>
+      <div class="detail">
+        <label>Payment status</label>
+        <div>
+          <span class="badge {{ booking.payment_status }}"
+            >{{ booking.get_payment_status_display }}</span
+          >
+        </div>
+      </div>
+      {% if booking.payment_method == "razorpay" and booking.payment_status ==
+      "paid" and booking.razorpay_payment_id %}
+      <div class="detail">
+        <label>Paid at</label>
+        <div>
+          {% if booking.paid_at %}{{ booking.paid_at|date:"M j, Y, g:i A" }}{%
+          else %}Payment confirmed{% endif %}
+        </div>
+      </div>
+      {% endif %}
+      <div class="detail">
+        <label>Razorpay order</label>
+        <div>{{ booking.razorpay_order_id|default:"—" }}</div>
+      </div>
+      <div class="detail full">
+        <label>Razorpay payment reference</label>
+        <div>{{ booking.razorpay_payment_id|default:"—" }}</div>
+      </div>
+    </div>
+    {% if booking.payment_status == "paid" %}{% if booking.payment_method ==
+    "cash" or booking.razorpay_payment_id %}
+    <div style="margin-top: 16px">
+      <a class="button" href="{% url 'dashboard_payment_receipt' booking.pk %}"
+        >View payment receipt</a
+      >
+      <a
+        class="button secondary"
+        href="{% url 'booking_receipt_pdf' booking.public_token %}"
+        >Download PDF</a
+      >
+    </div>
+    {% endif %}{% endif %}
+  </section>
+  <section class="panel">
+    <h2>Update booking</h2>
+    <p class="muted">
+      Update the reservation status here. Payment status is recorded from a
+      verified Razorpay capture or the Payments page.
+    </p>
+    <form method="post">
+      {% csrf_token %}{% if form.non_field_errors %}
+      <div class="form-errors">{{ form.non_field_errors }}</div>
+      {% endif %}{% for field in form %}
+      <div class="form-row" style="margin-top: 14px">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field
+        }}{% if field.errors %}
+        <div class="field-errors">{{ field.errors }}</div>
+        {% endif %}
+      </div>
+      {% endfor %}
+      <div class="form-actions">
+        <button class="button" type="submit">Save changes</button
+        ><a
+          class="button secondary"
+          href="{% url 'dashboard_booking_detail' booking.pk %}"
+          >Cancel</a
+        >
+      </div>
+    </form>
+  </section>
+</div>
+{% endblock %}

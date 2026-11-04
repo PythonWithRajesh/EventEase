@@ -1,0 +1,29 @@
+<script>
+(() => {
+  const country = document.getElementById("id_phone_country");
+  const phone = country?.form?.querySelector("[data-phone-lengths]");
+  if (!country || !phone) return;
+
+  const lengthsByCountry = JSON.parse(phone.dataset.phoneLengths || "{}");
+  const configurePhone = () => {
+    const lengths = lengthsByCountry[country.value] || [];
+    const min = lengths.length ? Math.min(...lengths) : 7;
+    const max = lengths.length ? Math.max(...lengths) : 15;
+    phone.minLength = min;
+    phone.maxLength = max;
+    phone.pattern = lengths.length
+      ? `(?:${lengths.map((length) => `[0-9]{${length}}`).join("|")})`
+      : "[0-9]{7,15}";
+    phone.placeholder = lengths.length
+      ? `Enter ${lengths.join(" or ")} digits`
+      : "Enter digits only";
+    phone.value = phone.value.replace(/[^0-9]/g, "").slice(0, max);
+  };
+
+  phone.addEventListener("input", () => {
+    phone.value = phone.value.replace(/[^0-9]/g, "").slice(0, phone.maxLength);
+  });
+  country.addEventListener("change", configurePhone);
+  configurePhone();
+})();
+</script>

@@ -1,0 +1,1978 @@
+{% extends "bookings/base.html" %}
+{% load static %}
+
+{% block title %}My Bookings, Passes &amp; Food Orders | Amazing Ahmedabad{% endblock %}
+
+{% block extra_css %}
+<!-- Leaflet Map CSS for Real Interactive Live Tracking -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
+<style>
+/* ══════════════════════════════════════════════════════════════
+   LIQUID GLASS LUXURY WALLET & BOOKINGS EXPERIENCE
+   AMAZING AHMEDABAD CELEBRATION PORTAL
+══════════════════════════════════════════════════════════════ */
+:root {
+  --acc-ink:             #120924;
+  --acc-ink-soft:        #23153d;
+  --acc-muted:           #64748b;
+  --acc-border:          rgba(255, 255, 255, 0.90);
+  --acc-border-subtle:   #ece6f4;
+  
+  --acc-purple:          #7c3aed;
+  --acc-purple-dark:     #5b21b6;
+  --acc-purple-light:    #ede9fe;
+  --acc-purple-glow:     rgba(124, 58, 237, 0.35);
+
+  --acc-gold:            #f59e0b;
+  --acc-gold-light:      #fef3c7;
+  --acc-green:           #10b981;
+  --acc-green-light:     #d1fae5;
+  --acc-red:             #ef4444;
+  --acc-red-light:       #fee2e2;
+
+  --acc-glass:           rgba(255, 255, 255, 0.88);
+  --acc-glass-hover:     rgba(255, 255, 255, 0.96);
+  --acc-glass-specular:  inset 0 1.5px 2px rgba(255, 255, 255, 0.98);
+  --acc-glass-blur:      blur(24px) saturate(180%);
+
+  --acc-radius-sm:       10px;
+  --acc-radius-md:       16px;
+  --acc-radius-lg:       22px;
+  --acc-radius-xl:       30px;
+  --acc-radius-pill:     9999px;
+  --acc-transition:      0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  background-color: #f7f5fb !important;
+  color: var(--acc-ink);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-x: clip !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FLOATING AMBIENT GLOW BLOBS
+══════════════════════════════════════════════════════════════ */
+.acc-ambient-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.acc-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.45;
+  will-change: transform;
+}
+
+.acc-blob-1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.40) 0%, rgba(167, 139, 250, 0.12) 70%, transparent 100%);
+  top: -80px; left: -80px;
+  animation: accFloat1 24s ease-in-out infinite alternate;
+}
+
+.acc-blob-2 {
+  width: 560px; height: 560px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.35) 0%, rgba(251, 191, 36, 0.10) 70%, transparent 100%);
+  bottom: -60px; right: -60px;
+  animation: accFloat2 28s ease-in-out infinite alternate;
+}
+
+@keyframes accFloat1 {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(60px, 45px) scale(1.08); }
+}
+
+@keyframes accFloat2 {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-60px, -50px) scale(1.1); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HERO CELEBRATION PHOTO BANNER (WARM ROYAL OVERLAY)
+══════════════════════════════════════════════════════════════ */
+.acc-hero-banner {
+  position: relative;
+  background-color: #170724;
+  background-image:
+    linear-gradient(180deg, rgba(20, 8, 40, 0.85) 0%, rgba(38, 14, 68, 0.90) 100%),
+    url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=85');
+  background-size: cover;
+  background-position: center;
+  color: #ffffff;
+  padding: 56px 24px 74px;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 16px 45px rgba(22, 9, 44, 0.22);
+  z-index: 2;
+  overflow: hidden;
+}
+
+.acc-hero-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 3;
+}
+
+.acc-hero-badge-strip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: var(--acc-radius-pill);
+  padding: 5px 16px;
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.acc-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: accPulseDot 1.8s infinite;
+}
+
+@keyframes accPulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.35); opacity: 0.6; }
+}
+
+.acc-hero-title {
+  font-size: clamp(2rem, 3.8vw, 2.85rem);
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+  margin: 0 0 12px;
+  color: #ffffff;
+}
+
+.acc-hero-title span {
+  background: linear-gradient(135deg, #ffffff 0%, #fef08a 45%, #f59e0b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 14px rgba(245, 158, 11, 0.60));
+}
+
+.acc-hero-desc {
+  font-size: 1rem;
+  color: #e2e8f0;
+  max-width: 620px;
+  line-height: 1.6;
+  margin: 0 0 24px;
+}
+
+/* User Identity Glass Capsule */
+.acc-profile-capsule {
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  border-radius: var(--acc-radius-xl);
+  padding: 22px 28px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.25), inset 0 1.5px 2px rgba(255, 255, 255, 0.4);
+}
+
+.acc-profile-avatar {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--acc-purple), var(--acc-gold));
+  color: #ffffff;
+  font-size: 1.4rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 2px solid #ffffff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.acc-profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.acc-profile-info strong {
+  display: block;
+  font-size: 1.15rem;
+  font-weight: 850;
+  color: #ffffff;
+}
+
+.acc-profile-info span {
+  display: block;
+  font-size: 0.82rem;
+  color: #cbd5e1;
+  margin-top: 2px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   COMPACT FLOATING METRICS SHELF (SMALL CHIPS)
+══════════════════════════════════════════════════════════════ */
+.acc-stats-shelf {
+  max-width: 1240px;
+  margin: -28px auto 26px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 4;
+}
+
+@media (max-width: 768px) {
+  .acc-stats-shelf {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 0 16px 6px;
+    margin: -22px auto 20px;
+  }
+  .acc-stats-shelf::-webkit-scrollbar { display: none; }
+}
+
+.acc-stat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--acc-glass);
+  backdrop-filter: var(--acc-glass-blur);
+  -webkit-backdrop-filter: var(--acc-glass-blur);
+  border: 1.5px solid var(--acc-border);
+  box-shadow: 0 8px 24px rgba(22, 9, 44, 0.06), var(--acc-glass-specular);
+  border-radius: var(--acc-radius-pill);
+  padding: 6px 16px 6px 6px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: all var(--acc-transition);
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.acc-stat-chip:hover {
+  transform: translateY(-2px);
+  border-color: var(--acc-purple);
+  box-shadow: 0 12px 28px rgba(124, 58, 237, 0.15);
+  background: #ffffff;
+}
+
+.acc-stat-chip.active {
+  border-color: var(--acc-purple);
+  background: #ffffff;
+  box-shadow: 0 0 0 2px var(--acc-purple-light), 0 8px 24px rgba(124, 58, 237, 0.16);
+}
+
+.acc-stat-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1.5px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  background: #ede9fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.acc-stat-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.acc-stat-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.acc-stat-info .acc-stat-num {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: var(--acc-ink);
+  letter-spacing: -0.02em;
+}
+
+.acc-stat-info .acc-stat-label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--acc-muted);
+  margin-top: 1px;
+  white-space: nowrap;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MAIN CONTAINER & CATEGORY TABS CONSOLE
+══════════════════════════════════════════════════════════════ */
+.acc-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+  position: relative;
+  z-index: 3;
+}
+
+.acc-console-card {
+  background: var(--acc-glass);
+  backdrop-filter: var(--acc-glass-blur);
+  -webkit-backdrop-filter: var(--acc-glass-blur);
+  border: 1.5px solid var(--acc-border);
+  box-shadow: 0 20px 50px rgba(22, 9, 44, 0.08), var(--acc-glass-specular);
+  border-radius: var(--acc-radius-xl);
+  padding: 24px 28px;
+  margin-bottom: 30px;
+}
+
+.acc-console-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* Category Filter Tabs */
+.acc-tabs-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 4px 0;
+}
+.acc-tabs-row::-webkit-scrollbar { display: none; }
+
+.acc-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--acc-border-subtle);
+  border-radius: var(--acc-radius-pill);
+  padding: 9px 18px;
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: var(--acc-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s ease;
+  font-family: inherit;
+  text-decoration: none;
+}
+
+.acc-tab-btn:hover {
+  background: #ffffff;
+  color: var(--acc-ink);
+  transform: translateY(-1px);
+}
+
+.acc-tab-btn.active {
+  background: var(--acc-purple);
+  color: #ffffff;
+  border-color: var(--acc-purple);
+  box-shadow: 0 4px 16px var(--acc-purple-glow);
+}
+
+.acc-tab-count {
+  font-size: 0.74rem;
+  font-weight: 850;
+  padding: 2px 7px;
+  border-radius: var(--acc-radius-pill);
+  background: rgba(0, 0, 0, 0.08);
+  color: inherit;
+}
+.acc-tab-btn.active .acc-tab-count {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+/* Search Box */
+.acc-search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1.5px solid #e2d9f3;
+  border-radius: var(--acc-radius-pill);
+  padding: 6px 14px;
+  min-width: 260px;
+  transition: all 0.18s ease;
+}
+.acc-search-box:focus-within {
+  border-color: var(--acc-purple);
+  box-shadow: 0 0 0 3px var(--acc-purple-light);
+}
+.acc-search-input {
+  border: none;
+  outline: none;
+  font-size: 0.86rem;
+  font-family: inherit;
+  color: var(--acc-ink);
+  width: 100%;
+  background: transparent;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STREAM OF LUXURY CARDS (PERFORATED ADMISSION & FOOD BITES)
+══════════════════════════════════════════════════════════════ */
+.acc-cards-stream {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.acc-card {
+  background: var(--acc-glass);
+  backdrop-filter: var(--acc-glass-blur);
+  -webkit-backdrop-filter: var(--acc-glass-blur);
+  border: 1.5px solid var(--acc-border);
+  box-shadow: 0 16px 40px rgba(22, 9, 44, 0.08), var(--acc-glass-specular);
+  border-radius: var(--acc-radius-lg);
+  overflow: hidden;
+  transition: transform var(--acc-transition), box-shadow var(--acc-transition);
+}
+
+.acc-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 54px rgba(22, 9, 44, 0.12);
+}
+
+.acc-card-inner {
+  display: grid;
+  grid-template-columns: 200px 1fr auto;
+  align-items: stretch;
+}
+
+/* Media Column */
+.acc-card-media {
+  position: relative;
+  overflow: hidden;
+  min-height: 170px;
+  background: #1e1035;
+}
+
+.acc-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.acc-card:hover .acc-card-media img {
+  transform: scale(1.05);
+}
+
+.acc-media-badge {
+  position: absolute;
+  top: 12px; left: 12px;
+  background: rgba(18, 9, 36, 0.82);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 850;
+  padding: 4px 10px;
+  border-radius: var(--acc-radius-pill);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  z-index: 2;
+}
+
+/* Content Details Column */
+.acc-card-content {
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.acc-card-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.acc-ref-token {
+  font-family: monospace;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--acc-muted);
+  background: #f1edfa;
+  padding: 3px 8px;
+  border-radius: var(--acc-radius-sm);
+}
+
+.acc-card-title {
+  font-size: 1.35rem;
+  font-weight: 850;
+  color: var(--acc-ink);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.acc-card-sub {
+  font-size: 0.88rem;
+  color: var(--acc-muted);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.acc-meta-pills {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.acc-meta-item {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #475569;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 5px 12px;
+  border-radius: var(--acc-radius-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Right Action Column (Perforated Pass Edge) */
+.acc-card-action-side {
+  padding: 24px 28px;
+  border-left: 2px dashed #e2d9f3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-width: 200px;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.acc-price-tag {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--acc-ink);
+  letter-spacing: -0.02em;
+}
+
+/* Live Tracking Button (Highlight) */
+.acc-btn-track {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 11px 18px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--acc-radius-pill);
+  font-size: 0.88rem;
+  font-weight: 850;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+  transition: all var(--acc-transition);
+  font-family: inherit;
+  text-decoration: none;
+}
+.acc-btn-track:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(16, 185, 129, 0.45);
+  color: #ffffff;
+}
+
+/* Official PDF Receipt Download Button (Liquid Glass Blue) */
+.acc-btn-receipt {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  padding: 9px 16px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.10) 0%, rgba(30, 64, 175, 0.05) 100%);
+  color: #1d4ed8;
+  border: 1.5px solid rgba(37, 99, 235, 0.35);
+  border-radius: var(--acc-radius-pill);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-decoration: none;
+  transition: all var(--acc-transition);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+}
+.acc-btn-receipt:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #ffffff;
+  border-color: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+}
+
+.acc-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 9px 16px;
+  background: #ffffff;
+  color: var(--acc-ink);
+  border: 1.5px solid #d8cfe8;
+  border-radius: var(--acc-radius-pill);
+  font-size: 0.82rem;
+  font-weight: 750;
+  text-decoration: none;
+  transition: all var(--acc-transition);
+}
+.acc-btn-secondary:hover {
+  border-color: var(--acc-purple);
+  color: var(--acc-purple);
+  background: #faf7ff;
+}
+
+/* Status Badges */
+.acc-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--acc-radius-pill);
+  font-size: 0.76rem;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.status-confirmed { background: #ede9fe; color: #6d28d9; }
+.status-pending   { background: #fef3c7; color: #b45309; }
+.status-delivered { background: #d1fae5; color: #047857; }
+.status-cancelled { background: #fee2e2; color: #b91c1c; }
+
+/* ══════════════════════════════════════════════════════════════
+   LIVE TRACKING MODAL & INTERACTIVE REAL MAP
+══════════════════════════════════════════════════════════════ */
+.track-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 9, 32, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 100050;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.track-modal-overlay.open {
+  display: flex;
+  opacity: 1;
+}
+
+.track-modal-box {
+  background: #ffffff;
+  width: 100%;
+  max-width: 820px;
+  border-radius: var(--acc-radius-xl);
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.40);
+  overflow: hidden;
+  border: 1.5px solid var(--acc-border);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  animation: modalScaleUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalScaleUp {
+  from { transform: scale(0.92); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.track-modal-header {
+  padding: 22px 28px;
+  background: linear-gradient(135deg, #170724 0%, #2e104d 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.track-modal-close {
+  background: rgba(255, 255, 255, 0.16);
+  border: none;
+  color: #ffffff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.track-modal-close:hover {
+  background: rgba(255, 255, 255, 0.30);
+}
+
+.track-modal-body {
+  padding: 24px 28px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* Stepper Bar */
+.track-stepper {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  position: relative;
+  margin-bottom: 6px;
+}
+
+.track-step-item {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.track-step-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  color: #64748b;
+  font-weight: 850;
+  font-size: 0.84rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #e2e8f0;
+  transition: all 0.2s;
+}
+
+.track-step-item.active .track-step-circle {
+  background: #10b981;
+  color: #ffffff;
+  border-color: #059669;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
+}
+
+.track-step-label {
+  font-size: 0.78rem;
+  font-weight: 750;
+  color: #64748b;
+}
+.track-step-item.active .track-step-label {
+  color: var(--acc-ink);
+  font-weight: 850;
+}
+
+/* Real Interactive Leaflet Map Shell */
+.track-map-container {
+  width: 100%;
+  height: 380px;
+  border-radius: var(--acc-radius-md);
+  border: 1.5px solid #e2e8f0;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  position: relative;
+  background: #f1f5f9;
+}
+
+#tracking-leaflet-map {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Floating HUD on top of map */
+.track-map-hud {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  z-index: 999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+.hud-pill {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  background: rgba(15, 23, 42, 0.88);
+  color: #ffffff;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.30);
+  letter-spacing: 0.02em;
+}
+.hud-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 10px #10b981;
+  animation: hudPulse 1.5s infinite;
+}
+@keyframes hudPulse {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.35); opacity: 1; box-shadow: 0 0 14px #10b981; }
+  100% { transform: scale(0.9); opacity: 0.8; }
+}
+.hud-divider {
+  opacity: 0.45;
+  margin: 0 2px;
+}
+.track-map-recenter-btn {
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  z-index: 999;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: #ffffff;
+  color: #0f172a;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  transition: all 0.2s ease;
+}
+.track-map-recenter-btn:hover {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+}
+
+/* Pulsing Custom Pin Markers */
+.leaflet-custom-origin, .leaflet-custom-dest {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.origin-pin-box {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  font-size: 19px;
+  border: 2.5px solid #ffffff;
+  box-shadow: 0 4px 16px rgba(234, 88, 12, 0.6);
+  z-index: 2;
+  position: relative;
+}
+.origin-ripple {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(234, 88, 12, 0.35);
+  animation: pulseRipple 1.8s ease-out infinite;
+  z-index: 1;
+}
+.dest-pin-box {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  font-size: 19px;
+  border: 2.5px solid #ffffff;
+  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.6);
+  z-index: 2;
+  position: relative;
+}
+.dest-ripple {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(79, 70, 229, 0.35);
+  animation: pulseRipple 1.8s ease-out infinite;
+  z-index: 1;
+}
+@keyframes pulseRipple {
+  0% { transform: scale(0.8); opacity: 0.95; }
+  100% { transform: scale(1.75); opacity: 0; }
+}
+
+/* Route Dash Flow Animation */
+.route-pulse-dash {
+  stroke-dasharray: 10, 10;
+  animation: routeDashFlow 1.2s linear infinite;
+}
+@keyframes routeDashFlow {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -40; }
+}
+
+/* Delivery Partner / Venue Concierge Bottom Card */
+.track-partner-card {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: var(--acc-radius-md);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.track-partner-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.track-partner-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.track-partner-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.track-btn-call {
+  background: #ffffff;
+  color: #0f172a;
+  border: 1.5px solid #cbd5e1;
+  padding: 8px 16px;
+  border-radius: var(--acc-radius-pill);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+.track-btn-wa {
+  background: #25d366;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--acc-radius-pill);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE RESPONSIVENESS
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 840px) {
+  .acc-card-inner {
+    grid-template-columns: 1fr;
+  }
+  .acc-card-media {
+    height: 180px;
+  }
+  .acc-card-action-side {
+    border-left: none;
+    border-top: 2px dashed #e2d9f3;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 18px 24px;
+  }
+  .acc-stats-shelf {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 540px) {
+  .acc-hero-banner {
+    padding: 36px 18px 56px;
+  }
+  .acc-stats-shelf {
+    grid-template-columns: 1fr;
+    margin-top: -24px;
+  }
+  .acc-console-card {
+    padding: 16px 18px;
+  }
+  .acc-card-action-side {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .acc-card-content {
+    padding: 18px 16px;
+  }
+  .track-stepper {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ── Floating Ambient Refractive Blobs ──────────────────────── -->
+<div class="acc-ambient-canvas" aria-hidden="true">
+  <div class="acc-blob acc-blob-1"></div>
+  <div class="acc-blob acc-blob-2"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     HEADER CELEBRATION PHOTO BANNER
+══════════════════════════════════════════════════════════════ -->
+<header class="acc-hero-banner">
+  <div class="acc-hero-inner">
+    <div>
+      <div class="acc-hero-badge-strip">
+        <span class="acc-live-dot"></span>
+        <span>Verified Customer Portal &amp; Live Passes</span>
+      </div>
+
+      <h1 class="acc-hero-title">
+        {% if is_guest %}
+          Track Your <span>Celebration Passes</span>
+        {% else %}
+          Welcome, <span>{% if request.user.first_name %}{{ request.user.first_name }} {{ request.user.last_name }}{% elif request.user.get_full_name %}{{ request.user.get_full_name }}{% else %}{{ request.user.username }}{% endif %}</span>!
+        {% endif %}
+      </h1>
+
+      <p class="acc-hero-desc">
+        Access your confirmed Navratri Garba admission barcodes, verified luxury banquet &amp; party plot slots, hotel stays, and freshly delivered Amdavad Food Hub snacks.
+      </p>
+
+      {% if is_guest %}
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <a href="{% url 'login' %}?next={% url 'account' %}" class="acc-btn-track" style="width:auto;padding:12px 24px;">
+            Sign In to Account
+          </a>
+          <a href="{% url 'register' %}" class="acc-btn-secondary" style="width:auto;padding:12px 24px;background:rgba(255,255,255,0.18);color:#fff;border-color:rgba(255,255,255,0.35);">
+            Create Free Account
+          </a>
+        </div>
+      {% endif %}
+    </div>
+
+    {# Profile Identity Capsule #}
+    <div class="acc-profile-capsule">
+      <div class="acc-profile-avatar">
+        {% if not is_guest and request.user.profile.profile_photo %}
+          <img src="{{ request.user.profile.profile_photo.url }}" alt="{{ request.user.username }}">
+        {% elif not is_guest %}
+          <span>{{ request.user.first_name|default:request.user.username|slice:":1"|upper }}</span>
+        {% else %}
+          <span>★</span>
+        {% endif %}
+      </div>
+      <div class="acc-profile-info">
+        <strong>
+          {% if is_guest %}Guest Explorer{% elif request.user.first_name %}{{ request.user.first_name }} {{ request.user.last_name }}{% elif request.user.get_full_name %}{{ request.user.get_full_name }}{% else %}{{ request.user.username }}{% endif %}
+        </strong>
+        <span>
+          {% if not is_guest and request.user.is_staff %}Staff Administrator · Amazing Ahmedabad
+          {% elif not is_guest %}{{ request.user.email|default:"Verified Account" }} · Ahmedabad, Gujarat
+          {% else %}Public Access Wallet
+          {% endif %}
+        </span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════════════
+     COMPACT METRICS CHIPS SHELF (SMALL & SLEEK)
+══════════════════════════════════════════════════════════════ -->
+<section class="acc-stats-shelf" aria-label="Passes and orders overview">
+  <!-- 1. Total Reservations -->
+  <button type="button" class="acc-stat-chip acc-quick-filter active" data-target-filter="all" title="View all reservations">
+    <div class="acc-stat-circle">
+      <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=120&q=80" alt="Total">
+    </div>
+    <div class="acc-stat-info">
+      <span class="acc-stat-num">{{ total_items_count }}</span>
+      <span class="acc-stat-label">Total Reservations</span>
+    </div>
+  </button>
+
+  <!-- 2. Garba & Events -->
+  <button type="button" class="acc-stat-chip acc-quick-filter" data-target-filter="event" title="View Garba event passes">
+    <div class="acc-stat-circle">
+      <img src="https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=120&q=80" alt="Garba">
+    </div>
+    <div class="acc-stat-info">
+      <span class="acc-stat-num">{{ upcoming_events }}</span>
+      <span class="acc-stat-label">Garba Passes</span>
+    </div>
+  </button>
+
+  <!-- 3. Food Hub Orders -->
+  <button type="button" class="acc-stat-chip acc-quick-filter" data-target-filter="food" title="View Food Hub orders">
+    <div class="acc-stat-circle">
+      <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=120&q=80" alt="Food">
+    </div>
+    <div class="acc-stat-info">
+      <span class="acc-stat-num">{{ active_food_orders }}</span>
+      <span class="acc-stat-label">Food Orders</span>
+    </div>
+  </button>
+
+  <!-- 4. Luxury Rooms -->
+  <button type="button" class="acc-stat-chip acc-quick-filter" data-target-filter="room" title="View Luxury Room bookings">
+    <div class="acc-stat-circle">
+      <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=120&q=80" alt="Rooms">
+    </div>
+    <div class="acc-stat-info">
+      <span class="acc-stat-num">{{ upcoming_stays }}</span>
+      <span class="acc-stat-label">Luxury Rooms</span>
+    </div>
+  </button>
+
+  <!-- 5. Wedding Halls -->
+  <button type="button" class="acc-stat-chip acc-quick-filter" data-target-filter="hall" title="View Wedding Hall bookings">
+    <div class="acc-stat-circle">
+      <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=120&q=80" alt="Halls">
+    </div>
+    <div class="acc-stat-info">
+      <span class="acc-stat-num">{{ upcoming_halls }}</span>
+      <span class="acc-stat-label">Wedding Halls</span>
+    </div>
+  </button>
+
+  <!-- 6. Party Plots -->
+  <button type="button" class="acc-stat-chip acc-quick-filter" data-target-filter="plot" title="View Party Plot bookings">
+    <div class="acc-stat-circle">
+      <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=120&q=80" alt="Plots">
+    </div>
+    <div class="acc-stat-info">
+      <span class="acc-stat-num">{{ upcoming_plots }}</span>
+      <span class="acc-stat-label">Party Plots</span>
+    </div>
+  </button>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     MAIN CONSOLE & CARDS STREAM
+══════════════════════════════════════════════════════════════ -->
+<div class="acc-container">
+
+  <!-- Interactive Category Tabs & Search Console -->
+  <section class="acc-console-card">
+    <div class="acc-console-top">
+      <div class="acc-tabs-row" role="tablist">
+        <button type="button" class="acc-tab-btn active" data-filter="all">
+          <span>All Bookings</span>
+          <span class="acc-tab-count">{{ total_items_count }}</span>
+        </button>
+        <button type="button" class="acc-tab-btn" data-filter="event">
+          <span>Garba Passes</span>
+          <span class="acc-tab-count">{{ upcoming_events }}</span>
+        </button>
+        <button type="button" class="acc-tab-btn" data-filter="food">
+          <span>Food Orders</span>
+          <span class="acc-tab-count">{{ active_food_orders }}</span>
+        </button>
+        <button type="button" class="acc-tab-btn" data-filter="room">
+          <span>Luxury Rooms</span>
+          <span class="acc-tab-count">{{ upcoming_stays }}</span>
+        </button>
+        <button type="button" class="acc-tab-btn" data-filter="hall">
+          <span>Wedding Halls</span>
+          <span class="acc-tab-count">{{ upcoming_halls }}</span>
+        </button>
+        <button type="button" class="acc-tab-btn" data-filter="plot">
+          <span>Party Plots</span>
+          <span class="acc-tab-count">{{ upcoming_plots }}</span>
+        </button>
+      </div>
+
+      <div class="acc-search-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          type="text"
+          id="acc-search-field"
+          class="acc-search-input"
+          placeholder="Filter by name, venue, token..."
+          aria-label="Filter bookings"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════
+       STREAM OF CARDS (BOOKINGS + FOOD ORDERS)
+  ════════════════════════════════════════════════════════════ -->
+  <div class="acc-cards-stream" id="acc-stream-container">
+
+    <!-- 1. BOOKINGS (GARBA, PLOTS, HALLS, ROOMS) -->
+    {% for booking in bookings %}
+    <article
+      class="acc-card acc-item-card"
+      data-category="{% if booking.kind == 'event' %}event{% elif booking.kind == 'room' %}room{% elif booking.venue_space.space_type == 'banquet_hall' %}hall{% else %}plot{% endif %}"
+      data-title="{% if booking.event %}{{ booking.event.name|lower }}{% elif booking.venue_space %}{{ booking.venue_space.name|lower }}{% else %}{{ booking.room.name|lower }}{% endif %}"
+      data-ref="{{ booking.public_token|slice:':8'|lower }}"
+      data-location="{% if booking.event %}{{ booking.event.venue|default:'SG Highway' }}, {{ booking.event.city|default:'Ahmedabad' }}{% elif booking.venue_space %}{{ booking.venue_space.address|default:'Sindhu Bhavan Road' }}, {{ booking.venue_space.city|default:'Ahmedabad' }}{% else %}{{ booking.room.property_name|default:'Satellite' }}, {{ booking.room.city|default:'Ahmedabad' }}{% endif %}"
+    >
+      <div class="acc-card-inner">
+        
+        {# Media Column #}
+        <div class="acc-card-media">
+          {% if booking.kind == 'event' %}
+            <span class="acc-media-badge">Garba Pass</span>
+            <img src="{{ booking.event.cover_image_url|default:'https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=600&q=80' }}" alt="{{ booking.event.name }}">
+          {% elif booking.kind == 'venue' and booking.venue_space.space_type == 'party_plot' %}
+            <span class="acc-media-badge">Party Plot</span>
+            <img src="{{ booking.venue_space.primary_image_url|default:'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=600&q=80' }}" alt="{{ booking.venue_space.name }}">
+          {% elif booking.kind == 'venue' %}
+            <span class="acc-media-badge">Wedding Hall</span>
+            <img src="{{ booking.venue_space.primary_image_url|default:'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=600&q=80' }}" alt="{{ booking.venue_space.name }}">
+          {% elif booking.kind == 'room' %}
+            <span class="acc-media-badge">Hotel Stay</span>
+            <img src="{{ booking.room.featured_photo_url|default:'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80' }}" alt="{{ booking.room.name }}">
+          {% endif %}
+        </div>
+
+        {# Details Column #}
+        <div class="acc-card-content">
+          <div class="acc-card-top-row">
+            <span class="acc-ref-token">REF: #{{ booking.public_token|slice:":8"|upper }}</span>
+            <span class="acc-status-badge {% if booking.status == 'confirmed' %}status-confirmed{% elif booking.status == 'cancelled' %}status-cancelled{% else %}status-pending{% endif %}">
+              {{ booking.status|title }}
+            </span>
+          </div>
+
+          <div>
+            <h3 class="acc-card-title">
+              {% if booking.event %}{{ booking.event.name }}
+              {% elif booking.venue_space %}{{ booking.venue_space.name }}
+              {% else %}{{ booking.room.name }}
+              {% endif %}
+            </h3>
+            <p class="acc-card-sub">
+              📍 {% if booking.event %}{{ booking.event.venue|default:"SG Highway, Ahmedabad" }}
+              {% elif booking.venue_space %}{{ booking.venue_space.address|default:"Sindhu Bhavan Road, Ahmedabad" }}
+              {% else %}{{ booking.room.property_name|default:"Heritage Quarter, Ahmedabad" }}
+              {% endif %}
+            </p>
+          </div>
+
+          <div class="acc-meta-pills">
+            {% if booking.check_in %}
+              <span class="acc-meta-item">📅 {{ booking.check_in|date:"d M Y" }} &rarr; {{ booking.check_out|date:"d M Y" }}</span>
+            {% elif booking.venue_start_at %}
+              <span class="acc-meta-item">⏰ {{ booking.venue_start_at|date:"d M Y · h:i A" }}</span>
+            {% elif booking.event %}
+              <span class="acc-meta-item">⏰ {{ booking.event.starts_at|date:"d M Y · h:i A" }}</span>
+            {% endif %}
+            <span class="acc-meta-item">👥 {{ booking.quantity }} Guest{{ booking.quantity|pluralize }}</span>
+            {% if booking.payment_method == 'razorpay' %}
+              <span class="acc-meta-item" style="color:#2563eb;">Online (Razorpay Verified)</span>
+            {% else %}
+              <span class="acc-meta-item" style="color:#d97706;">Pay at Venue (Cash)</span>
+            {% endif %}
+          </div>
+        </div>
+
+        {# Action Side #}
+        <div class="acc-card-action-side">
+          <div class="acc-price-tag">₹{{ booking.total_amount|floatformat:"0" }}</div>
+          
+          <!-- Live Tracking Button for Bookings -->
+          <button
+            type="button"
+            class="acc-btn-track btn-trigger-track"
+            data-track-type="venue"
+            data-title="{% if booking.event %}{{ booking.event.name }}{% elif booking.venue_space %}{{ booking.venue_space.name }}{% else %}{{ booking.room.name }}{% endif %}"
+            data-ref="{{ booking.public_token|slice:':8'|upper }}"
+            data-status="{{ booking.status }}"
+            data-address="{% if booking.event %}{{ booking.event.venue|default:'SG Highway, Ahmedabad' }}{% elif booking.venue_space %}{{ booking.venue_space.address|default:'Sindhu Bhavan Road, Ahmedabad' }}{% else %}{{ booking.room.property_name|default:'Heritage Quarter, Ahmedabad' }}{% endif %}"
+            data-lat="{% if booking.event %}23.0396{% elif booking.venue_space %}23.0440{% else %}23.0250{% endif %}"
+            data-lng="{% if booking.event %}72.5066{% elif booking.venue_space %}72.4960{% else %}72.5710{% endif %}"
+          >
+            <span>Live Tracking &amp; Map</span>
+          </button>
+
+          {% if booking.payment_status == 'paid' or booking.payment_method == 'razorpay' %}
+          <a href="{% url 'booking_receipt_pdf' booking.public_token %}" class="acc-btn-receipt" target="_blank" download="Pass_AA_{{ booking.public_token|slice:':8'|upper }}.pdf">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Download Receipt (PDF)</span>
+          </a>
+          {% endif %}
+
+          <a href="{% url 'booking_done' booking.public_token %}" class="acc-btn-secondary" target="_blank">
+            <span>View Pass &amp; QR</span>
+          </a>
+        </div>
+
+      </div>
+    </article>
+    {% endfor %}
+
+    <!-- 2. FOOD ORDERS (AMDAWAD BITES & SNACKS) -->
+    {% for order in food_orders %}
+    <article
+      class="acc-card acc-item-card"
+      data-category="food"
+      data-title="{{ order.food_item.name|lower }} {{ order.food_item.restaurant_name|lower }}"
+      data-ref="{{ order.public_token|slice:':8'|lower }}"
+      data-location="{{ order.delivery_address|default:order.food_item.area|default:order.food_item.city|lower }}"
+    >
+      <div class="acc-card-inner">
+        
+        {# Media Column #}
+        <div class="acc-card-media">
+          <span class="acc-media-badge" style="background:rgba(217, 119, 6, 0.9);">Food Order</span>
+          <img src="{{ order.food_item.cover_image_url|default:order.food_item.image_url|default:'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80' }}" alt="{{ order.food_item.name }}">
+        </div>
+
+        {# Details Column #}
+        <div class="acc-card-content">
+          <div class="acc-card-top-row">
+            <span class="acc-ref-token">ORDER: #{{ order.public_token|slice:":8"|upper }}</span>
+            <span class="acc-status-badge {% if order.status == 'delivered' %}status-delivered{% elif order.status == 'cancelled' %}status-cancelled{% else %}status-confirmed{% endif %}">
+              {{ order.status|title }}
+            </span>
+          </div>
+
+          <div>
+            <h3 class="acc-card-title">{{ order.quantity }}x {{ order.food_item.name }}</h3>
+            <p class="acc-card-sub">
+              ☕ From: <strong>{{ order.food_item.restaurant_name }}</strong> · {{ order.food_item.area|default:order.food_item.city|default:"Ahmedabad" }}
+            </p>
+          </div>
+
+          <div class="acc-meta-pills">
+            <span class="acc-meta-item">🛵 Type: {{ order.order_type|title }}</span>
+            <span class="acc-meta-item">📍 {{ order.delivery_address|default:"Pickup at Food Stall"|truncatechars:32 }}</span>
+            {% if order.payment_method == 'razorpay' %}
+              <span class="acc-meta-item" style="color:#2563eb;">Paid Online (Razorpay)</span>
+            {% else %}
+              <span class="acc-meta-item" style="color:#d97706;">Cash on Delivery (COD)</span>
+            {% endif %}
+          </div>
+        </div>
+
+        {# Action Side #}
+        <div class="acc-card-action-side">
+          <div class="acc-price-tag">₹{{ order.total_amount|floatformat:"0" }}</div>
+          
+          <!-- Live Tracking Button for Food Orders -->
+          <button
+            type="button"
+            class="acc-btn-track btn-trigger-track"
+            data-track-type="food"
+            data-title="{{ order.quantity }}x {{ order.food_item.name }}"
+            data-ref="{{ order.public_token|slice:':8'|upper }}"
+            data-status="{{ order.status }}"
+            data-restaurant="{{ order.food_item.restaurant_name }}"
+            data-address="{{ order.delivery_address|default:order.food_item.area|default:'Prahlad Nagar, SG Highway, Ahmedabad' }}"
+            data-lat="23.0225"
+            data-lng="72.5286"
+          >
+            <span>Live Tracking &amp; Map</span>
+          </button>
+
+          {% if order.payment_status == 'paid' or order.payment_method == 'razorpay' %}
+          <a href="{% url 'food_order_receipt_pdf' order.public_token %}" class="acc-btn-receipt" target="_blank" download="Food_Receipt_FD_{{ order.public_token|slice:':8'|upper }}.pdf">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Download Receipt (PDF)</span>
+          </a>
+          {% endif %}
+
+          <a href="{% url 'food_order_done' order.public_token %}" class="acc-btn-secondary" target="_blank">
+            <span>Order Summary</span>
+          </a>
+        </div>
+
+      </div>
+    </article>
+    {% endfor %}
+
+    <!-- Empty State Fallback -->
+    <div id="acc-no-results" style="display:none;background:#ffffff;border-radius:18px;padding:48px 24px;text-align:center;box-shadow:0 12px 32px rgba(22,9,44,0.06);border:1.5px dashed #cbd5e1;margin:12px 0;">
+      <div style="font-size:2.8rem;margin-bottom:12px;">🎟️</div>
+      <h3 style="font-size:1.35rem;font-weight:800;color:var(--acc-ink);margin:0 0 8px;">No Reservations Found</h3>
+      <p style="color:var(--acc-muted);font-size:0.92rem;max-width:440px;margin:0 auto 20px;">
+        There are no bookings matching this selection. Explore our celebration events, luxury hotel stays, grand wedding halls, party plots, or authentic Amdavad food.
+      </p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <a href="{% url 'events' %}" class="acc-btn-track" style="width:auto;padding:10px 20px;">Explore Garba</a>
+        <a href="{% url 'food_hub' %}" class="acc-btn-secondary" style="width:auto;padding:10px 20px;">Food Hub</a>
+        <a href="{% url 'wedding_halls' %}" class="acc-btn-secondary" style="width:auto;padding:10px 20px;">Wedding Halls</a>
+        <a href="{% url 'party_plots' %}" class="acc-btn-secondary" style="width:auto;padding:10px 20px;">Party Plots</a>
+        <a href="{% url 'rooms' %}" class="acc-btn-secondary" style="width:auto;padding:10px 20px;">Luxury Rooms</a>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     INTERACTIVE LIVE TRACKING MODAL (REAL LEAFLET MAP)
+══════════════════════════════════════════════════════════════ -->
+<div class="track-modal-overlay" id="trackingModal" role="dialog" aria-modal="true" aria-label="Live Tracking Map">
+  <div class="track-modal-box">
+    
+    <div class="track-modal-header">
+      <div>
+        <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;color:#a7f3d0;font-weight:800;">
+          Live GPS Route &amp; Operations Feed
+        </div>
+        <h2 id="modal-track-title" style="font-size:1.3rem;font-weight:900;margin:3px 0 0;color:#ffffff;">
+          Live Order Tracking
+        </h2>
+        <span id="modal-track-ref" style="font-size:0.8rem;color:#cbd5e1;font-family:monospace;">
+          REF: #AMD-TRACK
+        </span>
+      </div>
+      <button type="button" class="track-modal-close" id="closeTrackModal" aria-label="Close modal">&times;</button>
+    </div>
+
+    <div class="track-modal-body">
+      
+      <!-- Stepper Status Bar -->
+      <div class="track-stepper" id="modal-stepper">
+        <div class="track-step-item active">
+          <div class="track-step-circle">1</div>
+          <span class="track-step-label">Confirmed</span>
+        </div>
+        <div class="track-step-item active">
+          <div class="track-step-circle">2</div>
+          <span class="track-step-label">Preparing</span>
+        </div>
+        <div class="track-step-item active">
+          <div class="track-step-circle">3</div>
+          <span class="track-step-label">On Route</span>
+        </div>
+        <div class="track-step-item">
+          <div class="track-step-circle">4</div>
+          <span class="track-step-label">Delivered</span>
+        </div>
+      </div>
+
+      <!-- Real Interactive Map Shell (Leaflet.js) -->
+      <div class="track-map-container">
+        <!-- Floating HUD Overlay -->
+        <div class="track-map-hud">
+          <div class="hud-pill hud-status">
+            <span class="hud-pulse-dot"></span>
+            <span id="hud-status-text">LIVE GPS STREAMING</span>
+          </div>
+          <div class="hud-pill hud-eta">
+            <span>⏱️</span>
+            <span id="hud-eta-text">ETA: ~16 mins</span>
+            <span class="hud-divider">·</span>
+            <span id="hud-distance-text">3.6 km</span>
+          </div>
+        </div>
+
+        <button type="button" class="track-map-recenter-btn" id="btnRecenterMap" title="Fit Route / Recenter Map">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+          <span>Fit Route</span>
+        </button>
+
+        <div id="tracking-leaflet-map"></div>
+      </div>
+
+      <!-- Partner / Concierge Detail Card -->
+      <div class="track-partner-card">
+        <div class="track-partner-left">
+          <div class="track-partner-avatar" id="modal-partner-avatar">
+            🛵
+          </div>
+          <div>
+            <strong id="modal-partner-name" style="font-size:0.96rem;color:#0f172a;">
+              Mukesh Parmar · Delivery Partner
+            </strong>
+            <div id="modal-partner-sub" style="font-size:0.8rem;color:#64748b;margin-top:2px;">
+              Hero Electric Scooter (GJ-01-ET-8924) · 4.9 ★ Rating
+            </div>
+          </div>
+        </div>
+
+        <div class="track-partner-actions">
+          <a href="tel:+917203928160" class="track-btn-call">
+            Call Partner
+          </a>
+          <a href="https://wa.me/917203928160?text=Hi%2C%20checking%20my%20live%20order%20status" target="_blank" class="track-btn-wa">
+            WhatsApp Live
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<!-- Leaflet.js for interactive mapping -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // ── 1. Category Tabs Filter ──
+  var tabButtons = document.querySelectorAll('.acc-tab-btn');
+  var cards = document.querySelectorAll('.acc-item-card');
+  var searchInput = document.getElementById('acc-search-field');
+  var currentFilter = 'all';
+
+  function applyFilters() {
+    var query = (searchInput ? searchInput.value || '' : '').toLowerCase().trim();
+    var visibleCount = 0;
+
+    cards.forEach(function(card) {
+      var category = card.getAttribute('data-category');
+      var title = (card.getAttribute('data-title') || '').toLowerCase();
+      var ref = (card.getAttribute('data-ref') || '').toLowerCase();
+      var location = (card.getAttribute('data-location') || '').toLowerCase();
+
+      var matchesCategory = (currentFilter === 'all') || (category === currentFilter);
+      var matchesSearch = (!query) || (title.indexOf(query) !== -1) || (ref.indexOf(query) !== -1) || (location.indexOf(query) !== -1);
+
+      if (matchesCategory && matchesSearch) {
+        card.style.display = '';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    var noResultsEl = document.getElementById('acc-no-results');
+    if (noResultsEl) {
+      noResultsEl.style.display = (visibleCount === 0) ? 'block' : 'none';
+    }
+  }
+
+  // Initial check
+  applyFilters();
+
+  var quickChips = document.querySelectorAll('.acc-quick-filter');
+
+  tabButtons.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      tabButtons.forEach(function(b) { b.classList.remove('active'); });
+      this.classList.add('active');
+      currentFilter = this.getAttribute('data-filter');
+      applyFilters();
+
+      // Sync active state on top quick chips
+      quickChips.forEach(function(qc) {
+        if (qc.getAttribute('data-target-filter') === currentFilter) {
+          qc.classList.add('active');
+        } else {
+          qc.classList.remove('active');
+        }
+      });
+
+      // Deep link support
+      if (history.replaceState) {
+        history.replaceState(null, null, '#' + currentFilter);
+      }
+    });
+  });
+
+  quickChips.forEach(function(chip) {
+    chip.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = this.getAttribute('data-target-filter');
+      var matchingTab = document.querySelector('.acc-tab-btn[data-filter="' + target + '"]');
+      if (matchingTab) {
+        matchingTab.click();
+      }
+    });
+  });
+
+  if (searchInput) {
+    searchInput.addEventListener('input', applyFilters);
+  }
+
+  // Handle URL hash or query param on load (e.g. ?filter=food or #food)
+  var urlParams = new URLSearchParams(window.location.search);
+  var targetFilter = urlParams.get('filter') || urlParams.get('tab') || window.location.hash.replace('#', '');
+  if (targetFilter) {
+    var targetTab = document.querySelector('.acc-tab-btn[data-filter="' + targetFilter + '"]');
+    if (targetTab) {
+      targetTab.click();
+    }
+  }
+
+  // ── 2. Real Interactive Leaflet Map & Live Tracking Modal ──
+  var modal = document.getElementById('trackingModal');
+  var closeBtn = document.getElementById('closeTrackModal');
+  var trackButtons = document.querySelectorAll('.btn-trigger-track');
+  var btnRecenter = document.getElementById('btnRecenterMap');
+  
+  var modalTitle = document.getElementById('modal-track-title');
+  var modalRef = document.getElementById('modal-track-ref');
+  var partnerAvatar = document.getElementById('modal-partner-avatar');
+  var partnerName = document.getElementById('modal-partner-name');
+  var partnerSub = document.getElementById('modal-partner-sub');
+  var hudStatusText = document.getElementById('hud-status-text');
+  var hudEtaText = document.getElementById('hud-eta-text');
+  var hudDistanceText = document.getElementById('hud-distance-text');
+  var modalStepper = document.getElementById('modal-stepper');
+
+  var leafletMap = null;
+  var currentBounds = null;
+  var mapMarkers = [];
+  var routeLayers = [];
+  var riderMarker = null;
+  var animationTimer = null;
+
+  var AMD_AREAS = [
+    { keys: ['sindhu', 'sbr'], lat: 23.0440, lng: 72.4960, name: 'Sindhu Bhavan Road' },
+    { keys: ['bodakdev', 'judges'], lat: 23.0425, lng: 72.5120, name: 'Bodakdev' },
+    { keys: ['vastrapur', 'iim', 'alphaone', 'lake'], lat: 23.0360, lng: 72.5186, name: 'Vastrapur' },
+    { keys: ['prahlad', 'anandnagar'], lat: 23.0118, lng: 72.5076, name: 'Prahlad Nagar' },
+    { keys: ['satellite', 'shivranjani', 'jodhpur'], lat: 23.0250, lng: 72.5290, name: 'Satellite' },
+    { keys: ['navrangpura', 'cg road', 'c.g.'], lat: 23.0340, lng: 72.5580, name: 'Navrangpura / CG Road' },
+    { keys: ['ashram', 'riverfront', 'paldi', 'usmanpura'], lat: 23.0380, lng: 72.5740, name: 'Sabarmati Riverfront' },
+    { keys: ['maninagar', 'kankaria', 'geeta mandir'], lat: 22.9980, lng: 72.6020, name: 'Kankaria / Maninagar' },
+    { keys: ['thaltej', 'science city', 'sola'], lat: 23.0650, lng: 72.5150, name: 'Science City / Thaltej' },
+    { keys: ['bopal', 'south bopal', 'ghuma'], lat: 23.0330, lng: 72.4690, name: 'Bopal' },
+    { keys: ['gandhinagar', 'gift city', 'koba', 'infocity'], lat: 23.1610, lng: 72.6850, name: 'Gandhinagar / GIFT City' },
+    { keys: ['sg highway', 'iscon', 'pakwan'], lat: 23.0396, lng: 72.5066, name: 'SG Highway' },
+  ];
+
+  function findAmdCoords(text, fallbackLat, fallbackLng) {
+    if (!text) return [fallbackLat, fallbackLng];
+    var lower = text.toLowerCase();
+    for (var i = 0; i < AMD_AREAS.length; i++) {
+      var area = AMD_AREAS[i];
+      for (var k = 0; k < area.keys.length; k++) {
+        if (lower.indexOf(area.keys[k]) !== -1) {
+          return [area.lat, area.lng];
+        }
+      }
+    }
+    return [fallbackLat, fallbackLng];
+  }
+
+  function getDistanceKm(lat1, lon1, lat2, lon2) {
+    var R = 6371; // km
+    var dLat = (lat2 - lat1) * Math.PI / 180;
+    var dLon = (lon2 - lon1) * Math.PI / 180;
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  }
+
+  function initMap(lat1, lng1, lat2, lng2, isFood, originTitle, destTitle, destAddress) {
+    var mapEl = document.getElementById('tracking-leaflet-map');
+    if (!mapEl) return;
+
+    if (!leafletMap) {
+      leafletMap = L.map('tracking-leaflet-map', {
+        zoomControl: true,
+        scrollWheelZoom: true
+      }).setView([lat1, lng1], 13);
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CARTO',
+        subdomains: 'abcd',
+        maxZoom: 20
+      }).addTo(leafletMap);
+    }
+
+    // Clear old elements
+    mapMarkers.forEach(function(m) { leafletMap.removeLayer(m); });
+    mapMarkers = [];
+    routeLayers.forEach(function(r) { leafletMap.removeLayer(r); });
+    routeLayers = [];
+    if (riderMarker) { leafletMap.removeLayer(riderMarker); riderMarker = null; }
+    if (animationTimer) { clearInterval(animationTimer); animationTimer = null; }
+
+    // Distance & ETA calculation
+    var rawDist = getDistanceKm(lat1, lng1, lat2, lng2);
+    var distKm = Math.max(1.8, Math.round(rawDist * 10) / 10);
+    var etaMins = Math.max(12, Math.round(distKm * 3.4));
+
+    if (hudDistanceText) hudDistanceText.textContent = distKm.toFixed(1) + ' km';
+    if (hudEtaText) hudEtaText.textContent = 'ETA: ~' + etaMins + ' mins';
+    if (hudStatusText) hudStatusText.textContent = isFood ? 'LIVE RIDER GPS TRACKING' : 'VENUE TURNSTILE GATE ACTIVE';
+
+    // ── 1. Origin Marker (Pulsing DivIcon) ──
+    var originIcon = L.divIcon({
+      className: 'leaflet-custom-origin',
+      html: '<div class="origin-ripple"></div><div class="origin-pin-box">' + (isFood ? '🍳' : '🏛️') + '</div>',
+      iconSize: [40, 40],
+      iconAnchor: [20, 20]
+    });
+    var originMarker = L.marker([lat1, lng1], { icon: originIcon }).addTo(leafletMap)
+      .bindPopup('<div style="font-family:inherit;padding:4px;"><strong style="color:#0f172a;font-size:0.92rem;">' + (isFood ? 'Pickup Kitchen / Stall' : 'Venue Turnstile Desk') + '</strong><br><span style="color:#475569;font-size:0.82rem;">' + originTitle + '</span><div style="font-size:0.75rem;color:#16a34a;margin-top:3px;font-weight:700;">● Dispatch Hub Ready</div></div>');
+    mapMarkers.push(originMarker);
+
+    // ── 2. Destination Marker (Pulsing DivIcon) ──
+    var destIcon = L.divIcon({
+      className: 'leaflet-custom-dest',
+      html: '<div class="dest-ripple"></div><div class="dest-pin-box">' + (isFood ? '📍' : '🎟️') + '</div>',
+      iconSize: [40, 40],
+      iconAnchor: [20, 20]
+    });
+    var destMarker = L.marker([lat2, lng2], { icon: destIcon }).addTo(leafletMap)
+      .bindPopup('<div style="font-family:inherit;padding:4px;"><strong style="color:#0f172a;font-size:0.92rem;">' + (isFood ? 'Delivery Destination' : 'VIP Gate Turnstiles') + '</strong><br><span style="color:#475569;font-size:0.82rem;">' + destAddress + '</span><div style="font-size:0.75rem;color:#2563eb;margin-top:3px;font-weight:700;">● Confirmed Drop Location</div></div>');
+    mapMarkers.push(destMarker);
+
+    // ── 3. Realistic Ahmedabad Road Route Polyline ──
+    var midLat1 = lat1 + (lat2 - lat1) * 0.35 + 0.003;
+    var midLng1 = lng1 + (lng2 - lng1) * 0.35 - 0.002;
+    var midLat2 = lat1 + (lat2 - lat1) * 0.70 - 0.002;
+    var midLng2 = lng1 + (lng2 - lng1) * 0.70 + 0.003;
+
+    var waypoints = [
+      [lat1, lng1],
+      [midLat1, midLng1],
+      [(lat1 + lat2) / 2 + 0.004, (lng1 + lng2) / 2],
+      [midLat2, midLng2],
+      [lat2, lng2]
+    ];
+
+    // Background Glow Line
+    var casingLine = L.polyline(waypoints, {
+      color: isFood ? '#047857' : '#4338ca',
+      weight: 8,
+      opacity: 0.30
+    }).addTo(leafletMap);
+    routeLayers.push(casingLine);
+
+    // Active Flowing Dash Line
+    var activeRouteLine = L.polyline(waypoints, {
+      color: isFood ? '#10b981' : '#6366f1',
+      weight: 4.5,
+      opacity: 0.95,
+      className: 'route-pulse-dash'
+    }).addTo(leafletMap);
+    routeLayers.push(activeRouteLine);
+
+    // ── 4. Animated Moving Delivery Partner (For Food) ──
+    if (isFood) {
+      var riderIcon = L.divIcon({
+        className: 'leaflet-rider-pin',
+        html: '<div style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:20px;border:2.5px solid #fff;box-shadow:0 0 16px rgba(16,185,129,0.85);">🛵</div>',
+        iconSize: [38, 38],
+        iconAnchor: [19, 19]
+      });
+
+      var currentStep = 0;
+      var totalSteps = 120;
+      riderMarker = L.marker([lat1, lng1], { icon: riderIcon }).addTo(leafletMap);
+      riderMarker.bindTooltip('Rider moving on SG Highway · 28 km/h', { permanent: false, direction: 'top' });
+
+      animationTimer = setInterval(function() {
+        currentStep = (currentStep + 1) % totalSteps;
+        var p = currentStep / totalSteps;
+        var rLat, rLng;
+        if (p < 0.25) {
+          var subP = p / 0.25;
+          rLat = waypoints[0][0] + (waypoints[1][0] - waypoints[0][0]) * subP;
+          rLng = waypoints[0][1] + (waypoints[1][1] - waypoints[0][1]) * subP;
+        } else if (p < 0.50) {
+          var subP = (p - 0.25) / 0.25;
+          rLat = waypoints[1][0] + (waypoints[2][0] - waypoints[1][0]) * subP;
+          rLng = waypoints[1][1] + (waypoints[2][1] - waypoints[1][1]) * subP;
+        } else if (p < 0.75) {
+          var subP = (p - 0.50) / 0.25;
+          rLat = waypoints[2][0] + (waypoints[3][0] - waypoints[2][0]) * subP;
+          rLng = waypoints[2][1] + (waypoints[3][1] - waypoints[2][1]) * subP;
+        } else {
+          var subP = (p - 0.75) / 0.25;
+          rLat = waypoints[3][0] + (waypoints[4][0] - waypoints[3][0]) * subP;
+          rLng = waypoints[3][1] + (waypoints[4][1] - waypoints[3][1]) * subP;
+        }
+        riderMarker.setLatLng([rLat, rLng]);
+      }, 110);
+    }
+
+    // ── 5. Fit Bounds smoothly & invalidate size ──
+    currentBounds = L.latLngBounds(waypoints);
+    leafletMap.fitBounds(currentBounds, { padding: [55, 55], maxZoom: 16 });
+
+    setTimeout(function() { if (leafletMap) leafletMap.invalidateSize(); }, 60);
+    setTimeout(function() { if (leafletMap) leafletMap.invalidateSize(); }, 220);
+    setTimeout(function() { if (leafletMap) leafletMap.invalidateSize(); }, 450);
+  }
+
+  // Recenter Route Button Handler
+  if (btnRecenter) {
+    btnRecenter.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (leafletMap && currentBounds) {
+        leafletMap.fitBounds(currentBounds, { padding: [55, 55], maxZoom: 16 });
+      }
+    });
+  }
+
+  function openTracking(btn) {
+    var type = btn.getAttribute('data-track-type');
+    var title = btn.getAttribute('data-title');
+    var ref = btn.getAttribute('data-ref');
+    var address = btn.getAttribute('data-address') || 'Ahmedabad';
+    var restaurant = btn.getAttribute('data-restaurant') || 'Amdavad Food Stall';
+    
+    modalTitle.textContent = title;
+    modalRef.textContent = 'REF: #' + ref;
+
+    if (type === 'food') {
+      partnerAvatar.innerHTML = '🛵';
+      partnerName.textContent = 'Mukesh Parmar · Delivery Partner';
+      partnerSub.textContent = 'Hero Electric Scooter (GJ-01-ET-8924) · 4.9 ★ · Delivering to: ' + address;
+
+      // Update Stepper for Food
+      if (modalStepper) {
+        modalStepper.innerHTML = [
+          '<div class="track-step-item active"><div class="track-step-circle">1</div><span class="track-step-label">Order Confirmed</span></div>',
+          '<div class="track-step-item active"><div class="track-step-circle">2</div><span class="track-step-label">Kitchen Preparing</span></div>',
+          '<div class="track-step-item active"><div class="track-step-circle">3</div><span class="track-step-label">Rider On Route</span></div>',
+          '<div class="track-step-item"><div class="track-step-circle">4</div><span class="track-step-label">Delivered</span></div>'
+        ].join('');
+      }
+
+      var originCoords = findAmdCoords(restaurant, 23.0440, 72.4960);
+      var destCoords = findAmdCoords(address, 23.0225, 72.5286);
+      if (originCoords[0] === destCoords[0] && originCoords[1] === destCoords[1]) {
+        destCoords = [destCoords[0] - 0.018, destCoords[1] + 0.022];
+      }
+
+      modal.classList.add('open');
+      initMap(originCoords[0], originCoords[1], destCoords[0], destCoords[1], true, restaurant, title, address);
+    } else {
+      partnerAvatar.innerHTML = '🏛️';
+      partnerName.textContent = 'Venue Concierge Desk · Gate Turnstile Active';
+      partnerSub.textContent = 'Turnstile Gate 3A · Direct Venue Location: ' + address;
+
+      // Update Stepper for Venues
+      if (modalStepper) {
+        modalStepper.innerHTML = [
+          '<div class="track-step-item active"><div class="track-step-circle">1</div><span class="track-step-label">Booking Confirmed</span></div>',
+          '<div class="track-step-item active"><div class="track-step-circle">2</div><span class="track-step-label">Pass Token Active</span></div>',
+          '<div class="track-step-item active"><div class="track-step-circle">3</div><span class="track-step-label">Turnstile Gates Ready</span></div>',
+          '<div class="track-step-item"><div class="track-step-circle">4</div><span class="track-step-label">Check-in Verified</span></div>'
+        ].join('');
+      }
+
+      var venueCoords = findAmdCoords(address, 23.0396, 72.5066);
+      var userCoords = [venueCoords[0] - 0.015, venueCoords[1] - 0.018];
+
+      modal.classList.add('open');
+      initMap(venueCoords[0], venueCoords[1], userCoords[0], userCoords[1], false, title, 'VIP Gate Access Point', address);
+    }
+  }
+
+  trackButtons.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      openTracking(this);
+    });
+  });
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', function() {
+      modal.classList.remove('open');
+      if (animationTimer) clearInterval(animationTimer);
+    });
+  }
+
+  modal.addEventListener('click', function(e) {
+    if (e.target === modal) {
+      modal.classList.remove('open');
+      if (animationTimer) clearInterval(animationTimer);
+    }
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && modal.classList.contains('open')) {
+      modal.classList.remove('open');
+      if (animationTimer) clearInterval(animationTimer);
+    }
+  });
+
+  window.addEventListener('resize', function() {
+    if (modal.classList.contains('open') && leafletMap) {
+      leafletMap.invalidateSize();
+      if (currentBounds) leafletMap.fitBounds(currentBounds, { padding: [55, 55], maxZoom: 16 });
+    }
+  });
+});
+</script>
+{% endblock %}
