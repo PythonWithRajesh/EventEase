@@ -352,4 +352,15 @@ class Command(BaseCommand):
                     body=msg,
                 )
 
+        # 5. FOOD HUB ITEMS
+        from bookings.models import FoodItem
+        from django.core.management import call_command
+        from pathlib import Path
+
+        if FoodItem.objects.count() == 0:
+            fixture_path = Path(__file__).resolve().parent.parent.parent / "fixtures" / "initial_catalog.json"
+            if fixture_path.exists():
+                call_command("loaddata", str(fixture_path), verbosity=1)
+                self.stdout.write(self.style.SUCCESS("Loaded 109 Amdavad Food Hub dishes from catalog fixture!"))
+
         self.stdout.write(self.style.SUCCESS("Successfully seeded rich Navratri passes, luxury rooms, party plots, wedding halls, and support inquiries for Amazing Ahmedabad!"))
